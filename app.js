@@ -16,7 +16,15 @@ const LIBELLE_TYPE = { min: "À atteindre", max: "À ne pas dépasser", fourchet
 
 let foods, refs, activite, parId, nutParCle;
 let etat, historique;
-const ui = { onglet: "aliments", replies: new Set(), ouvert: null, poids: null, manquantsOuverts: new Set(), presse: "" };
+// Champs saisis au clavier : bornes de validation (lues par calculs.lireSaisie).
+const CHAMPS = {
+  pas: { min: 0, max: 200000, entier: true },
+  km: { min: 0, max: 300 },
+  poids: { min: 30, max: 300 },
+};
+const CROIX = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+
+const ui = { saisie: {}, onglet: "aliments", replies: new Set(), ouvert: null, poids: null, manquantsOuverts: new Set(), presse: "" };
 
 // ---------- Démarrage ----------
 
@@ -39,6 +47,9 @@ async function demarrer() {
   rafraichir();
 
   document.addEventListener("click", surClic);
+  // Champs : enregistrement au « change » (perte du focus ou Entrée) ; Entrée ferme le clavier.
+  document.addEventListener("change", (e) => e.target.dataset?.champ && surSaisie(e.target));
+  document.addEventListener("keydown", (e) => e.key === "Enter" && e.target.dataset?.champ && e.target.blur());
   // Remise à zéro à minuit : au retour au premier plan, au retour depuis le cache de navigation, et toutes les 30 s.
   document.addEventListener("visibilitychange", () => document.visibilityState === "visible" && verifierJour());
   window.addEventListener("pageshow", () => verifierJour());
@@ -78,6 +89,7 @@ function contexte() {
 function rafraichir() {
   // Les blocs <details> ouverts restent ouverts après le nouvel affichage.
   const ouverts = [...document.querySelectorAll("details[data-garde][open]")].map((d) => d.dataset.garde);
+  const actif = document.activeElement?.dataset?.champ ? document.activeElement.id : null; // garder le champ en cours
   const ctx = contexte();
   rendreEntete(ctx);
   rendreJournal();
@@ -85,6 +97,47 @@ function rafraichir() {
   rendreActivite(ctx);
   rendrePoids();
   for (const g of ouverts) $(`details[data-garde="${g}"]`)?.setAttribute("open", "");
+  if (actif) $(`#${actif}`)?.focus();
+}
+
+// Champ de saisie avec unité et message d'erreur. Le texte invalide reste affiché tant qu'il n'est pas corrigé.
+function champ(id, cle, libelle, valeur, mode, unite) {
+  const err = ui.saisie[cle];
+  const texte = err ? err.texte : String(valeur).replace(".", ",");
+  return `<label class="champ" for="${id}"><span class="champ-nom">${libelle}</span>
+    <span class="champ-boite"><input id="${id}" data-champ="${cle}" data-valeur="${valeur}" type="text" inputmode="${mode}" enterkeyhint="done" autocomplete="off" spellcheck="false" value="${esc(texte)}" aria-invalid="${!!err}" aria-describedby="${id}-err"><span class="champ-unite">${unite}</span></span>
+    <span class="champ-erreur" id="${id}-err" role="alert"${err ? "" : " hidden"}>${err ? esc(err.message) : ""}</span></label>`;
+}
+
+// Valide un champ ; valeur valide : enregistrée ; invalide : message sous le champ, rien n'est touché.
+function surSaisie(input) {
+  const cle = input.dataset.champ;
+  const r = C.lireSaisie(input.value, CHAMPS[cle]);
+  if (r.erreur) {
+    ui.saisie[cle] = { texte: input.value, message: r.erreur };
+    input.setAttribute("aria-invalid", "true");
+    const m = $(`#${input.id}-err`);
+    m.textContent = r.erreur;
+    m.hidden = false;
+    return false;
+  }
+  delete ui.saisie[cle];
+  input.setAttribute("aria-invalid", "false");
+  $(`#${input.id}-err`).hidden = true;
+  input.dataset.valeur = r.valeur;
+  input.value = String(r.valeur).replace(".", ",");
+  if (cle === "poids") {
+    ui.poids = r.valeur;
+    return true;
+  }
+  verifierJour();
+  etat.activite[cle] = r.valeur;
+  sauver();
+  const ctx = contexte();
+  rendreEntete(ctx);
+  rendreBilan(ctx);
+  $("#a-depense-carte").innerHTML = htmlDepense(ctx.dep);
+  return true;
 }
 
 // ---------- Onglets ----------
@@ -127,7 +180,7 @@ function rendreAliments() {
       const als = foods.aliments.filter((a) => a.categorie === cat);
       return `<section class="categorie" data-cat="${esc(cat)}">
         <button class="cat-tete" data-act="categorie" data-cat="${esc(cat)}" aria-expanded="true">
-          <span>${esc(cat)}</span><span class="chevron" aria-hidden="true">▾</span></button>
+          <span>${esc(cat)}</span><span class="chevron" aria-hidden="true"></span></button>
         <div class="cat-corps">${als.map(htmlAliment).join("")}</div></section>`;
     })
     .join("");
@@ -242,7 +295,7 @@ function rendreJournal() {
           <span class="c-prot">P ${C.formater(v("proteines"), "g")}</span>
           <span class="c-gluc">G ${C.formater(v("glucides"), "g")}</span>
           <span class="c-lip">L ${C.formater(v("lipides"), "g")}</span></div>
-        <button class="j-suppr" data-act="supprimer" data-id="${e.id}" aria-label="Supprimer ${esc(al.nom)}">✕</button>
+        <button class="j-suppr" data-act="supprimer" data-id="${e.id}" aria-label="Supprimer ${esc(al.nom)}">${CROIX}</button>
       </li>`;
     })
     .join("");
@@ -310,7 +363,7 @@ function rendreBilan({ t, dep, poids }) {
   $("#vue-bilan").innerHTML = `
     <h2>Bilan du ${dateLongue(etat.jour)}</h2>
     ${blocEnergie(t, dep, poids)}
-    <p class="legende"><span class="l-min">▮ à atteindre</span> <span class="l-max">▮ à ne pas dépasser</span> <span class="l-four">▮ fourchette</span></p>
+    <p class="legende"><span class="l-min">À atteindre</span> <span class="l-max">À ne pas dépasser</span> <span class="l-four">Fourchette</span></p>
     ${groupes}
     <section class="carte sources"><h2>Références</h2>
       <p>${esc(refs.profil)}. Références du ${esc(refs.date)}.</p>
@@ -403,12 +456,12 @@ function rendreActivite({ dep, poids }) {
     .join("");
   $("#vue-activite").innerHTML = `
     <section class="carte"><h2>Pas et distance</h2>
-      <button class="btn btn-large btn-principal" data-act="importer">📋 Importer depuis le Raccourci</button>
+      <button class="btn btn-large btn-principal" data-act="importer">Importer depuis le Raccourci</button>
       ${ui.presse ? `<p class="message" role="status">${esc(ui.presse)}</p>` : ""}
-      <div class="reglage"><span class="reglage-nom">Distance</span><span class="reglage-val" id="a-km" data-valeur="${a.km}">${C.formater(a.km, "g")} km</span></div>
-      <div class="rangee4"><button class="btn" data-act="km" data-d="-1">−1</button><button class="btn" data-act="km" data-d="-0.1">−0,1</button><button class="btn" data-act="km" data-d="0.1">+0,1</button><button class="btn" data-act="km" data-d="1">+1</button></div>
-      <div class="reglage"><span class="reglage-nom">Pas</span><span class="reglage-val" id="a-pas" data-valeur="${a.pas}">${new Intl.NumberFormat("fr-FR").format(a.pas)}</span></div>
-      <div class="rangee4"><button class="btn" data-act="pas" data-d="-1000">−1000</button><button class="btn" data-act="pas" data-d="-100">−100</button><button class="btn" data-act="pas" data-d="100">+100</button><button class="btn" data-act="pas" data-d="1000">+1000</button></div>
+      <div class="champs2">
+        ${champ("a-pas", "pas", "Pas", a.pas, "numeric", "pas")}
+        ${champ("a-km", "km", "Distance", a.km, "decimal", "km")}
+      </div>
       <p class="aide">Seule la distance entre dans la dépense ; les pas sont affichés pour mémoire.</p>
       <details class="aide-raccourci" data-garde="raccourci"><summary>Créer le Raccourci iPhone</summary>
         <p>Une appli web ne peut pas lire l'app Santé. Un Raccourci copie tes pas et ta distance du jour, puis le bouton ci-dessus les lit dans le presse-papiers.</p>
@@ -426,17 +479,21 @@ function rendreActivite({ dep, poids }) {
       <div class="seances">${seances}</div>
     </section>
     <section class="carte"><h2>Créatine</h2>
-      <button class="btn btn-large case${a.creatine ? " cochee" : ""}" data-act="creatine" aria-pressed="${a.creatine}">${a.creatine ? "✅ Créatine prise" : "⬜ Créatine prise"}</button>
+      <button class="btn btn-large case${a.creatine ? " cochee" : ""}" data-act="creatine" aria-pressed="${a.creatine}"><span class="case-boite" aria-hidden="true"></span>Créatine prise</button>
     </section>
-    <section class="carte"><h2>Dépense du jour</h2>
+    <section class="carte" id="a-depense-carte">${htmlDepense(dep)}</section>`;
+}
+
+// Carte « Dépense du jour » (mise à jour seule après une saisie, sans toucher aux champs ni aux boutons).
+function htmlDepense(dep) {
+  return `<h2>Dépense du jour</h2>
       ${dep ? `<dl class="detail-dep" id="a-depense" data-total="${dep.total}">
         <dt>Repos (Cunningham)</dt><dd>${C.formater(dep.repos, "kcal")} kcal</dd>
         <dt>Journée sédentaire (× ${C.formater(activite.facteur_journee_sedentaire.valeur, "mg")})</dt><dd>${C.formater(dep.sedentaire, "kcal")} kcal</dd>
         <dt>Marche</dt><dd>${C.formater(dep.marche, "kcal")} kcal</dd>
         <dt>Salle</dt><dd>${C.formater(dep.salle, "kcal")} kcal</dd>
         <dt>Total</dt><dd><b>${C.formater(dep.total, "kcal")} kcal</b></dd></dl>`
-        : `<p class="alerte" id="a-depense" data-total="">Dépense inconnue : <button class="lien" data-act="onglet" data-onglet="poids">saisis ton poids</button>.</p>`}
-    </section>`;
+        : `<p class="alerte" id="a-depense" data-total="">Dépense inconnue : <button class="lien" data-act="onglet" data-onglet="poids">saisis ton poids</button>.</p>`}`;
 }
 
 async function importer() {
@@ -466,12 +523,11 @@ function rendrePoids() {
   const lignes = [...tab]
     .reverse()
     .map((p) => `<tr data-date="${p.date}"><td>${dateCourte(p.date)}</td><td><b>${C.formater(p.kg, "g")}</b></td><td>${p.variation === null ? "—" : signe(p.variation)}</td><td>${C.formater(p.moyenne7, "g")}</td>
-      <td><button class="j-suppr" data-act="suppr-pesee" data-date="${p.date}" aria-label="Supprimer la pesée du ${dateCourte(p.date)}">✕</button></td></tr>`)
+      <td><button class="j-suppr" data-act="suppr-pesee" data-date="${p.date}" aria-label="Supprimer la pesée du ${dateCourte(p.date)}">${CROIX}</button></td></tr>`)
     .join("");
   $("#vue-poids").innerHTML = `
     <section class="carte"><h2>Pesée du jour</h2>
-      <div class="poids-val" id="p-brouillon" data-valeur="${ui.poids}">${C.formater(ui.poids, "g")} kg</div>
-      <div class="rangee4"><button class="btn" data-act="poids" data-d="-1">−1</button><button class="btn" data-act="poids" data-d="-0.1">−0,1</button><button class="btn" data-act="poids" data-d="0.1">+0,1</button><button class="btn" data-act="poids" data-d="1">+1</button></div>
+      ${champ("p-brouillon", "poids", "Poids", ui.poids, "decimal", "kg")}
       <button class="btn btn-large btn-principal" data-act="enregistrer-poids">Enregistrer pour aujourd'hui</button>
     </section>
     <section class="carte"><h2>Courbe</h2>${courbe(tab)}
@@ -504,7 +560,7 @@ function courbe(tab) {
     <path d="${chemin("kg")}" class="c-poids"/><path d="${chemin("moyenne7")}" class="c-moy"/>
     ${tab.map((p) => `<circle cx="${X(p.date).toFixed(1)}" cy="${Y(p.kg).toFixed(1)}" r="3" class="c-point"/>`).join("")}
   </svg>
-  <p class="legende"><span class="l-poids">● poids</span> <span class="l-moy">━ moyenne 7 jours</span></p>`;
+  <p class="legende"><span class="l-poids">Pesées</span> <span class="l-moy">Moyenne 7 jours</span></p>`;
 }
 
 // ---------- Feuille du bas, toast ----------
@@ -572,16 +628,6 @@ const ACTIONS = {
     b.nextElementSibling.hidden = !ui.manquantsOuverts.has(c);
   },
   importer: () => importer(),
-  km: (b) => {
-    etat.activite.km = Math.max(0, C.arrondi1(etat.activite.km + Number(b.dataset.d)));
-    sauver();
-    rafraichir();
-  },
-  pas: (b) => {
-    etat.activite.pas = Math.max(0, etat.activite.pas + Number(b.dataset.d));
-    sauver();
-    rafraichir();
-  },
   seance: (b) => {
     etat.activite.seance = etat.activite.seance === b.dataset.id ? null : b.dataset.id;
     sauver();
@@ -592,11 +638,10 @@ const ACTIONS = {
     sauver();
     rafraichir();
   },
-  poids: (b) => {
-    ui.poids = Math.min(400, Math.max(20, C.arrondi1(ui.poids + Number(b.dataset.d))));
-    rendrePoids();
-  },
   "enregistrer-poids": () => {
+    // Le texte du champ fait foi, même si le « change » n'est pas encore passé.
+    const champPoids = $("#p-brouillon");
+    if (!surSaisie(champPoids)) return;
     verifierJour();
     etat.pesees = etat.pesees.filter((p) => p.date !== etat.jour).concat({ date: etat.jour, kg: ui.poids });
     sauver();

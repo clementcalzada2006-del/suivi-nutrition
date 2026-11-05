@@ -73,7 +73,7 @@ Une appli web ne peut pas lire l'app Santé. Un Raccourci copie les chiffres, l'
 3. Deuxième action **Rechercher des échantillons de santé** : « Distance à pied et en course », date « Aujourd'hui », regrouper par « Jour », valeur « Somme », unité « km ».
 4. Action **Texte** : `[pas] pas [distance] km` (insérer chaque résultat avec la barre au-dessus du clavier).
 5. Action **Copier dans le presse-papiers**.
-6. Lancer le raccourci, ouvrir l'appli, onglet Activité → **Importer depuis le Raccourci**. Le texte peut aussi être « Pas : 8432 ; Distance : 6,2 km » ou dans un autre ordre. À défaut, les boutons ± règlent la distance et les pas.
+6. Lancer le raccourci, ouvrir l'appli, onglet Activité → **Importer depuis le Raccourci**. Le texte peut aussi être « Pas : 8432 ; Distance : 6,2 km » ou dans un autre ordre. À défaut, tape les pas et la distance dans les champs (virgule ou point).
 
 ## Mettre à jour le site
 

@@ -213,6 +213,19 @@ export function analyserPressePapiers(texte) {
   return res.km === undefined && res.pas === undefined ? null : res;
 }
 
+// ---------- Saisie au clavier ----------
+
+// Lit un nombre tapé (virgule ou point, espaces tolérées) et le valide : { valeur } ou { erreur: message }.
+export function lireSaisie(texte, { min, max, entier = false }) {
+  const t = String(texte ?? "").replace(/[\s\u00a0\u202f]/g, "").replace(",", ".");
+  const borne = (x) => new Intl.NumberFormat("fr-FR").format(x);
+  if (!/^\d+(\.\d+)?$/.test(t)) return { erreur: entier ? "Tape un nombre entier." : "Tape un nombre (virgule ou point)." };
+  const v = Number(t);
+  if (entier && !Number.isInteger(v)) return { erreur: "Nombre entier attendu, sans virgule." };
+  if (v < min || v > max) return { erreur: `Valeur entre ${borne(min)} et ${borne(max)} attendue.` };
+  return { valeur: v };
+}
+
 // ---------- Pesées ----------
 
 // Dernière pesée à la date donnée ou avant (pesees triées ou non). null s'il n'y en a pas.

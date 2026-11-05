@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Suivi nutrition</title>
   <meta name="description" content="Suivi calorique et nutritionnel du jour : calories, macros, vitamines, minéraux, oméga, dépense et poids. Tout reste sur l'appareil.">
-  <meta name="theme-color" content="#F6F7F4" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#111412" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#F7F6F3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#161514" media="(prefers-color-scheme: dark)">
   <meta name="color-scheme" content="light dark">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
@@ -30,9 +30,9 @@
       <button id="e-incomplet" class="marque-incomplet" data-act="onglet" data-onglet="bilan" hidden>incomplet</button>
     </div>
     <div class="entete-macros">
-      <div class="macro m-prot"><span class="macro-val" id="e-proteines" data-total="0">0,0</span><span class="macro-nom">g protéines</span></div>
-      <div class="macro m-gluc"><span class="macro-val" id="e-glucides" data-total="0">0,0</span><span class="macro-nom">g glucides</span></div>
-      <div class="macro m-lip"><span class="macro-val" id="e-lipides" data-total="0">0,0</span><span class="macro-nom">g lipides</span></div>
+      <div class="macro m-prot"><span class="macro-val" id="e-proteines" data-total="0">0,0</span><span class="macro-nom">Protéines</span></div>
+      <div class="macro m-gluc"><span class="macro-val" id="e-glucides" data-total="0">0,0</span><span class="macro-nom">Glucides</span></div>
+      <div class="macro m-lip"><span class="macro-val" id="e-lipides" data-total="0">0,0</span><span class="macro-nom">Lipides</span></div>
     </div>
   </header>
 
@@ -46,11 +46,12 @@
   </main>
 
   <nav class="onglets" aria-label="Onglets">
-    <button data-act="onglet" data-onglet="aliments"><span aria-hidden="true">🍽️</span>Aliments</button>
-    <button data-act="onglet" data-onglet="journal"><span aria-hidden="true">📋</span>Journal</button>
-    <button data-act="onglet" data-onglet="bilan"><span aria-hidden="true">📊</span>Bilan</button>
-    <button data-act="onglet" data-onglet="activite"><span aria-hidden="true">🚶</span>Activité</button>
-    <button data-act="onglet" data-onglet="poids"><span aria-hidden="true">⚖️</span>Poids</button>
+    <!-- Icônes dessinées à la main (trait de 1,6), sans bibliothèque externe -->
+    <button data-act="onglet" data-onglet="aliments"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 21V3c-2.2 1.2-3 3.6-3 6.5V13h3"/></svg>Aliments</button>
+    <button data-act="onglet" data-onglet="journal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 8.5h6M9 12h6M9 15.5h4"/></svg>Journal</button>
+    <button data-act="onglet" data-onglet="bilan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16M7 16v-5M12 16V6M17 16v-8"/></svg>Bilan</button>
+    <button data-act="onglet" data-onglet="activite"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="13.5" cy="4.5" r="1.8"/><path d="M9 21l2.5-6 2.5 2.5V21M8 11.5l3-3.5 3 1.5 2 3M11.5 8l-1.5 7"/></svg>Activité</button>
+    <button data-act="onglet" data-onglet="poids"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4" width="17" height="16" rx="3"/><path d="M8.5 9a5 5 0 0 1 7 0M12 9.5l1.5-2"/></svg>Poids</button>
   </nav>
 
   <div id="voile" class="voile" data-act="fermer" hidden></div>

@@ -84,12 +84,18 @@ const histoStocke = (page) => page.evaluate(() => JSON.parse(localStorage.getIte
 async function regler(page, act, d, n) {
   for (let i = 0; i < n; i++) await toucher(page.locator(`[data-act="${act}"][data-d="${d}"]`));
 }
+// Saisie au clavier : on tape le texte puis Entrée (qui valide le champ).
+async function saisir(page, id, texte) {
+  const champ = page.locator(`#${id}`);
+  await toucher(champ);
+  await champ.fill(texte);
+  await champ.press("Enter");
+}
 async function peser(page, kg) {
   await onglet(page, "poids");
-  const actuel = Number(await page.locator("#p-brouillon").getAttribute("data-valeur"));
-  const pas = Math.round((kg - actuel) * 10);
-  await regler(page, "poids", pas >= 0 ? "1" : "-1", Math.floor(Math.abs(pas) / 10));
-  await regler(page, "poids", pas >= 0 ? "0.1" : "-0.1", Math.abs(pas) % 10);
+  const champ = page.locator("#p-brouillon");
+  await toucher(champ);
+  await champ.fill(typeof kg === "string" ? kg : String(kg).replace(".", ",")); // nombre : virgule ; texte : tel quel
   await toucher(page.locator('[data-act="enregistrer-poids"]'));
 }
 
@@ -149,9 +155,7 @@ console.log("\n1. Ajout, suppression et annulation (calculs à la main)");
   await annulerToast(page);
   verifTotaux(await totaux(page), cas3, "ajout de la banane annulé");
   verif((await etatStocke(page)).journal.length === 3, "stockage : 3 entrées");
-  await page.screenshot({ path: join(captures, "aliments-clair.png") });
   await onglet(page, "journal");
-  await page.screenshot({ path: join(captures, "journal-clair.png") });
   await ctx.close();
 }
 
@@ -224,7 +228,6 @@ console.log("\n3. Donnée manquante");
   const attendusIncomplets = FOODS.nutriments.filter((n) => n.ciqual.length && (vals("echine_porc")[n.cle].v === null || vals("orange")[n.cle].v === null)).map((n) => n.cle);
   const incomplets = await page.locator('#vue-bilan .ligne-nut[data-incomplet="1"]').evaluateAll((els) => els.map((e) => e.dataset.cle).filter((c) => !["omega", "rapport_la_ala"].includes(c)));
   verif(JSON.stringify(incomplets) === JSON.stringify(attendusIncomplets), "« incomplet » exactement là où une donnée manque (biotine jamais)", `${incomplets} ≠ ${attendusIncomplets}`);
-  await page.screenshot({ path: join(captures, "bilan-clair.png"), fullPage: true });
   // Fiche de l'échine : null affiché « non disponible », jamais 0.
   await onglet(page, "aliments");
   await toucher(page.locator('.al-info[data-id="echine_porc"]'));
@@ -248,8 +251,8 @@ console.log("\n4. Persistance après rechargement");
   await ajouter(page, "filet_poulet", 150);
   await peser(page, 81.3);
   await onglet(page, "activite");
-  await regler(page, "km", "1", 4);
-  await regler(page, "pas", "1000", 3);
+  await saisir(page, "a-km", "4");
+  await saisir(page, "a-pas", "3000");
   await toucher(page.locator('[data-act="seance"][data-id="jambes"]'));
   await toucher(page.locator('[data-act="creatine"]'));
   const avant = await totaux(page);
@@ -279,13 +282,12 @@ console.log("\n5. Remise à zéro manuelle puis annulation");
   await ajouter(page, "pomme", 2);
   await peser(page, 75);
   await onglet(page, "activite");
-  await regler(page, "km", "0.1", 3);
+  await saisir(page, "a-km", "0,3");
   await toucher(page.locator('[data-act="seance"][data-id="dos_epaules"]'));
   const avant = { t: await totaux(page), etat: await etatStocke(page), histo: await histoStocke(page) };
   await onglet(page, "journal");
   await toucher(page.locator('[data-act="raz"]'));
   verif(await page.locator("#feuille").isVisible(), "confirmation dans une feuille (pas de window.confirm)");
-  await page.screenshot({ path: join(captures, "confirmation-raz.png") });
   await toucher(page.locator('#feuille [data-act="raz-ok"]'));
   verif((await page.locator(".j-ligne").count()) === 0 && (await page.locator("#e-kcal").getAttribute("data-total")) === "0", "journal vidé, total à 0");
   const e1 = await etatStocke(page);
@@ -314,7 +316,7 @@ console.log("\n6. Passage de minuit (fausse horloge)");
   await ajouter(page, "riz_complet", 150);
   await peser(page, 78.4);
   await onglet(page, "activite");
-  await regler(page, "km", "1", 2);
+  await saisir(page, "a-km", "2");
   await onglet(page, "journal");
   verif((await page.locator(".j-ligne").count()) === 2 && (await etatStocke(page)).jour === "2026-11-04", "23:59 : 2 ajouts le 4 novembre");
   await page.clock.runFor(2 * 60 * 1000); // l'appli reste ouverte ; la minuterie de 30 s voit minuit passer
@@ -361,8 +363,7 @@ console.log("\n7a. Calcul de la dépense");
   // 80 kg, 15 % : repos 370 + 21,6 × 68 = 1838,8 ; × (36,7 − 3,2 + 1,5)/24 = 1838,8 × 1,4583333333333333 = 2681,5833333333333
   verif(proche(await dep(), 2681.5833333333333), "80 kg, 15 % de masse grasse, sans activité : 2681,58 kcal");
   // Marche 6,2 km : 6,2 × (3,8 − 1,5) × 80 / 5 = 228,16
-  await regler(page, "km", "1", 6);
-  await regler(page, "km", "0.1", 2);
+  await saisir(page, "a-km", "6,2");
   verif(proche(await dep(), 2681.5833333333333 + 228.16), "+ 6,2 km de marche : + 228,16 kcal");
   // Séances (80 kg) : séries × 3,5 min / 60 × (3,5 − 1,5) × 80
   const seances = { pecs_epaules: 112, dos_epaules: 112, jambes: 93.33333333333333, jambes_epaules: 149.33333333333334 };
@@ -403,9 +404,7 @@ console.log("\n7a. Calcul de la dépense");
   }
   const r = await coller("liste de courses : pain, œufs");
   verif(r.km === "7.5" && r.pas === "10432" && r.msg.includes("non reconnu"), "texte invalide : rien ne change, message clair", JSON.stringify(r));
-  await page.screenshot({ path: join(captures, "activite-clair.png"), fullPage: true });
   await onglet(page, "poids");
-  await page.screenshot({ path: join(captures, "poids-clair.png"), fullPage: true });
   await ctx.close();
 }
 
@@ -455,7 +454,6 @@ console.log("\n7c. Affichage à 375 px, cibles de 48 px, captures");
     if (o === "aliments") await toucher(page.locator('.aliment[data-id="cote_porc"] .al-nom'));
     await page.locator(`#vue-${o} details`).evaluateAll((ds) => ds.forEach((d) => (d.open = true))); // aides et sources dépliées
     await controle(o);
-    await page.screenshot({ path: join(captures, `${o}-375.png`), fullPage: o !== "aliments" });
   }
   verif((await page.locator(".courbe path.c-moy").count()) === 1 && (await page.locator(".courbe circle").count()) === 4, "courbe SVG : 4 pesées et la moyenne 7 jours");
   verif((await page.locator("#vue-poids").textContent()).includes("créatine"), "note sur la créatine sous la courbe");
@@ -466,7 +464,6 @@ console.log("\n7c. Affichage à 375 px, cibles de 48 px, captures");
   verif((await page.locator('#feuille .fiche-ligne[data-cle="vitC"]').textContent()).includes("Estimé"), "fiche pain : vitamine C « Estimé »");
   verif((await page.locator("#feuille .fiche-ligne").count()) === FOODS.nutriments.length, `fiche : les ${FOODS.nutriments.length} nutriments suivis`);
   verif((await page.locator('#feuille .fiche-ligne[data-cle="vitB8"]').textContent()).includes("absente de Ciqual"), "fiche : biotine « absente de Ciqual »");
-  await page.screenshot({ path: join(captures, "fiche-ouverte.png") });
   await ctx.close();
 }
 
@@ -477,10 +474,8 @@ console.log("\n7d. Thème sombre");
   await ajouter(page, "kiwi_jaune", 2);
   await ajouter(page, "lapin", 300);
   const fond = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
-  verif(fond === "rgb(17, 20, 18)", "fond sombre appliqué", fond);
-  await page.screenshot({ path: join(captures, "aliments-sombre.png") });
+  verif(fond === "rgb(22, 21, 20)", "fond sombre appliqué", fond);
   await onglet(page, "bilan");
-  await page.screenshot({ path: join(captures, "bilan-sombre.png"), fullPage: true });
   await ctx.close();
 }
 
@@ -595,6 +590,112 @@ console.log("\n7f. Unités d'affichage, teneurs brutes, textes visibles");
   verif(!(await page.locator("#vue-bilan").textContent()).includes("Pour éditer ce fichier"), "Bilan : le champ « format » de references.json n'est pas affiché");
   await ctx.close();
 }
+
+console.log("\n7h. Saisie au clavier (pas, distance, poids), zoom au double toucher");
+{
+  const { ctx, page } = await nouveauContexte();
+  await ouvrir(page);
+  await onglet(page, "activite");
+  // Valeurs valides, virgule et point, puis rechargement.
+  await saisir(page, "a-km", "6,25");
+  await saisir(page, "a-pas", "8 432");
+  verif((await page.locator("#a-km").getAttribute("data-valeur")) === "6.25" && (await page.locator("#a-km").inputValue()) === "6,25", "distance « 6,25 » enregistrée");
+  verif((await page.locator("#a-pas").getAttribute("data-valeur")) === "8432", "pas « 8 432 » enregistrés");
+  // Enregistrement à la perte du focus (sans Entrée) : on tape puis on touche ailleurs.
+  await toucher(page.locator("#a-km"));
+  await page.locator("#a-km").fill("7.5");
+  await toucher(page.locator("#vue-activite h2").first());
+  verif((await etatStocke(page)).activite.km === 7.5, "distance « 7.5 » (point) enregistrée à la perte du focus");
+  await peser(page, "81.4");
+  verif((await etatStocke(page)).pesees.at(-1).kg === 81.4, "poids « 81.4 » (point) enregistré");
+  await peser(page, 81.6);
+  verif((await etatStocke(page)).pesees.length === 1 && (await etatStocke(page)).pesees[0].kg === 81.6, "poids « 81,6 » (virgule) : remplace la pesée du jour");
+  await page.reload();
+  await page.locator(".aliment").first().waitFor({ state: "attached" });
+  verif((await page.locator("#a-km").inputValue()) === "7,5" && (await page.locator("#a-pas").inputValue()) === "8432", "après rechargement : 7,5 km et 8432 pas dans les champs");
+  verif((await page.locator("#p-brouillon").inputValue()) === "81,6", "après rechargement : poids prérempli 81,6");
+  // Saisies invalides : message clair, rien d'enregistré, rien d'effacé.
+  const avant = JSON.stringify(await etatStocke(page));
+  await onglet(page, "activite");
+  for (const [id, texte, motif] of [["a-km", "abc", "nombre"], ["a-km", "301", "entre 0 et 300"], ["a-pas", "12,5", "entier"], ["a-pas", "250000", "entre 0 et 200"]]) {
+    await saisir(page, id, texte);
+    const msg = (await page.locator(`#${id}-err`).textContent()) || "";
+    verif((await page.locator(`#${id}-err`).isVisible()) && msg.toLowerCase().includes(motif) && (await page.locator(`#${id}`).inputValue()) === texte, `« ${texte} » refusé : message « ${msg} », texte gardé`);
+  }
+  verif(JSON.stringify(await etatStocke(page)) === avant, "saisies invalides : rien n'est enregistré");
+  await saisir(page, "a-km", "5");
+  verif(await page.locator("#a-km-err").isHidden(), "valeur corrigée : le message disparaît");
+  await onglet(page, "poids");
+  const champPoids = page.locator("#p-brouillon");
+  await toucher(champPoids);
+  await champPoids.fill("25");
+  await toucher(page.locator('[data-act="enregistrer-poids"]'));
+  verif((await page.locator("#p-brouillon-err").textContent()).includes("entre 30 et 300") && (await etatStocke(page)).pesees[0].kg === 81.6, "poids 25 kg refusé : message, pesée inchangée");
+  // Police des champs ≥ 16 px (sinon iOS zoome) et pas de zoom au double toucher.
+  const polices = await page.locator("input").evaluateAll((els) => els.map((e) => parseFloat(getComputedStyle(e).fontSize)));
+  verif(polices.length === 3 && polices.every((t) => t >= 16), `police des 3 champs ≥ 16 px (${polices.join(", ")} px)`);
+  const touch = await page.evaluate(() => ({
+    html: getComputedStyle(document.documentElement).touchAction,
+    boutons: [...document.querySelectorAll("button, input, summary")].filter((e) => getComputedStyle(e).touchAction !== "manipulation").length,
+    total: document.querySelectorAll("button").length,
+    viewport: document.querySelector('meta[name="viewport"]').content,
+  }));
+  verif(touch.html === "manipulation" && touch.boutons === 0 && touch.total > 100, `touch-action: manipulation sur html et les ${touch.total} boutons`);
+  verif(!touch.viewport.includes("user-scalable") && !touch.viewport.includes("maximum-scale"), "zoom à deux doigts non bloqué (viewport)");
+  await ctx.close();
+}
+
+console.log("\n8. Captures (390 × 844, plein écran, clair et sombre)");
+for (const theme of ["clair", "sombre"]) {
+  const { ctx, page } = await nouveauContexte({ colorScheme: theme === "clair" ? "light" : "dark" });
+  await page.clock.install({ time: new Date(2026, 10, 1, 8, 0, 0) });
+  await ouvrir(page);
+  for (const [j, kg] of [[1, 80.4], [2, 80.1], [3, 80.6], [4, 79.9], [5, 79.7]]) {
+    await page.clock.setSystemTime(new Date(2026, 10, j, 8, 0, 0));
+    await peser(page, kg);
+  }
+  await page.clock.setSystemTime(new Date(2026, 10, 5, 12, 30, 0));
+  await onglet(page, "aliments");
+  await ajouter(page, "oeuf", 2);
+  await ajouter(page, "pain_complet", 2);
+  await ajouter(page, "avocat", 0.5);
+  await ajouter(page, "filet_poulet", 200);
+  await ajouter(page, "riz_complet", 100);
+  await ajouter(page, "kiwi_vert", 2);
+  await onglet(page, "activite");
+  await saisir(page, "a-pas", "8432");
+  await saisir(page, "a-km", "6,2");
+  await toucher(page.locator('[data-act="seance"][data-id="jambes"]'));
+  await page.clock.runFor(10000); // le dernier toast disparaît
+  const capture = async (nom) => {
+    // L'horloge simulée fige les animations : on retire le reflet d'ajout encore affiché.
+    await page.evaluate(() => document.querySelectorAll(".flash").forEach((b) => b.classList.remove("flash")));
+    await page.screenshot({ path: join(captures, `${theme}-${nom}.png`) });
+  };
+  await onglet(page, "aliments");
+  await toucher(page.locator('.aliment[data-id="filet_poulet"] .al-nom'));
+  await page.locator('.categorie[data-cat="Viandes"]').scrollIntoViewIfNeeded();
+  await page.evaluate(() => window.scrollBy(0, -40));
+  await capture("aliments");
+  for (const o of ["journal", "bilan", "activite", "poids"]) {
+    await onglet(page, o);
+    await capture(o);
+    if (o === "bilan") {
+      // Deuxième vue du Bilan : les nutriments avec leurs barres.
+      await page.locator("#vue-bilan .carte").nth(1).evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 120));
+      await capture("bilan-nutriments");
+    }
+  }
+  await onglet(page, "aliments");
+  await toucher(page.locator('.al-info[data-id="oeuf"]'));
+  await capture("fiche");
+  await toucher(page.locator('#feuille [data-act="fermer"]'));
+  await onglet(page, "journal");
+  await toucher(page.locator('[data-act="raz"]'));
+  await capture("confirmation");
+  await ctx.close();
+}
+verif(true, "captures écrites dans outils/captures/");
 
 console.log("\n7g. Stockage indisponible");
 {
