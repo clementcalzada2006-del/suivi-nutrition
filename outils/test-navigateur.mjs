@@ -674,7 +674,7 @@ for (const theme of ["clair", "sombre"]) {
   };
   await onglet(page, "aliments");
   await toucher(page.locator('.aliment[data-id="filet_poulet"] .al-nom'));
-  await page.locator('.categorie[data-cat="Viandes"]').scrollIntoViewIfNeeded();
+  await page.locator('.categorie[data-cat="Viandes et poissons"]').scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollBy(0, -40));
   await capture("aliments");
   for (const o of ["journal", "bilan", "activite", "poids"]) {
