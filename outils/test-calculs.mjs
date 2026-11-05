@@ -154,5 +154,69 @@ const tab = C.tableauPesees(pes);
 verif(tab[0].variation === null && tab[1].variation === 1 && tab[2].variation === -2, "variations");
 verif(tab[1].moyenne7 === 80.5 && tab[2].moyenne7 === 79, "moyennes sur 7 jours");
 
+console.log("\nBilan de la semaine");
+{
+  // Œuf dur (Ciqual 22010), 50 g : 134 kcal, 13,5 g P, 0,52 g G, 8,62 g L pour 100 g → 67 kcal et 6,75 g P par œuf.
+  // Masse grasse 15 %, sans activité, 80 kg : 370 + 21,6 × 68 = 1838,8 × 35/24 = 2681,5833 kcal.
+  const oeufs = (n) => [{ id: `o${n}`, alimentId: "oeuf", quantite: n, heure: "2026-11-02T08:00:00.000Z" }];
+  const etat = {
+    jour: "2026-11-05",
+    journal: oeufs(1),
+    activite: { pas: 0, km: 0, seance: null, creatine: true },
+    pesees: [{ date: "2026-11-02", kg: 80 }, { date: "2026-11-05", kg: 79.5 }],
+    reglages: { masseGrasse: 15 },
+  };
+  const historique = [
+    { jour: "2026-10-31", motif: "minuit", journal: oeufs(3), activite: { pas: 0, km: 0, seance: null, creatine: false } },
+    { jour: "2026-11-02", motif: "minuit", journal: oeufs(2), activite: { pas: 4000, km: 0, seance: null, creatine: true } },
+    { jour: "2026-11-03", motif: "manuel", journal: oeufs(6), activite: { pas: 0, km: 0, seance: null, creatine: false } },
+    { jour: "2026-11-04", motif: "minuit", journal: oeufs(2), activite: { pas: 1, km: 1, seance: null, creatine: false } },
+    { jour: "2026-11-04", motif: "minuit", journal: oeufs(2), activite: { pas: 7000, km: 5, seance: "jambes", creatine: true } },
+  ];
+  const b = C.bilanSemaine({ lundi: "2026-11-02", aujourdhui: "2026-11-05", etat, historique, foods, activite });
+  const [lu, ma, me, je, ve, sa, di] = b.jours;
+  verif(b.jours.map((j) => j.nomJour).join() === "lundi,mardi,mercredi,jeudi,vendredi,samedi,dimanche" && b.dimanche === "2026-11-08", "7 jours, du lundi au dimanche");
+  verif(C.lundiDe("2026-11-08") === "2026-11-02" && C.lundiDe("2026-11-02") === "2026-11-02" && C.lundiDe("2026-11-05") === "2026-11-02", "lundi de la semaine (dimanche, lundi, jeudi)");
+  verif(C.estDimanche("2026-11-08") && !C.estDimanche("2026-11-07"), "dimanche reconnu");
+  // Lundi : 2 œufs = 134 kcal ; dépense 2681,5833 ; solde 134 − 2681,5833 = −2547,5833.
+  verif(lu.etat === "rempli" && lu.totaux.energie === 134 && proche(lu.depense, 2681.5833333333333) && proche(lu.solde, -2547.5833333333333) && lu.poids === 80, "lundi : 134 kcal, solde −2547,58, pesée 80 kg");
+  // Mardi : seule une archive « manuel » (6 œufs) → exclue → non rempli.
+  verif(ma.etat === "non rempli" && ma.solde === null && ma.totaux.energie === 0, "mardi : archive « manuel » exclue → non rempli");
+  // Mercredi : deux archives « minuit » → 2 + 2 œufs = 268 kcal ; activité de la dernière : 5 km, jambes.
+  // Dépense : 2681,5833 + marche 5 × 2,3 × 80 / 5 = 184 + jambes 35 min / 60 × 2 × 80 = 93,3333 → 2958,9167 ; solde −2690,9167.
+  verif(me.totaux.energie === 268 && me.activite.km === 5 && me.seanceNom === "Jambes" && proche(me.depense, 2958.9166666666665) && proche(me.solde, -2690.9166666666665), "mercredi : 2 archives « minuit » concaténées (268 kcal), solde −2690,92");
+  // Jeudi (aujourd'hui) : état en cours, 1 œuf = 67 kcal ; pesée 79,5 kg : 370 + 21,6 × 79,5 × 0,85 = 1829,62 × 35/24 = 2668,1958 ; solde −2601,1958.
+  verif(je.etat === "rempli" && je.totaux.energie === 67 && je.poids === 79.5 && proche(je.depense, 2668.195833333333) && proche(je.solde, -2601.195833333333) && je.activite.creatine, "jeudi (aujourd'hui) : état en cours, 67 kcal, solde −2601,20");
+  verif([ve, sa, di].every((j) => j.etat === "à venir" && j.depense === null), "vendredi à dimanche : à venir");
+  // Totaux : 134 + 268 + 67 = 469 kcal ; dépense 8308,6958 ; solde −7839,6958 ; moyenne −2613,2319 ; protéines 47,25 / 3 = 15,75.
+  const t = b.totaux;
+  verif(t.jours === 3 && t.mange === 469 && proche(t.depense, 8308.695833333333) && proche(t.solde, -7839.695833333333) && proche(t.soldeMoyen, -2613.231944444444) && proche(t.proteinesMoyennes, 15.75), "totaux : 3 jours, 469 kcal, solde −7839,70, moyenne −2613,23, 15,75 g de protéines");
+  verif(b.poids.premiere.kg === 80 && b.poids.derniere.kg === 79.5 && b.poids.difference === -0.5, "poids : 80 → 79,5 kg (−0,5)");
+  verif(C.verdictSemaine(b) === "Déficit de 7 840 kcal sur la semaine (3 jours remplis)", "verdict : déficit de 7 840 kcal", C.verdictSemaine(b));
+  // Semaine précédente : le samedi 31 a un journal mais aucune pesée à cette date ou avant → dépense inconnue, non compté.
+  const b0 = C.bilanSemaine({ lundi: "2026-10-26", aujourdhui: "2026-11-05", etat, historique, foods, activite });
+  verif(b0.jours[5].etat === "dépense inconnue" && b0.totaux.jours === 0 && b0.totaux.solde === 0, "jour sans pesée : « dépense inconnue », non compté");
+  verif(C.verdictSemaine(b0).startsWith("Aucun jour rempli"), "semaine sans jour compté : verdict explicite");
+  // Surplus : 40 œufs aujourd'hui = 2680 kcal… on prend 60 œufs (4020 kcal) : 4020 − 2681,5833 = +1338,42.
+  const bs = C.bilanSemaine({ lundi: "2026-11-02", aujourdhui: "2026-11-02", etat: { ...etat, jour: "2026-11-02", journal: oeufs(60) }, historique: [], foods, activite });
+  verif(proche(bs.totaux.solde, 1338.4166666666667) && C.verdictSemaine(bs) === "Surplus de 1 338 kcal sur la semaine (1 jour rempli)", "surplus : signe +, verdict « Surplus » au singulier", C.verdictSemaine(bs));
+
+  // CSV
+  const csv = C.csvSemaine(b, { genereLe: "2026-11-05 20:15", profil: "Homme adulte.", masseGrasse: 15 });
+  const lignes = csv.slice(1).split("\r\n");
+  verif(csv.charCodeAt(0) === 0xfeff, "CSV : commence par le BOM UTF-8");
+  verif(lignes.length === 20 && lignes.at(-1) === "", "CSV : 19 lignes (5 d'en-tête, vide, titres, 7 jours, vide, total, moyenne, poids, verdict)", String(lignes.length));
+  verif(lignes[6].split(";").length === 14 && lignes[6].startsWith("Date;Jour;État;kcal mangées;Dépense (kcal);Solde (kcal);Protéines (g)"), "CSV : 14 colonnes séparées par « ; »");
+  // Lundi : 134 ; 2682 ; −2548 ; P 13,5 ; G 0,52 → 0,5 ; L 8,62 → 8,6 ; 4000 pas ; 0,00 km ; créatine oui ; 80,0 kg.
+  verif(lignes[7] === "2026-11-02;lundi;rempli;134;2682;-2548;13,5;0,5;8,6;4000;0,00;;oui;80,0", "CSV : ligne du lundi, virgule décimale", lignes[7]);
+  verif(lignes[8] === "2026-11-03;mardi;non rempli;;2682;;;;;0;0,00;;non;", "CSV : mardi non rempli (dépense affichée, pas de solde)", lignes[8]);
+  verif(lignes[9].includes(";Jambes;") && lignes[13].startsWith("2026-11-08;dimanche;à venir;"), "CSV : séance du mercredi, dimanche à venir");
+  verif(lignes[15] === "Total (jours comptés);;3 jours;469;8309;-7840", "CSV : total", lignes[15]);
+  verif(lignes[16] === "Moyenne par jour;;;156;2770;-2613;15,8;0,6;10,1", "CSV : moyenne", lignes[16]);
+  verif(lignes[17] === "Poids;2026-11-02 : 80,0 kg;2026-11-05 : 79,5 kg;-0,5 kg", "CSV : évolution du poids", lignes[17]);
+  verif(lignes[18] === "Verdict;Déficit de 7 840 kcal sur la semaine (3 jours remplis)", "CSV : verdict", lignes[18]);
+  verif(!/\d\.\d/.test(csv.replace(/\d{4}-\d{2}-\d{2}/g, "")), "CSV : aucun point décimal");
+}
+
 console.log(echecs ? `\nÉCHEC : ${echecs} sur ${total} vérifications` : `\nOK : ${total} vérifications des calculs`);
 process.exit(echecs ? 1 : 0);

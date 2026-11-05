@@ -24,7 +24,7 @@ const CHAMPS = {
 };
 const CROIX = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
 
-const ui = { saisie: {}, onglet: "aliments", replies: new Set(), ouvert: null, poids: null, manquantsOuverts: new Set(), presse: "" };
+const ui = { bilanVue: "jour", lundi: null, saisie: {}, onglet: "aliments", replies: new Set(), ouvert: null, poids: null, manquantsOuverts: new Set(), presse: "" };
 
 // ---------- Démarrage ----------
 
@@ -346,7 +346,98 @@ function razManuelle() {
 
 // ---------- Bilan ----------
 
-function rendreBilan({ t, dep, poids }) {
+// Sélecteur « Jour | Semaine » en haut du Bilan.
+function selecteurBilan() {
+  const b = (vue, nom) => `<button data-act="bilan-vue" data-vue="${vue}" aria-pressed="${ui.bilanVue === vue}">${nom}</button>`;
+  return `<div class="segment" role="group" aria-label="Période du bilan">${b("jour", "Jour")}${b("semaine", "Semaine")}</div>`;
+}
+
+function rendreBilan(ctx) {
+  if (ui.bilanVue === "semaine") return rendreSemaine();
+  rendreBilanJour(ctx);
+  $("#vue-bilan").insertAdjacentHTML("afterbegin", selecteurBilan());
+}
+
+// ---------- Bilan de la semaine ----------
+
+function bilanCourant() {
+  const lundi = ui.lundi ?? C.lundiDe(etat.jour);
+  return C.bilanSemaine({ lundi, aujourdhui: etat.jour, etat, historique, foods, activite });
+}
+
+function rendreSemaine() {
+  const b = bilanCourant();
+  const t = b.totaux;
+  const kcal = (v) => C.formater(v, "kcal");
+  const signe = (v) => (v > 0 ? "+" : v < 0 ? "−" : "") + kcal(Math.abs(v));
+  const courte = (j) => enDate(j).toLocaleDateString("fr-FR", { day: "numeric", month: "long" });
+  const lignes = b.jours
+    .map((j) => {
+      const tete = `<span class="sj-jour">${j.nomJour[0].toUpperCase() + j.nomJour.slice(1)} ${enDate(j.date).getDate()}</span>`;
+      if (j.etat !== "rempli") {
+        const detail = j.etat === "dépense inconnue" ? `${kcal(j.totaux.energie)} kcal mangées · dépense inconnue (pas de pesée)` : j.etat;
+        return `<li class="sj sj-vide" data-date="${j.date}" data-etat="${j.etat}"><div class="sj-tete">${tete}<span class="sj-etat">${esc(j.etat)}</span></div>
+          ${j.etat === "dépense inconnue" ? `<div class="sj-detail">${detail}</div>` : ""}</li>`;
+      }
+      return `<li class="sj" data-date="${j.date}" data-etat="rempli" data-solde="${j.solde}">
+        <div class="sj-tete">${tete}<span class="sj-solde ${j.solde < 0 ? "deficit" : "surplus"}">${signe(j.solde)}</span></div>
+        <div class="sj-detail"><span>${kcal(j.totaux.energie)} mangées</span><span>${kcal(j.depense)} dépensées</span><span class="c-prot">P ${C.formater(j.totaux.proteines, "g")} g</span></div>
+      </li>`;
+    })
+    .join("");
+  const p = b.poids;
+  const poids = p.premiere
+    ? p.derniere
+      ? `Poids : ${C.formater(p.premiere.kg, "g")} → ${C.formater(p.derniere.kg, "g")} kg (${p.difference > 0 ? "+" : p.difference < 0 ? "−" : "±"}${C.formater(Math.abs(p.difference), "g")} kg).`
+      : `Une seule pesée cette semaine : ${C.formater(p.premiere.kg, "g")} kg.`
+    : "Aucune pesée cette semaine.";
+  const courante = b.lundi === C.lundiDe(etat.jour);
+  $("#vue-bilan").innerHTML = `${selecteurBilan()}
+    <div class="semaine-nav">
+      <button class="btn-icone" data-act="semaine" data-d="-7" aria-label="Semaine précédente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h2 class="semaine-titre">Du ${b.lundi.slice(5, 7) === b.dimanche.slice(5, 7) ? enDate(b.lundi).getDate() : courte(b.lundi)} au ${courte(b.dimanche)}</h2>
+      <button class="btn-icone" data-act="semaine" data-d="7" aria-label="Semaine suivante"${courante ? " disabled" : ""}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+    ${C.estDimanche(etat.jour) && courante ? '<p class="dimanche">C\'est dimanche : exporte ton bilan de la semaine.</p>' : ""}
+    <ul class="semaine">${lignes}</ul>
+    <section class="verdict${t.jours ? (t.solde < 0 ? " deficit" : " surplus") : ""}" data-solde="${t.jours ? t.solde : ""}" data-jours="${t.jours}">
+      <p class="verdict-texte">${esc(C.verdictSemaine(b))}</p>
+      ${t.jours ? `<p>Soit ${signe(t.soldeMoyen)} kcal par jour en moyenne · ${kcal(t.mange)} mangées pour ${kcal(t.depense)} dépensées · protéines ${C.formater(t.proteinesMoyennes, "g")} g par jour.</p>` : ""}
+      <p>${poids}</p>
+    </section>
+    <p class="aide">La dépense est une estimation (masse grasse : réglage actuel). Les jours non remplis, à venir ou sans pesée ne comptent pas.</p>
+    <button class="btn btn-large btn-principal" data-act="exporter">Exporter la semaine (Excel)</button>`;
+}
+
+// Export CSV : menu de partage de l'iPhone si possible (Fichiers, Excel, Numbers), sinon téléchargement.
+async function exporterSemaine() {
+  const b = bilanCourant();
+  const maintenant = new Date();
+  const csv = C.csvSemaine(b, {
+    genereLe: `${C.jourLocal(maintenant)} ${maintenant.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}`,
+    profil: refs.profil.split(". ")[0] + ".",
+    masseGrasse: etat.reglages.masseGrasse,
+  });
+  const nom = `bilan-semaine-${b.lundi}.csv`;
+  const fichier = new File([csv], nom, { type: "text/csv;charset=utf-8" });
+  if (navigator.canShare?.({ files: [fichier] })) {
+    try {
+      await navigator.share({ files: [fichier], title: `Bilan de la semaine du ${b.lundi}` });
+      return;
+    } catch (e) {
+      if (e.name === "AbortError") return; // partage annulé : pas une erreur
+    }
+  }
+  const lien = document.createElement("a");
+  lien.href = URL.createObjectURL(fichier);
+  lien.download = nom;
+  document.body.append(lien);
+  lien.click();
+  lien.remove();
+  setTimeout(() => URL.revokeObjectURL(lien.href), 10000);
+}
+
+function rendreBilanJour({ t, dep, poids }) {
   const contexteRef = { poids, depense: dep ? dep.total : null };
   const groupes = GROUPES_BILAN.map(({ groupe, titre }) => {
     const lignes = foods.nutriments.filter((n) => n.groupe === groupe).map((n) => ligneBilan(n, t[n.cle], C.referenceConcrete(refs.nutriments[n.cle], contexteRef)));
@@ -603,6 +694,18 @@ const dateCourte = (j) => enDate(j).toLocaleDateString("fr-FR", { day: "2-digit"
 // ---------- Gestes ----------
 
 const ACTIONS = {
+  "bilan-vue": (b) => {
+    ui.bilanVue = b.dataset.vue;
+    ui.lundi = null; // retour à la semaine en cours
+    rafraichir();
+  },
+  semaine: (b) => {
+    const actuel = C.lundiDe(etat.jour);
+    const l = C.decalerJour(ui.lundi ?? actuel, Number(b.dataset.d));
+    ui.lundi = l > actuel ? actuel : l; // pas après la semaine en cours
+    rafraichir();
+  },
+  exporter: () => exporterSemaine(),
   onglet: (b) => allerOnglet(b.dataset.onglet),
   categorie: (b) => {
     const ouvert = b.getAttribute("aria-expanded") === "true";

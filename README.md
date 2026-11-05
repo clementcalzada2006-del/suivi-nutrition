@@ -75,6 +75,16 @@ Une appli web ne peut pas lire l'app Santé. Un Raccourci copie les chiffres, l'
 5. Action **Copier dans le presse-papiers**.
 6. Lancer le raccourci, ouvrir l'appli, onglet Activité → **Importer depuis le Raccourci**. Le texte peut aussi être « Pas : 8432 ; Distance : 6,2 km » ou dans un autre ordre. À défaut, tape les pas et la distance dans les champs (virgule ou point).
 
+## Bilan de la semaine et export
+
+Onglet Bilan → **Semaine** : une ligne par jour, du lundi au dimanche (kcal mangées, dépense estimée, solde, protéines), puis le verdict de la semaine (déficit ou surplus total, solde moyen par jour, évolution du poids). Les flèches montrent les semaines précédentes.
+
+- Seuls comptent les jours **remplis** (journal non vide) dont la dépense est connue (une pesée à cette date ou avant). Les jours non remplis, à venir ou sans pesée sont affichés mais pas comptés.
+- Les jours passés viennent de l'archive faite à minuit. Les copies faites par une remise à zéro manuelle ne comptent pas. Aujourd'hui vient de la journée en cours.
+- La dépense est une estimation (Cunningham × facteur sédentaire FAO + marche + salle) ; la masse grasse utilisée est le réglage actuel pour tous les jours.
+
+**Exporter la semaine (Excel)** crée `bilan-semaine-AAAA-MM-JJ.csv` (date du lundi) : UTF-8 avec BOM, séparateur `;`, virgule décimale, pour s'ouvrir directement dans Excel en français. Sur l'iPhone, le menu de partage s'ouvre : « Enregistrer dans Fichiers », Excel ou Numbers. Ailleurs, le fichier est téléchargé. Le dimanche, le Bilan de la semaine le rappelle.
+
 ## Mettre à jour le site
 
 Après toute modification (code ou `donnees/*.json`) : `npm test`, puis changer `VERSION` dans `sw.js`, sinon le téléphone garde l'ancienne version en cache. Publier ensuite les fichiers du site (sans `sources/`, `node_modules/`, `outils/captures/`, déjà exclus par `.gitignore`).

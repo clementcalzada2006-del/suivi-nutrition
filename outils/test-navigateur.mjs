@@ -41,7 +41,8 @@ async function nouveauContexte(opts = {}) {
   const ctx = await nav.newContext({ ...TELEPHONE, ...opts });
   ctx.on("request", (r) => {
     const u = new URL(r.url());
-    if (!["127.0.0.1", "localhost"].includes(u.hostname) && !u.protocol.startsWith("data")) requetesExternes.push(r.url());
+    // Seules les requêtes réseau comptent (pas data:, blob:, ni les pages internes du navigateur comme edge://downloads).
+    if (/^(https?|wss?):$/.test(u.protocol) && !["127.0.0.1", "localhost"].includes(u.hostname)) requetesExternes.push(r.url());
   });
   const page = await ctx.newPage();
   surveiller(page);
@@ -696,6 +697,114 @@ for (const theme of ["clair", "sombre"]) {
   await ctx.close();
 }
 verif(true, "captures écrites dans outils/captures/");
+
+console.log("\n9. Bilan de la semaine et export");
+// Semaine du lundi 2 au dimanche 8 novembre 2026, remplie jour après jour, appli ouverte (passages de minuit).
+// Œuf dur 50 g = 67 kcal et 6,75 g de protéines. 80 kg, 15 % : journée sédentaire = 1838,8 × 35/24 = 2681,5833 kcal.
+async function construireSemaine(page) {
+  await page.clock.install({ time: new Date(2026, 10, 2, 8, 0, 0) });
+  await ouvrir(page);
+  await peser(page, 80);
+  await onglet(page, "aliments");
+  await ajouter(page, "oeuf", 2); // lundi : 134 kcal
+  const lendemain = async (j) => {
+    await page.clock.setSystemTime(new Date(2026, 10, j, 8, 0, 0));
+    await page.clock.runFor(31000); // la minuterie de 30 s voit le changement de jour
+  };
+  await lendemain(3); // mardi : rien (non rempli)
+  await lendemain(4); // mercredi : 4 œufs, 5 km
+  await onglet(page, "aliments");
+  await ajouter(page, "oeuf", 4);
+  await onglet(page, "activite");
+  await saisir(page, "a-km", "5");
+  await lendemain(5); // jeudi (aujourd'hui) : pesée 79,5 kg, 1 œuf
+  await peser(page, 79.5);
+  await onglet(page, "aliments");
+  await ajouter(page, "oeuf", 1);
+  await page.clock.runFor(10000);
+  await onglet(page, "bilan");
+  await toucher(page.locator('[data-act="bilan-vue"][data-vue="semaine"]'));
+}
+{
+  const { ctx, page } = await nouveauContexte();
+  // Pas de menu de partage dans ce navigateur de test : l'export passe par le téléchargement.
+  await ctx.addInitScript(() => Object.defineProperty(Navigator.prototype, "canShare", { value: undefined, configurable: true }));
+  await construireSemaine(page);
+  const jours = await page.locator(".semaine .sj").evaluateAll((els) => els.map((e) => ({ date: e.dataset.date, etat: e.dataset.etat, solde: e.dataset.solde ? Number(e.dataset.solde) : null })));
+  verif(jours.length === 7 && jours.map((j) => j.etat).join() === "rempli,non rempli,rempli,rempli,à venir,à venir,à venir", "7 lignes : lundi rempli, mardi non rempli, mercredi et jeudi remplis, 3 à venir", jours.map((j) => j.etat).join());
+  // Lundi : 134 − 2681,5833 = −2547,5833 ; mercredi : 268 − (2681,5833 + 5 × 2,3 × 80 / 5 = 184) = −2597,5833 ;
+  // jeudi : 67 − 1829,62 × 35/24 (79,5 kg) = 67 − 2668,1958 = −2601,1958.
+  verif(proche(jours[0].solde, -2547.5833333333333) && proche(jours[2].solde, -2597.5833333333333) && proche(jours[3].solde, -2601.195833333333), "soldes du lundi, du mercredi et du jeudi");
+  verif((await page.locator('.sj[data-date="2026-11-02"] .sj-solde.deficit').textContent()) === "−2 548", "lundi : « −2 548 » en vert (déficit)");
+  // Total : 469 − (2681,5833 + 2865,5833 + 2668,1958 = 8215,3625) = −7746,3625 ; moyenne −2582,12 ; protéines 47,25 / 3 = 15,75 g.
+  const verdict = page.locator(".verdict");
+  verif(proche(Number(await verdict.getAttribute("data-solde")), -7746.3625) && (await verdict.getAttribute("data-jours")) === "3", "solde de la semaine −7746,36 sur 3 jours");
+  verif((await verdict.locator(".verdict-texte").textContent()) === "Déficit de 7 746 kcal sur la semaine (3 jours remplis)", "verdict « Déficit de 7 746 kcal sur la semaine (3 jours remplis) »");
+  const suite = await verdict.textContent();
+  verif(suite.includes("−2 582 kcal par jour") && suite.includes("15,8 g par jour") && suite.includes("80,0 → 79,5 kg (−0,5 kg)"), "moyenne par jour, protéines et poids", suite);
+  verif((await page.locator("#vue-bilan .aide").textContent()).includes("estimation") && (await page.locator(".dimanche").count()) === 0, "phrase sur l'estimation ; pas de rappel du dimanche un jeudi");
+  verif(await page.locator('[data-act="semaine"][data-d="7"]').isDisabled(), "pas de semaine après la semaine en cours");
+  await page.locator(".verdict").evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().bottom + window.scrollY - window.innerHeight + 80)); // verdict visible
+  await page.screenshot({ path: join(captures, "clair-semaine.png") });
+  // Navigation entre semaines.
+  await toucher(page.locator('[data-act="semaine"][data-d="-7"]'));
+  verif((await page.locator(".semaine-titre").textContent()) === "Du 26 octobre au 1 novembre" && (await page.locator('.sj[data-etat="non rempli"]').count()) === 7, "semaine précédente : 7 jours non remplis");
+  verif((await page.locator(".verdict-texte").textContent()).startsWith("Aucun jour rempli"), "semaine précédente : pas de verdict chiffré");
+  await toucher(page.locator('[data-act="semaine"][data-d="7"]'));
+  verif((await page.locator(".semaine-titre").textContent()) === "Du 2 au 8 novembre", "retour à la semaine en cours");
+  // Le jour reste accessible.
+  await toucher(page.locator('[data-act="bilan-vue"][data-vue="jour"]'));
+  verif((await page.locator('#vue-bilan .ligne-nut[data-cle="energie"]').getAttribute("data-total")) === "67", "« Jour » : bilan du jour (1 œuf = 67 kcal)");
+  await toucher(page.locator('[data-act="bilan-vue"][data-vue="semaine"]'));
+
+  // Export : téléchargement d'un CSV pour Excel.
+  const [dl] = await Promise.all([page.waitForEvent("download"), toucher(page.locator('[data-act="exporter"]'))]);
+  verif(dl.suggestedFilename() === "bilan-semaine-2026-11-02.csv", "fichier « bilan-semaine-2026-11-02.csv »", dl.suggestedFilename());
+  const octets = readFileSync(await dl.path());
+  verif(octets[0] === 0xef && octets[1] === 0xbb && octets[2] === 0xbf, "UTF-8 avec BOM");
+  const lignes = octets.toString("utf8").slice(1).split("\r\n");
+  verif(lignes.length === 20 && lignes[6].split(";").length === 14, "19 lignes, 14 colonnes séparées par « ; »");
+  verif(lignes[7] === "2026-11-02;lundi;rempli;134;2682;-2548;13,5;0,5;8,6;0;0,00;;non;80,0", "ligne du lundi", lignes[7]);
+  verif(lignes[9].startsWith("2026-11-04;mercredi;rempli;268;2866;-2598;27,0;") && lignes[9].includes(";5,00;"), "ligne du mercredi (5 km)", lignes[9]);
+  verif(lignes[15] === "Total (jours comptés);;3 jours;469;8215;-7746", "ligne de total", lignes[15]);
+  verif(lignes[18] === "Verdict;Déficit de 7 746 kcal sur la semaine (3 jours remplis)", "verdict dans le fichier", lignes[18]);
+
+  // iPhone : menu de partage quand il accepte le fichier ; annulation sans erreur ni téléchargement.
+  await page.evaluate(() => {
+    navigator.canShare = () => true;
+    navigator.share = async ({ files }) => {
+      const octets = new Uint8Array(await files[0].arrayBuffer()); // text() retirerait le BOM
+      window.partage = { nom: files[0].name, bom: [...octets.slice(0, 3)].join(), debut: new TextDecoder("utf-8", { ignoreBOM: true }).decode(octets).slice(1, 20) };
+    };
+  });
+  let telechargements = 0;
+  page.on("download", () => telechargements++);
+  await toucher(page.locator('[data-act="exporter"]'));
+  await page.waitForFunction(() => window.partage);
+  const partage = await page.evaluate(() => window.partage);
+  verif(partage.nom === "bilan-semaine-2026-11-02.csv" && partage.bom === "239,187,191" && partage.debut.startsWith("Bilan de la semaine"), "partage : fichier transmis au menu de partage", JSON.stringify(partage));
+  await page.evaluate(() => {
+    navigator.share = async () => {
+      throw new DOMException("annulé", "AbortError");
+    };
+  });
+  await toucher(page.locator('[data-act="exporter"]'));
+  await page.clock.runFor(1000);
+  verif(telechargements === 0, "partage annulé : ni erreur ni téléchargement");
+
+  // Le dimanche : rappel discret.
+  await page.clock.setSystemTime(new Date(2026, 10, 8, 10, 0, 0));
+  await page.clock.runFor(31000);
+  verif((await page.locator(".dimanche").textContent()).includes("exporte ton bilan"), "dimanche : « C'est dimanche : exporte ton bilan de la semaine. »");
+  await ctx.close();
+}
+{
+  const { ctx, page } = await nouveauContexte({ colorScheme: "dark" });
+  await construireSemaine(page);
+  await page.locator(".verdict").evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().bottom + window.scrollY - window.innerHeight + 80));
+  await page.screenshot({ path: join(captures, "sombre-semaine.png") });
+  await ctx.close();
+}
 
 console.log("\n7g. Stockage indisponible");
 {

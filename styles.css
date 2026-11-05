@@ -418,3 +418,42 @@ details[open] summary::after { content: "−"; }
 
 /* Longues références (DOI, URL) : couper n'importe où plutôt que d'élargir la page. */
 .citation, .citation li { overflow-wrap: anywhere; }
+
+/* ---------- Bilan : sélecteur Jour | Semaine ---------- */
+.segment {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; margin: 0 0 22px;
+  background: var(--surface2); border-radius: 10px;
+}
+.segment button {
+  min-height: 48px; border: none; border-radius: 7px; background: none;
+  font-size: 15px; font-weight: 600; color: var(--texte2);
+}
+.segment button[aria-pressed="true"] { background: var(--surface); color: var(--texte); box-shadow: 0 0 0 1px var(--trait); }
+
+/* ---------- Bilan de la semaine ---------- */
+.semaine-nav { display: grid; grid-template-columns: 48px 1fr 48px; align-items: center; gap: 8px; margin-bottom: 14px; }
+.semaine-titre { margin: 0; text-align: center; font-size: 1.2rem; }
+.btn-icone {
+  width: 48px; height: 48px; display: grid; place-items: center; border: 1px solid var(--trait-fort);
+  border-radius: var(--rayon-petit); background: var(--surface); color: var(--texte);
+}
+.btn-icone svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.btn-icone:disabled { opacity: 0.35; cursor: default; }
+.dimanche { margin: 0 0 12px; font-size: 14px; color: var(--texte2); text-align: center; }
+.semaine { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--trait); }
+.sj { padding: 10px 0; border-bottom: 1px solid var(--trait); }
+.sj-tete { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.sj-jour { font-weight: 600; }
+.sj-solde { font-weight: 700; font-variant-numeric: tabular-nums; }
+.sj-solde.deficit { color: var(--min); }
+.sj-solde.surplus { color: var(--max); }
+.sj-detail { display: flex; flex-wrap: wrap; gap: 2px 14px; margin-top: 2px; font-size: 14px; color: var(--texte2); font-variant-numeric: tabular-nums; }
+.sj-vide .sj-jour { color: var(--texte3); }
+.sj-etat { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--texte3); }
+.verdict { margin: 24px 0 8px; padding: 20px; border: 1px solid var(--trait); border-radius: var(--rayon); background: var(--surface); }
+.verdict.deficit { border-left: 3px solid var(--min); }
+.verdict.surplus { border-left: 3px solid var(--max); }
+.verdict-texte { font-family: var(--serif); font-size: 1.45rem; font-weight: 600; line-height: 1.25; letter-spacing: -0.02em; margin: 0 0 10px; }
+.verdict.deficit .verdict-texte { color: var(--min); }
+.verdict.surplus .verdict-texte { color: var(--max); }
+.verdict p:not(.verdict-texte) { margin: 6px 0 0; font-size: 15px; color: var(--texte2); }
