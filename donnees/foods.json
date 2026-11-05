@@ -10297,6 +10297,744 @@
           "trace": false
         }
       }
+    },
+    {
+      "id": "raisin",
+      "nom": "Raisin",
+      "categorie": "Fruits",
+      "icone": "🍇",
+      "unite": "g",
+      "unite_pluriel": "g",
+      "quantites": [
+        50,
+        100,
+        150,
+        200,
+        250,
+        300
+      ],
+      "poids_unite_g": null,
+      "poids_source": null,
+      "part_comestible": 1,
+      "part_comestible_source": null,
+      "etat": "cru, grains sans la rafle",
+      "a_confirmer": false,
+      "source_valeurs": "ciqual",
+      "ciqual": {
+        "code": 13395,
+        "nom": "Raisin cru (aliment moyen)"
+      },
+      "notes": "Pesé en grains. Repère : 10 grains de raisin de table pèsent 49 g (USDA SR28 n° 09132 « Grapes, red or green (European type), raw »).",
+      "valeurs": {
+        "energie": {
+          "v": 71,
+          "brut": "71",
+          "unite": "kcal",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 328,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "proteines": {
+          "v": 0.7,
+          "brut": "0,7",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 25003,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "glucides": {
+          "v": 16.3,
+          "brut": "16,3",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 31000,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "lipides": {
+          "v": 0.25,
+          "brut": "0,25",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 40000,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "oleique": {
+          "v": 0.0079,
+          "brut": "0,0079",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 41819,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "linoleique": {
+          "v": 0.019,
+          "brut": "0,019",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 41826,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "arachidonique": {
+          "v": 0,
+          "brut": "< 0,0073",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 42046,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "ala": {
+          "v": 0.0082,
+          "brut": "0,0082",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 41833,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "epa": {
+          "v": 0,
+          "brut": "< 0,0073",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 42053,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "dha": {
+          "v": 0,
+          "brut": "< 0,0073",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 42263,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "vitA": {
+          "v": 0.99,
+          "brut": "0,99",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 51104,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB1": {
+          "v": 0.042,
+          "brut": "0,042",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 56100,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB2": {
+          "v": 0.009,
+          "brut": "0,009",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 56200,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB3": {
+          "v": 0.07,
+          "brut": "0,07",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 56310,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB5": {
+          "v": 0.076,
+          "brut": "0,076",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 56400,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB6": {
+          "v": 0.05,
+          "brut": "0,05",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 56500,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": null,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB9": {
+          "v": 14.9,
+          "brut": "14,9",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 56702,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB12": {
+          "v": 0,
+          "brut": "0",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 56600,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitC": {
+          "v": 3.03,
+          "brut": "3,03",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 55100,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitD": {
+          "v": 0,
+          "brut": "< 0,18",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 52100,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "vitE": {
+          "v": 0.33,
+          "brut": "0,33",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 71010,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitK1": {
+          "v": 5.44,
+          "brut": "5,44",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 54101,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitK2": {
+          "v": null,
+          "brut": "-",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 54104,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "fer": {
+          "v": 0.23,
+          "brut": "0,23",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 10260,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "calcium": {
+          "v": 11.2,
+          "brut": "11,2",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 10200,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "magnesium": {
+          "v": 7.38,
+          "brut": "7,38",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 10120,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "potassium": {
+          "v": 193,
+          "brut": "193",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 10190,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "sodium": {
+          "v": 0,
+          "brut": "< 3,77",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 10110,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "zinc": {
+          "v": 0.028,
+          "brut": "0,028",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 10300,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "phosphore": {
+          "v": 15.2,
+          "brut": "15,2",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 10150,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "manganese": {
+          "v": 0.072,
+          "brut": "0,072",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 10251,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "selenium": {
+          "v": 0,
+          "brut": "< 15,4",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 10340,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "cuivre": {
+          "v": 0.16,
+          "brut": "0,16",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13395,
+          "const": 10290,
+          "date": "2025-11-03",
+          "trace": false
+        }
+      }
+    },
+    {
+      "id": "peche",
+      "nom": "Pêche (avec la peau)",
+      "categorie": "Fruits",
+      "icone": "🍑",
+      "unite": "pêche",
+      "unite_pluriel": "pêches",
+      "quantites": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "poids_unite_g": 150,
+      "poids_source": "USDA SR28 n° 09236 « Peaches, yellow, raw » : 1 medium (2-2/3\" dia) = 150 g, sans noyau",
+      "part_comestible": 1,
+      "part_comestible_source": null,
+      "etat": "crue, avec la peau",
+      "a_confirmer": false,
+      "source_valeurs": "ciqual",
+      "ciqual": {
+        "code": 13043,
+        "nom": "Pêche, chair et peau, sans noyau, crue"
+      },
+      "notes": "",
+      "valeurs": {
+        "energie": {
+          "v": 37.9,
+          "brut": "37,9",
+          "unite": "kcal",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 328,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "proteines": {
+          "v": 0.91,
+          "brut": "0,91",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 25003,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "glucides": {
+          "v": 7.55,
+          "brut": "7,55",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 31000,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "lipides": {
+          "v": 0.25,
+          "brut": "0,25",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 40000,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "oleique": {
+          "v": 0.067,
+          "brut": "0,067",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 41819,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "linoleique": {
+          "v": 0.084,
+          "brut": "0,084",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 41826,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "arachidonique": {
+          "v": 0,
+          "brut": "0",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 42046,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "ala": {
+          "v": 0.0022,
+          "brut": "0,0022",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 41833,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "epa": {
+          "v": 0,
+          "brut": "0",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 42053,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "dha": {
+          "v": 0,
+          "brut": "0",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 42263,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitA": {
+          "v": 13.5,
+          "brut": "13,5",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 51104,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB1": {
+          "v": 0.024,
+          "brut": "0,024",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 56100,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB2": {
+          "v": 0.031,
+          "brut": "0,031",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 56200,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB3": {
+          "v": 0.81,
+          "brut": "0,81",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 56310,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB5": {
+          "v": 0.15,
+          "brut": "0,15",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 56400,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB6": {
+          "v": 0.025,
+          "brut": "0,025",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 56500,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": null,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB9": {
+          "v": 4,
+          "brut": "4",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 56702,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB12": {
+          "v": 0,
+          "brut": "0",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 56600,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitC": {
+          "v": 6.6,
+          "brut": "6,6",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 55100,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitD": {
+          "v": 0,
+          "brut": "0",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 52100,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitE": {
+          "v": 0.73,
+          "brut": "0,73",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 71010,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitK1": {
+          "v": 2.6,
+          "brut": "2,6",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 54101,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitK2": {
+          "v": null,
+          "brut": "-",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 54104,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "fer": {
+          "v": 0.15,
+          "brut": "0,15",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 10260,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "calcium": {
+          "v": 7.32,
+          "brut": "7,32",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 10200,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "magnesium": {
+          "v": 11.2,
+          "brut": "11,2",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 10120,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "potassium": {
+          "v": 215,
+          "brut": "215",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 10190,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "sodium": {
+          "v": 0,
+          "brut": "< 1,11",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 10110,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "zinc": {
+          "v": 0.12,
+          "brut": "0,12",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 10300,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "phosphore": {
+          "v": 20,
+          "brut": "20",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 10150,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "manganese": {
+          "v": 0.064,
+          "brut": "0,064",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 10251,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "selenium": {
+          "v": 0.28,
+          "brut": "0,28",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 10340,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "cuivre": {
+          "v": 0.075,
+          "brut": "0,075",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 13043,
+          "const": 10290,
+          "date": "2025-11-03",
+          "trace": false
+        }
+      }
     }
   ]
 }
