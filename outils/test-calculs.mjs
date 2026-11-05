@@ -152,7 +152,32 @@ verif(C.poidsDuJour(pes, "2026-11-04") === 81, "poids du jour = dernière pesée
 verif(C.poidsDuJour(pes, "2026-10-31") === null, "avant toute pesée : null");
 const tab = C.tableauPesees(pes);
 verif(tab[0].variation === null && tab[1].variation === 1 && tab[2].variation === -2, "variations");
-verif(tab[1].moyenne7 === 80.5 && tab[2].moyenne7 === 79, "moyennes sur 7 jours");
+verif(!("moyenne7" in tab[1]), "plus de moyenne sur 7 jours (une pesée par semaine)");
+
+console.log("\nPesée du lundi");
+{
+  // Pesées les lundis 02/11 (80,0) et 09/11 (79,4).
+  const lundis = [{ date: "2026-11-02", kg: 80 }, { date: "2026-11-09", kg: 79.4 }];
+  verif(C.poidsDuJour(lundis, "2026-11-04") === 80 && C.poidsDuJour(lundis, "2026-11-08") === 80 && C.poidsDuJour(lundis, "2026-11-09") === 79.4, "la pesée du lundi sert toute la semaine (mercredi, dimanche), la suivante dès le lundi");
+  // Dépense d'un mercredi sans pesée ce jour-là : celle du lundi (80 kg) → 2681,5833 kcal sans activité.
+  verif(proche(C.depense(activite, C.poidsDuJour(lundis, "2026-11-04"), 15, { km: 0, seance: null }).total, 2681.5833333333333), "dépense du mercredi 04/11 calculée avec la pesée du lundi 02/11");
+  const etatP = { jour: "2026-11-10", journal: [], activite: C.activiteVide(), pesees: lundis, reglages: { masseGrasse: 15 } };
+  const sem = (lundi, e = etatP) => C.bilanSemaine({ lundi, aujourdhui: e.jour, etat: e, historique: [], foods, activite }).poids;
+  const p1 = sem("2026-11-02");
+  // Semaine du 02/11 : début 80,0 (lun. 02/11), fin 79,4 (lun. 09/11) → −0,6 kg (79,4 − 80 = −0,6 à l'arrondi près).
+  verif(p1.debut.date === "2026-11-02" && p1.fin.date === "2026-11-09" && proche(p1.difference, -0.6, 1e-12), "semaine du 02/11 : 80,0 → 79,4 kg");
+  verif(C.texteEvolutionPoids(p1) === "Poids : 80,0 kg (lun. 02/11) → 79,4 kg (lun. 09/11), soit −0,6 kg", "texte de l'évolution", C.texteEvolutionPoids(p1));
+  const p2 = sem("2026-11-09");
+  verif(p2.debut.kg === 79.4 && p2.fin === null && p2.difference === null, "semaine du 09/11 : pas encore de pesée de fin");
+  verif(C.texteEvolutionPoids(p2) === "Poids de début : 79,4 kg (lun. 09/11). Résultat à la pesée de lundi prochain (16/11).", "texte « résultat à la pesée de lundi prochain »", C.texteEvolutionPoids(p2));
+  // Pesée faite le dimanche 08/11 au lieu du lundi 09/11 : début de la semaine du 09/11.
+  const dim = [{ date: "2026-11-02", kg: 80 }, { date: "2026-11-08", kg: 79.6 }];
+  const p3 = sem("2026-11-09", { ...etatP, pesees: dim });
+  verif(p3.debut.date === "2026-11-08" && p3.debut.kg === 79.6, "pesée du dimanche 08/11 = début de la semaine du 09/11");
+  verif(C.textePesee(p3.debut) === "79,6 kg (dim. 08/11)", "pesée datée « dim. 08/11 »");
+  // Rappel : lundi sans pesée du jour → oui ; lundi pesé → non ; mardi → non.
+  verif(C.rappelPesee("2026-11-16", lundis) && !C.rappelPesee("2026-11-09", lundis) && !C.rappelPesee("2026-11-17", lundis), "rappel du lundi seulement si pas encore pesé");
+}
 
 console.log("\nBilan de la semaine");
 {
@@ -191,7 +216,8 @@ console.log("\nBilan de la semaine");
   // Totaux : 134 + 268 + 67 = 469 kcal ; dépense 8308,6958 ; solde −7839,6958 ; moyenne −2613,2319 ; protéines 47,25 / 3 = 15,75.
   const t = b.totaux;
   verif(t.jours === 3 && t.mange === 469 && proche(t.depense, 8308.695833333333) && proche(t.solde, -7839.695833333333) && proche(t.soldeMoyen, -2613.231944444444) && proche(t.proteinesMoyennes, 15.75), "totaux : 3 jours, 469 kcal, solde −7839,70, moyenne −2613,23, 15,75 g de protéines");
-  verif(b.poids.premiere.kg === 80 && b.poids.derniere.kg === 79.5 && b.poids.difference === -0.5, "poids : 80 → 79,5 kg (−0,5)");
+  // Début = dernière pesée au lundi 02/11 ou avant (80) ; fin = première pesée au 09/11 ou après : aucune.
+  verif(b.poids.debut.kg === 80 && b.poids.fin === null && b.poids.difference === null, "poids : début 80 kg, fin attendue lundi prochain");
   verif(C.verdictSemaine(b) === "Déficit de 7 840 kcal sur la semaine (3 jours remplis)", "verdict : déficit de 7 840 kcal", C.verdictSemaine(b));
   // Semaine précédente : le samedi 31 a un journal mais aucune pesée à cette date ou avant → dépense inconnue, non compté.
   const b0 = C.bilanSemaine({ lundi: "2026-10-26", aujourdhui: "2026-11-05", etat, historique, foods, activite });
@@ -213,7 +239,7 @@ console.log("\nBilan de la semaine");
   verif(lignes[9].includes(";Jambes;") && lignes[13].startsWith("2026-11-08;dimanche;à venir;"), "CSV : séance du mercredi, dimanche à venir");
   verif(lignes[15] === "Total (jours comptés);;3 jours;469;8309;-7840", "CSV : total", lignes[15]);
   verif(lignes[16] === "Moyenne par jour;;;156;2770;-2613;15,8;0,6;10,1", "CSV : moyenne", lignes[16]);
-  verif(lignes[17] === "Poids;2026-11-02 : 80,0 kg;2026-11-05 : 79,5 kg;-0,5 kg", "CSV : évolution du poids", lignes[17]);
+  verif(lignes[17] === "Poids;80,0 kg (lun. 02/11);;;Résultat à la pesée de lundi prochain (09/11).", "CSV : poids de début, fin en attente (cellule vide)", lignes[17]);
   verif(lignes[18] === "Verdict;Déficit de 7 840 kcal sur la semaine (3 jours remplis)", "CSV : verdict", lignes[18]);
   verif(!/\d\.\d/.test(csv.replace(/\d{4}-\d{2}-\d{2}/g, "")), "CSV : aucun point décimal");
 }

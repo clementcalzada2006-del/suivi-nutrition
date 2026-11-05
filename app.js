@@ -98,6 +98,8 @@ function rafraichir() {
   rendrePoids();
   for (const g of ouverts) $(`details[data-garde="${g}"]`)?.setAttribute("open", "");
   if (actif) $(`#${actif}`)?.focus();
+  const rappel = C.rappelPesee(etat.jour, etat.pesees);
+  for (const id of ["#rappel-aliments", "#rappel-poids"]) $(id).hidden = !rappel;
 }
 
 // Champ de saisie avec unité et message d'erreur. Le texte invalide reste affiché tant qu'il n'est pas corrigé.
@@ -184,8 +186,11 @@ function rendreAliments() {
         <div class="cat-corps">${als.map(htmlAliment).join("")}</div></section>`;
     })
     .join("");
-  $("#vue-aliments").innerHTML = html;
+  $("#vue-aliments").innerHTML = RAPPEL.replace("RAPPEL_ID", "rappel-aliments") + html;
 }
+
+// Rappel du lundi : une pesée par semaine, le lundi matin. Un toucher mène à l'onglet Poids.
+const RAPPEL = '<button class="rappel" id="RAPPEL_ID" data-act="onglet" data-onglet="poids" hidden>Lundi : pense à te peser ce matin.</button>';
 
 function htmlAliment(a) {
   const boutons = a.quantites.map((q) => `<button class="q" data-act="ajouter" data-id="${a.id}" data-q="${q}">${esc(C.libelleQuantite(a, q))}</button>`);
@@ -386,11 +391,7 @@ function rendreSemaine() {
     })
     .join("");
   const p = b.poids;
-  const poids = p.premiere
-    ? p.derniere
-      ? `Poids : ${C.formater(p.premiere.kg, "g")} → ${C.formater(p.derniere.kg, "g")} kg (${p.difference > 0 ? "+" : p.difference < 0 ? "−" : "±"}${C.formater(Math.abs(p.difference), "g")} kg).`
-      : `Une seule pesée cette semaine : ${C.formater(p.premiere.kg, "g")} kg.`
-    : "Aucune pesée cette semaine.";
+  const poids = C.texteEvolutionPoids(p);
   const courante = b.lundi === C.lundiDe(etat.jour);
   $("#vue-bilan").innerHTML = `${selecteurBilan()}
     <div class="semaine-nav">
@@ -403,7 +404,7 @@ function rendreSemaine() {
     <section class="verdict${t.jours ? (t.solde < 0 ? " deficit" : " surplus") : ""}" data-solde="${t.jours ? t.solde : ""}" data-jours="${t.jours}">
       <p class="verdict-texte">${esc(C.verdictSemaine(b))}</p>
       ${t.jours ? `<p>Soit ${signe(t.soldeMoyen)} kcal par jour en moyenne · ${kcal(t.mange)} mangées pour ${kcal(t.depense)} dépensées · protéines ${C.formater(t.proteinesMoyennes, "g")} g par jour.</p>` : ""}
-      <p>${poids}</p>
+      <p class="evolution-poids">${esc(poids)}</p>
     </section>
     <p class="aide">La dépense est une estimation (masse grasse : réglage actuel). Les jours non remplis, à venir ou sans pesée ne comptent pas.</p>
     <button class="btn btn-large btn-principal" data-act="exporter">Exporter la semaine (Excel)</button>`;
@@ -613,18 +614,18 @@ function rendrePoids() {
   const signe = (x) => (x > 0 ? "+" : x < 0 ? "−" : "±") + C.formater(Math.abs(x), "g");
   const lignes = [...tab]
     .reverse()
-    .map((p) => `<tr data-date="${p.date}"><td>${dateCourte(p.date)}</td><td><b>${C.formater(p.kg, "g")}</b></td><td>${p.variation === null ? "—" : signe(p.variation)}</td><td>${C.formater(p.moyenne7, "g")}</td>
+    .map((p) => `<tr data-date="${p.date}"><td>${dateCourte(p.date)}</td><td><b>${C.formater(p.kg, "g")}</b></td><td>${p.variation === null ? "—" : signe(p.variation)}</td>
       <td><button class="j-suppr" data-act="suppr-pesee" data-date="${p.date}" aria-label="Supprimer la pesée du ${dateCourte(p.date)}">${CROIX}</button></td></tr>`)
     .join("");
-  $("#vue-poids").innerHTML = `
+  $("#vue-poids").innerHTML = `${RAPPEL.replace("RAPPEL_ID", "rappel-poids")}
     <section class="carte"><h2>Pesée du jour</h2>
       ${champ("p-brouillon", "poids", "Poids", ui.poids, "decimal", "kg")}
       <button class="btn btn-large btn-principal" data-act="enregistrer-poids">Enregistrer pour aujourd'hui</button>
     </section>
     <section class="carte"><h2>Courbe</h2>${courbe(tab)}
-      <p class="aide">La créatine peut faire prendre un peu de poids en eau, surtout au début : regarde plutôt la moyenne sur 7 jours.</p></section>
+      <p class="aide">La créatine peut faire prendre un peu de poids en eau, surtout au début : regarde la tendance sur plusieurs semaines.</p></section>
     <section class="carte"><h2>Toutes les pesées</h2>
-      ${tab.length ? `<div class="table-defil"><table class="pesees"><thead><tr><th>Date</th><th>kg</th><th>Écart</th><th>Moy. 7 j</th><th><span class="visuellement-cache">Supprimer</span></th></tr></thead><tbody>${lignes}</tbody></table></div>` : '<p class="vide">Aucune pesée pour l\'instant.</p>'}
+      ${tab.length ? `<div class="table-defil"><table class="pesees"><thead><tr><th>Date</th><th>kg</th><th>Variation</th><th><span class="visuellement-cache">Supprimer</span></th></tr></thead><tbody>${lignes}</tbody></table></div>` : '<p class="vide">Aucune pesée pour l\'instant.</p>'}
     </section>
     <section class="carte"><h2>Masse grasse</h2>
       <div class="reglage"><span class="reglage-nom">Pour le calcul de la dépense</span><span class="reglage-val" id="p-mg" data-valeur="${etat.reglages.masseGrasse}">${C.formater(etat.reglages.masseGrasse, "g")} %</span></div>
@@ -632,26 +633,26 @@ function rendrePoids() {
     </section>`;
 }
 
-// Courbe SVG faite main : pesées (points et ligne) et moyenne sur 7 jours (trait épais).
+// Courbe SVG faite main : les pesées (une par semaine), points reliés.
 function courbe(tab) {
   if (tab.length < 2) return '<p class="vide">La courbe apparaît à partir de deux pesées.</p>';
   const L = 340, H = 180, m = { g: 40, d: 10, h: 12, b: 26 };
   const jours = (d) => Date.UTC(...d.split("-").map((x, i) => Number(x) - (i === 1 ? 1 : 0))) / 864e5;
   const x0 = jours(tab[0].date), x1 = jours(tab[tab.length - 1].date);
-  const vals = tab.flatMap((p) => [p.kg, p.moyenne7]);
+  const vals = tab.map((p) => p.kg);
   let y0 = Math.min(...vals), y1 = Math.max(...vals);
   if (y1 - y0 < 1) { y0 -= 0.5; y1 += 0.5; }
   const X = (d) => m.g + ((jours(d) - x0) / Math.max(1, x1 - x0)) * (L - m.g - m.d);
   const Y = (v) => m.h + (1 - (v - y0) / (y1 - y0)) * (H - m.h - m.b);
   const chemin = (k) => tab.map((p, i) => `${i ? "L" : "M"}${X(p.date).toFixed(1)},${Y(p[k]).toFixed(1)}`).join(" ");
   const graduations = [y0, (y0 + y1) / 2, y1].map((v) => `<line x1="${m.g}" x2="${L - m.d}" y1="${Y(v)}" y2="${Y(v)}" class="grille"/><text x="${m.g - 4}" y="${Y(v) + 4}" text-anchor="end">${C.formater(v, "g")}</text>`).join("");
-  return `<svg class="courbe" viewBox="0 0 ${L} ${H}" role="img" aria-label="Courbe du poids et de sa moyenne sur 7 jours">
+  return `<svg class="courbe" viewBox="0 0 ${L} ${H}" role="img" aria-label="Courbe des pesées">
     ${graduations}
     <text x="${m.g}" y="${H - 6}">${dateCourte(tab[0].date)}</text><text x="${L - m.d}" y="${H - 6}" text-anchor="end">${dateCourte(tab[tab.length - 1].date)}</text>
-    <path d="${chemin("kg")}" class="c-poids"/><path d="${chemin("moyenne7")}" class="c-moy"/>
+    <path d="${chemin("kg")}" class="c-poids"/>
     ${tab.map((p) => `<circle cx="${X(p.date).toFixed(1)}" cy="${Y(p.kg).toFixed(1)}" r="3" class="c-point"/>`).join("")}
   </svg>
-  <p class="legende"><span class="l-poids">Pesées</span> <span class="l-moy">Moyenne 7 jours</span></p>`;
+`;
 }
 
 // ---------- Feuille du bas, toast ----------

@@ -10,7 +10,7 @@ Nutriments suivis (34, liste `nutriments` de `donnees/foods.json`) :
 - minéraux : fer, calcium, magnésium, potassium, sodium, zinc, phosphore, manganèse, sélénium, cuivre.
 Site statique (HTML, CSS, JavaScript sans framework ni CDN), installable sur l'écran d'accueil, utilisable hors ligne. Aucune requête réseau à l'usage, aucun compte : tout reste dans le stockage du téléphone.
 
-Onglets : **Aliments** (ajout en un toucher, fiche « i » avec la provenance de chaque chiffre), **Journal** (ajouts du jour, suppression, remise à zéro), **Bilan** (tous les nutriments, références, marqueur « incomplet », rapports oméga, dépense), **Activité** (pas et distance, séance de salle, créatine), **Poids** (pesées, courbe, moyenne sur 7 jours, masse grasse).
+Onglets : **Aliments** (ajout en un toucher, fiche « i » avec la provenance de chaque chiffre), **Journal** (ajouts du jour, suppression, remise à zéro), **Bilan** (tous les nutriments, références, marqueur « incomplet », rapports oméga, dépense), **Activité** (pas et distance, séance de salle, créatine), **Poids** (pesées, variation, courbe, masse grasse).
 
 ## Fichiers
 
@@ -80,6 +80,7 @@ Une appli web ne peut pas lire l'app Santé. Un Raccourci copie les chiffres, l'
 Onglet Bilan → **Semaine** : une ligne par jour, du lundi au dimanche (kcal mangées, dépense estimée, solde, protéines), puis le verdict de la semaine (déficit ou surplus total, solde moyen par jour, évolution du poids). Les flèches montrent les semaines précédentes.
 
 - Seuls comptent les jours **remplis** (journal non vide) dont la dépense est connue (une pesée à cette date ou avant). Les jours non remplis, à venir ou sans pesée sont affichés mais pas comptés.
+- **Pesée une fois par semaine, le lundi matin** (un rappel s'affiche le lundi tant que la pesée n'est pas faite). Elle sert à la dépense de toute la semaine. L'évolution du poids d'une semaine va de la dernière pesée au lundi ou avant jusqu'à la première pesée du lundi suivant ou après ; avant celle-ci, le bilan affiche « Résultat à la pesée de lundi prochain ».
 - Les jours passés viennent de l'archive faite à minuit. Les copies faites par une remise à zéro manuelle ne comptent pas. Aujourd'hui vient de la journée en cours.
 - La dépense est une estimation (Cunningham × facteur sédentaire FAO + marche + salle) ; la masse grasse utilisée est le réglage actuel pour tous les jours.
 

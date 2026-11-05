@@ -234,19 +234,14 @@ export function poidsDuJour(pesees, jour) {
   return avant.length ? avant[avant.length - 1].kg : null;
 }
 
-// Tableau des pesées : variation depuis la précédente et moyenne des pesées des 7 derniers jours (date comprise).
+// Tableau des pesées (une par semaine, le lundi) : variation depuis la pesée précédente.
 export function tableauPesees(pesees) {
   const tri = [...pesees].sort((a, b) => a.date.localeCompare(b.date));
-  return tri.map((p, i) => {
-    const debut = decalerJour(p.date, -6);
-    const fen = tri.filter((x) => x.date >= debut && x.date <= p.date);
-    return {
-      ...p,
-      variation: i ? p.kg - tri[i - 1].kg : null,
-      moyenne7: fen.reduce((s, x) => s + x.kg, 0) / fen.length,
-    };
-  });
+  return tri.map((p, i) => ({ ...p, variation: i ? p.kg - tri[i - 1].kg : null }));
 }
+
+// Rappel du lundi : on est lundi et aucune pesée n'est enregistrée ce jour-là.
+export const rappelPesee = (jour, pesees) => jourDate(jour).getDay() === 1 && !pesees.some((p) => p.date === jour);
 
 export function decalerJour(jour, n) {
   const [a, m, j] = jour.split("-").map(Number);
@@ -278,7 +273,10 @@ export function lundiDe(jour) {
 // - aujourd'hui : l'état en cours ; jours suivants : « à venir » ;
 // - dépense du jour : depense() avec la dernière pesée à cette date ou avant. La masse grasse utilisée est le
 //   RÉGLAGE ACTUEL pour tous les jours : l'historique de ce réglage n'est pas gardé ;
-// - totaux sur les seuls jours « rempli » (journal non vide et dépense connue).
+// - totaux sur les seuls jours « rempli » (journal non vide et dépense connue) ;
+// - poids (une pesée par semaine, le lundi matin) : début = dernière pesée au lundi L ou avant ; fin = première
+//   pesée à L + 7 ou après (normalement le lundi suivant), qui montre le résultat de la semaine. Sans pesée de fin,
+//   le résultat est attendu à la pesée de lundi prochain.
 export function bilanSemaine({ lundi, aujourdhui, etat, historique, foods, activite }) {
   const mg = etat.reglages.masseGrasse;
   const jours = [];
@@ -315,9 +313,10 @@ export function bilanSemaine({ lundi, aujourdhui, etat, historique, foods, activ
   const comptes = jours.filter((j) => j.etat === "rempli");
   const n = comptes.length;
   const somme = (f) => comptes.reduce((s, j) => s + f(j), 0);
-  const pesees = etat.pesees.filter((p) => p.date >= lundi && p.date <= decalerJour(lundi, 6)).sort((a, b) => a.date.localeCompare(b.date));
-  const premiere = pesees[0] ?? null;
-  const derniere = pesees.length > 1 ? pesees[pesees.length - 1] : null;
+  const tri = [...etat.pesees].sort((a, b) => a.date.localeCompare(b.date));
+  const lundiSuivant = decalerJour(lundi, 7);
+  const debut = tri.filter((p) => p.date <= lundi).at(-1) ?? null;
+  const fin = tri.find((p) => p.date >= lundiSuivant) ?? null;
   return {
     lundi,
     dimanche: decalerJour(lundi, 6),
@@ -332,8 +331,28 @@ export function bilanSemaine({ lundi, aujourdhui, etat, historique, foods, activ
       glucidesMoyens: n ? somme((j) => j.totaux.glucides) / n : null,
       lipidesMoyens: n ? somme((j) => j.totaux.lipides) / n : null,
     },
-    poids: { premiere, derniere, difference: premiere && derniere ? derniere.kg - premiere.kg : null },
+    poids: { debut, fin, lundiSuivant, difference: debut && fin ? fin.kg - debut.kg : null },
   };
+}
+
+// Pesée lisible : « 80,0 kg (lun. 02/11) ».
+export function textePesee(p) {
+  const d = jourDate(p.date);
+  const jj = (n) => String(n).padStart(2, "0");
+  return `${F1.format(p.kg)} kg (${NOMS_JOURS[d.getDay()].slice(0, 3)}. ${jj(d.getDate())}/${jj(d.getMonth() + 1)})`;
+}
+
+// Évolution du poids sur la semaine (voir la règle de bilanSemaine).
+export function texteEvolutionPoids(poids) {
+  const { debut, fin, lundiSuivant, difference } = poids;
+  const [, m, j] = lundiSuivant.split("-");
+  if (!fin) {
+    const attente = `Résultat à la pesée de lundi prochain (${j}/${m})`;
+    return debut ? `Poids de début : ${textePesee(debut)}. ${attente}.` : `Aucune pesée de début. ${attente}.`;
+  }
+  if (!debut) return `Poids : ${textePesee(fin)} ; aucune pesée de début.`;
+  const signe = difference > 0 ? "+" : difference < 0 ? "−" : "±";
+  return `Poids : ${textePesee(debut)} → ${textePesee(fin)}, soit ${signe}${F1.format(Math.abs(difference))} kg`;
 }
 
 // Verdict de la semaine : « Déficit de 2 350 kcal sur la semaine (6 jours remplis) ».
@@ -375,7 +394,7 @@ export function csvSemaine(b, { genereLe, profil, masseGrasse }) {
     "",
     ligne("Total (jours comptés)", "", `${t.jours} jour${t.jours > 1 ? "s" : ""}`, nb(t.mange, 0), nb(t.depense, 0), nb(t.solde, 0)),
     ligne("Moyenne par jour", "", "", t.jours ? nb(t.mange / t.jours, 0) : "", t.jours ? nb(t.depense / t.jours, 0) : "", nb(t.soldeMoyen, 0), nb(t.proteinesMoyennes, 1), nb(t.glucidesMoyens, 1), nb(t.lipidesMoyens, 1)),
-    ligne("Poids", p.premiere ? `${p.premiere.date} : ${nb(p.premiere.kg, 1)} kg` : "aucune pesée", p.derniere ? `${p.derniere.date} : ${nb(p.derniere.kg, 1)} kg` : "", p.difference === null ? "" : `${p.difference > 0 ? "+" : ""}${nb(p.difference, 1)} kg`),
+    ligne("Poids", p.debut ? textePesee(p.debut) : "aucune pesée", p.fin ? textePesee(p.fin) : "", p.difference === null ? "" : `${p.difference > 0 ? "+" : ""}${nb(p.difference, 1)} kg`, p.fin ? "" : texteEvolutionPoids(p).replace(/^.*\. (Résultat)/, "$1")),
     ligne("Verdict", verdictSemaine(b)),
   ];
   return "\uFEFF" + lignes.join("\r\n") + "\r\n";

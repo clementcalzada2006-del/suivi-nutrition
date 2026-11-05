@@ -456,7 +456,9 @@ console.log("\n7c. Affichage à 375 px, cibles de 48 px, captures");
     await page.locator(`#vue-${o} details`).evaluateAll((ds) => ds.forEach((d) => (d.open = true))); // aides et sources dépliées
     await controle(o);
   }
-  verif((await page.locator(".courbe path.c-moy").count()) === 1 && (await page.locator(".courbe circle").count()) === 4, "courbe SVG : 4 pesées et la moyenne 7 jours");
+  verif((await page.locator(".courbe path.c-poids").count()) === 1 && (await page.locator(".courbe circle").count()) === 4 && (await page.locator(".courbe .c-moy").count()) === 0, "courbe SVG : 4 pesées, sans moyenne sur 7 jours");
+  verif((await page.locator(".pesees thead").textContent()).includes("Variation") && !(await page.locator(".pesees thead").textContent()).includes("Moy"), "tableau : colonne « Variation », plus de moyenne");
+  verif((await page.locator("#vue-poids").textContent()).includes("tendance sur plusieurs semaines"), "note créatine : tendance sur plusieurs semaines");
   verif((await page.locator("#vue-poids").textContent()).includes("créatine"), "note sur la créatine sous la courbe");
   await onglet(page, "aliments");
   await toucher(page.locator('.al-info[data-id="pain_graines"]'));
@@ -649,10 +651,10 @@ console.log("\n7h. Saisie au clavier (pas, distance, poids), zoom au double touc
 console.log("\n8. Captures (390 × 844, plein écran, clair et sombre)");
 for (const theme of ["clair", "sombre"]) {
   const { ctx, page } = await nouveauContexte({ colorScheme: theme === "clair" ? "light" : "dark" });
-  await page.clock.install({ time: new Date(2026, 10, 1, 8, 0, 0) });
+  await page.clock.install({ time: new Date(2026, 9, 5, 8, 0, 0) });
   await ouvrir(page);
-  for (const [j, kg] of [[1, 80.4], [2, 80.1], [3, 80.6], [4, 79.9], [5, 79.7]]) {
-    await page.clock.setSystemTime(new Date(2026, 10, j, 8, 0, 0));
+  for (const [m, j, kg] of [[9, 5, 81.6], [9, 12, 81.1], [9, 19, 80.9], [9, 26, 80.3], [10, 2, 79.7]]) { // une pesée par semaine, le lundi
+    await page.clock.setSystemTime(new Date(2026, m, j, 8, 0, 0));
     await peser(page, kg);
   }
   await page.clock.setSystemTime(new Date(2026, 10, 5, 12, 30, 0));
@@ -741,7 +743,7 @@ async function construireSemaine(page) {
   verif(proche(Number(await verdict.getAttribute("data-solde")), -7746.3625) && (await verdict.getAttribute("data-jours")) === "3", "solde de la semaine −7746,36 sur 3 jours");
   verif((await verdict.locator(".verdict-texte").textContent()) === "Déficit de 7 746 kcal sur la semaine (3 jours remplis)", "verdict « Déficit de 7 746 kcal sur la semaine (3 jours remplis) »");
   const suite = await verdict.textContent();
-  verif(suite.includes("−2 582 kcal par jour") && suite.includes("15,8 g par jour") && suite.includes("80,0 → 79,5 kg (−0,5 kg)"), "moyenne par jour, protéines et poids", suite);
+  verif(suite.includes("−2 582 kcal par jour") && suite.includes("15,8 g par jour") && suite.includes("Poids de début : 80,0 kg (lun. 02/11). Résultat à la pesée de lundi prochain (09/11)."), "moyenne par jour, protéines et poids (résultat attendu lundi prochain)", suite);
   verif((await page.locator("#vue-bilan .aide").textContent()).includes("estimation") && (await page.locator(".dimanche").count()) === 0, "phrase sur l'estimation ; pas de rappel du dimanche un jeudi");
   verif(await page.locator('[data-act="semaine"][data-d="7"]').isDisabled(), "pas de semaine après la semaine en cours");
   await page.locator(".verdict").evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().bottom + window.scrollY - window.innerHeight + 80)); // verdict visible
@@ -796,6 +798,26 @@ async function construireSemaine(page) {
   await page.clock.setSystemTime(new Date(2026, 10, 8, 10, 0, 0));
   await page.clock.runFor(31000);
   verif((await page.locator(".dimanche").textContent()).includes("exporte ton bilan"), "dimanche : « C'est dimanche : exporte ton bilan de la semaine. »");
+
+  // Lundi 09/11 : rappel de pesée, puis pesée de 79,4 kg ; la semaine du 02/11 montre alors son résultat.
+  verif(await page.locator("#rappel-aliments").isHidden(), "dimanche : pas de rappel de pesée");
+  await page.clock.setSystemTime(new Date(2026, 10, 9, 7, 30, 0));
+  await page.clock.runFor(31000);
+  await onglet(page, "aliments");
+  const rappel = page.locator("#rappel-aliments");
+  verif(await rappel.isVisible() && (await rappel.textContent()) === "Lundi : pense à te peser ce matin.", "lundi sans pesée : rappel en haut des Aliments");
+  await toucher(rappel);
+  verif((await page.locator('.onglets [aria-current="page"]').getAttribute("data-onglet")) === "poids" && (await page.locator("#rappel-poids").isVisible()), "toucher le rappel → onglet Poids (rappel aussi en haut)");
+  await peser(page, 79.4);
+  verif(await page.locator("#rappel-poids").isHidden(), "pesée enregistrée : le rappel disparaît (Poids)");
+  await onglet(page, "aliments");
+  verif(await page.locator("#rappel-aliments").isHidden(), "pesée enregistrée : le rappel disparaît (Aliments)");
+  await onglet(page, "bilan");
+  verif((await page.locator(".evolution-poids").textContent()) === "Poids de début : 79,4 kg (lun. 09/11). Résultat à la pesée de lundi prochain (16/11).", "semaine du 09/11 : résultat attendu à la pesée du 16/11");
+  await toucher(page.locator('[data-act="semaine"][data-d="-7"]'));
+  verif((await page.locator(".evolution-poids").textContent()) === "Poids : 80,0 kg (lun. 02/11) → 79,4 kg (lun. 09/11), soit −0,6 kg", "semaine du 02/11 : 80,0 → 79,4 kg, soit −0,6 kg");
+  // Mercredi 04/11 (pas de pesée ce jour-là) : dépense avec la pesée du lundi 02/11 = 80 kg → 2681,5833 + 184 (5 km).
+  verif(proche(Number(await page.locator('.sj[data-date="2026-11-04"]').getAttribute("data-solde")), 268 - 2865.5833333333333), "mercredi : dépense calculée avec la pesée du lundi");
   await ctx.close();
 }
 {

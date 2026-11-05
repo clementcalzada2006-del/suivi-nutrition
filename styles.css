@@ -359,10 +359,8 @@ details[open] summary::after { content: "−"; }
 .courbe { width: 100%; height: auto; display: block; }
 .courbe text { font-size: 12px; fill: var(--texte3); font-family: var(--sans); }
 .courbe .grille { stroke: var(--trait); stroke-width: 1; }
-.c-poids { fill: none; stroke: var(--texte3); stroke-width: 1; }
+.c-poids { fill: none; stroke: var(--texte); stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
 .c-point { fill: var(--surface); stroke: var(--texte2); stroke-width: 1.5; }
-.c-moy { fill: none; stroke: var(--texte); stroke-width: 2.25; stroke-linecap: round; stroke-linejoin: round; }
-.l-poids { color: var(--texte3); } .l-moy { color: var(--texte); }
 
 /* ---------- Onglets ---------- */
 .onglets {
@@ -457,3 +455,11 @@ details[open] summary::after { content: "−"; }
 .verdict.deficit .verdict-texte { color: var(--min); }
 .verdict.surplus .verdict-texte { color: var(--max); }
 .verdict p:not(.verdict-texte) { margin: 6px 0 0; font-size: 15px; color: var(--texte2); }
+
+/* Rappel du lundi (pesée hebdomadaire) */
+.rappel {
+  display: flex; align-items: center; gap: 10px; width: 100%; min-height: 48px; margin: 0 0 14px; padding: 8px 14px;
+  border: 1px solid var(--trait); border-radius: var(--rayon-petit); background: var(--surface);
+  font-size: 15px; font-weight: 550; color: var(--texte2); text-align: left;
+}
+.rappel::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--avert); flex: none; }
