@@ -1,7 +1,7 @@
 // Service worker : met tous les fichiers de l'appli en cache pour un fonctionnement hors ligne.
 // Changer VERSION à chaque mise à jour (code ou donnees/*.json) pour que le téléphone récupère la nouvelle version.
 // Le dossier sources/ n'est jamais mis en cache.
-const VERSION = "suivi-nutrition-2026-11-05-6";
+const VERSION = "suivi-nutrition-2026-11-05-7";
 const FICHIERS = [
   "./",
   "./index.html",
