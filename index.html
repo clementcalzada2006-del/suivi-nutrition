@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Suivi nutrition</title>
+  <meta name="description" content="Suivi calorique et nutritionnel du jour : calories, macros, vitamines, minéraux, oméga, dépense et poids. Tout reste sur l'appareil.">
+  <meta name="theme-color" content="#F6F7F4" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111412" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="light dark">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Nutrition">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <div id="bandeau-stockage" class="bandeau" role="alert" hidden>Stockage indisponible : tes ajouts seront perdus à la fermeture.</div>
+
+  <!-- Total du jour, toujours visible -->
+  <header id="entete" class="entete" aria-label="Total du jour">
+    <div class="entete-kcal">
+      <span id="e-kcal" class="kcal" data-total="0">0</span>
+      <span class="kcal-unite">kcal</span>
+      <span id="e-depense" class="kcal-depense"></span>
+      <button id="e-incomplet" class="marque-incomplet" data-act="onglet" data-onglet="bilan" hidden>incomplet</button>
+    </div>
+    <div class="entete-macros">
+      <div class="macro m-prot"><span class="macro-val" id="e-proteines" data-total="0">0,0</span><span class="macro-nom">g protéines</span></div>
+      <div class="macro m-gluc"><span class="macro-val" id="e-glucides" data-total="0">0,0</span><span class="macro-nom">g glucides</span></div>
+      <div class="macro m-lip"><span class="macro-val" id="e-lipides" data-total="0">0,0</span><span class="macro-nom">g lipides</span></div>
+    </div>
+    <div class="entete-petit">
+      <span>dont sucres <b id="e-sucres" data-total="0">0,0</b> g</span>
+      <span>fibres <b id="e-fibres" data-total="0">0,0</b> g</span>
+      <span>sel <b id="e-sel" data-total="0">0,0</b> g</span>
+    </div>
+  </header>
+
+  <main id="app">
+    <p class="chargement">Chargement…</p>
+    <section id="vue-aliments" class="vue" aria-label="Aliments" hidden></section>
+    <section id="vue-journal" class="vue" aria-label="Journal du jour" hidden></section>
+    <section id="vue-bilan" class="vue" aria-label="Bilan du jour" hidden></section>
+    <section id="vue-activite" class="vue" aria-label="Activité" hidden></section>
+    <section id="vue-poids" class="vue" aria-label="Poids" hidden></section>
+  </main>
+
+  <nav class="onglets" aria-label="Onglets">
+    <button data-act="onglet" data-onglet="aliments"><span aria-hidden="true">🍽️</span>Aliments</button>
+    <button data-act="onglet" data-onglet="journal"><span aria-hidden="true">📋</span>Journal</button>
+    <button data-act="onglet" data-onglet="bilan"><span aria-hidden="true">📊</span>Bilan</button>
+    <button data-act="onglet" data-onglet="activite"><span aria-hidden="true">🚶</span>Activité</button>
+    <button data-act="onglet" data-onglet="poids"><span aria-hidden="true">⚖️</span>Poids</button>
+  </nav>
+
+  <div id="voile" class="voile" data-act="fermer" hidden></div>
+  <div id="feuille" class="feuille" role="dialog" aria-modal="true" hidden></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <noscript><p class="chargement">Cette application a besoin de JavaScript.</p></noscript>
+</body>
+</html>

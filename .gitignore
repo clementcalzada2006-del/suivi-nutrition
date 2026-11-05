@@ -1,0 +1,7 @@
+node_modules/
+outils/captures/
+# Sources téléchargées : gardées sur le PC, pas dans le dépôt (sauf la liste)
+sources/*
+!sources/LISEZMOI.md
+# Cahier des charges : contient des données personnelles, gardé sur le PC
+SPEC.md

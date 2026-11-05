@@ -1,0 +1,91 @@
+{
+  "profil": "Homme de 18 à 24 ans (calcium de la tranche 18-24 ans, les autres références valent à partir de 18 ans)",
+  "date": "2026-11-04",
+  "explication": "« À atteindre » : apport conseillé par l'ANSES (RNP ou apport satisfaisant). « À ne pas dépasser » : limite. « Fourchette » : part de l'énergie à garder entre deux bornes. Les références exprimées en % de l'énergie ou par MJ sont calculées avec ta dépense estimée du jour, celles par kg avec ta dernière pesée. Sans référence officielle, seul le total est affiché.",
+  "format": "Pour éditer ce fichier : type min = à atteindre ; max = à ne pas dépasser ; fourchette = entre deux bornes ; null = pas de référence officielle. valeur = quantité par jour dans l'unité du nutriment ; par_kg = par kg de poids corporel ; par_mj = par MJ de l'énergie de référence ; pct_ae = % de l'énergie de référence, converti en grammes avec kcal_par_g. L'énergie de référence est la dépense estimée du jour (donnees/activite.json).",
+  "sources": {
+    "anses_vm_2025": {
+      "titre": "ANSES, « Les références nutritionnelles en vitamines et minéraux », page mise à jour le 21/02/2025 (tableaux « Hommes de 18 ans et plus » ou « Hommes et femmes de 18 ans et plus »)",
+      "url": "https://www.anses.fr/fr/content/les-references-nutritionnelles-en-vitamines-et-mineraux",
+      "copie": "sources/anses/references-vitamines-mineraux.html",
+      "consulte": "2026-11-04"
+    },
+    "anses_2016": {
+      "titre": "ANSES, avis et rapport « Actualisation des repères du PNNS : révision des repères de consommations alimentaires », saisine 2012-SA-0103, décembre 2016 (avis p. 15-17, tableau 2 p. 20, tableau 4 p. 23)",
+      "url": "https://www.anses.fr/fr/system/files/NUT2012SA0103Ra-1.pdf",
+      "copie": "sources/anses/ANSES_2016_NUT2012SA0103Ra.pdf",
+      "consulte": "2026-11-04"
+    },
+    "anses_lipides": {
+      "titre": "ANSES, page « Les lipides » : références en acides gras de l'adulte (avis 2011) et lipides totaux 35 à 40 % de l'apport énergétique",
+      "url": "https://www.anses.fr/fr/content/les-lipides",
+      "copie": "sources/anses/les-lipides.html",
+      "consulte": "2026-11-04"
+    },
+    "anses_proteines": {
+      "titre": "ANSES, page « Les protéines » : référence de 0,83 g/kg/j pour l'adulte (2007), protéines entre 10 et 20 % de l'AET (2016)",
+      "url": "https://www.anses.fr/fr/content/les-proteines",
+      "copie": "sources/anses/les-proteines.html",
+      "consulte": "2026-11-04"
+    },
+    "ue_1169_2011": {
+      "titre": "Règlement (UE) n° 1169/2011, annexe I : sel = sodium × 2,5",
+      "url": "https://eur-lex.europa.eu/eli/reg/2011/1169/oj"
+    }
+  },
+  "nutriments": {
+    "energie": { "type": "egal", "base": "depense", "note": "Dépense estimée du jour (onglet Activité)." },
+    "proteines": { "type": "min", "par_kg": 0.83, "source": "anses_proteines", "note": "0,83 g/kg/j ; l'ANSES place aussi les protéines entre 10 et 20 % de l'AET." },
+    "glucides": { "type": "fourchette", "pct_ae": [40, 55], "kcal_par_g": 4, "source": "anses_2016" },
+    "sucres": { "type": "max", "valeur": 100, "source": "anses_2016", "note": "Limite pour les sucres totaux hors lactose et galactose. La table donne les sucres totaux, lactose compris." },
+    "amidon": null,
+    "fibres": { "type": "min", "valeur": 30, "source": "anses_2016", "note": "Apport satisfaisant (AS)." },
+    "lipides": { "type": "fourchette", "pct_ae": [35, 40], "kcal_par_g": 9, "source": "anses_lipides" },
+    "ags": { "type": "max", "pct_ae": 12, "kcal_par_g": 9, "source": "anses_lipides", "note": "Acides gras saturés totaux ≤ 12 % de l'apport énergétique." },
+    "agmi": null,
+    "agpi": null,
+    "cholesterol": null,
+    "oleique": { "type": "fourchette", "pct_ae": [15, 20], "kcal_par_g": 9, "source": "anses_lipides" },
+    "linoleique": { "type": "min", "pct_ae": 4, "kcal_par_g": 9, "source": "anses_lipides" },
+    "arachidonique": null,
+    "ala": { "type": "min", "pct_ae": 1, "kcal_par_g": 9, "source": "anses_lipides" },
+    "epa": { "type": "min", "valeur": 0.25, "source": "anses_lipides", "note": "250 mg/j." },
+    "dha": { "type": "min", "valeur": 0.25, "source": "anses_lipides", "note": "250 mg/j." },
+    "vitA": { "type": "min", "valeur": 750, "source": "anses_vm_2025", "note": "RNP, µg d'équivalents rétinol." },
+    "retinol": null,
+    "betacarotene": null,
+    "vitD": { "type": "min", "valeur": 15, "source": "anses_vm_2025", "note": "AS." },
+    "vitE": { "type": "min", "valeur": 10, "source": "anses_vm_2025", "note": "AS." },
+    "vitK1": { "type": "min", "valeur": 79, "source": "anses_vm_2025", "note": "AS (vitamine K1)." },
+    "vitK2": null,
+    "vitC": { "type": "min", "valeur": 110, "source": "anses_vm_2025", "note": "RNP." },
+    "vitB1": { "type": "min", "par_mj": 0.1, "source": "anses_vm_2025", "note": "RNP : 0,1 mg par MJ d'énergie." },
+    "vitB2": { "type": "min", "valeur": 1.6, "source": "anses_vm_2025", "note": "RNP." },
+    "vitB3": { "type": "min", "par_mj": 1.6, "source": "anses_vm_2025", "note": "RNP en équivalents niacine (EN) par MJ. Ciqual donne la niacine préformée sans le tryptophane : le total sous-estime l'apport en EN." },
+    "vitB5": { "type": "min", "valeur": 6, "source": "anses_vm_2025", "note": "AS." },
+    "vitB6": { "type": "min", "valeur": 1.7, "source": "anses_vm_2025", "note": "RNP." },
+    "vitB9": { "type": "min", "valeur": 330, "source": "anses_vm_2025", "note": "RNP, µg d'équivalents folates alimentaires (EFA = DFE)." },
+    "folatesNat": null,
+    "acideFolique": null,
+    "vitB12": { "type": "min", "valeur": 4, "source": "anses_vm_2025", "note": "AS." },
+    "calcium": { "type": "min", "valeur": 1000, "source": "anses_vm_2025", "note": "RNP 18-24 ans (950 mg à partir de 25 ans)." },
+    "fer": { "type": "min", "valeur": 11, "source": "anses_vm_2025", "note": "RNP." },
+    "magnesium": { "type": "min", "valeur": 380, "source": "anses_vm_2025", "note": "AS." },
+    "potassium": { "type": "min", "valeur": 3500, "source": "anses_vm_2025", "note": "AS." },
+    "phosphore": { "type": "min", "valeur": 550, "source": "anses_vm_2025", "note": "AS." },
+    "zinc": { "type": "min", "valeur": 11.7, "source": "anses_vm_2025", "note": "RNP pour 600 mg/j de phytates (niveau intermédiaire, les phytates ne sont pas suivis) ; 9,4 mg pour 300 mg/j, 14,0 mg pour 900 mg/j." },
+    "selenium": { "type": "min", "valeur": 70, "source": "anses_vm_2025", "note": "AS." },
+    "iode": { "type": "min", "valeur": 150, "source": "anses_vm_2025", "note": "AS." },
+    "cuivre": { "type": "min", "valeur": 1.9, "source": "anses_vm_2025", "note": "AS." },
+    "manganese": { "type": "min", "valeur": 2.8, "source": "anses_2016", "note": "AS de 2016 (avis, tableau 2) : la page ANSES de 2025 ne donne pas de référence pour le manganèse." },
+    "sodium": { "type": "max", "valeur": 2300, "source": "anses_vm_2025", "note": "LSS (limite supérieure de sécurité) ; l'AS est de 1 500 mg." },
+    "sel": { "type": "max", "valeur": 5.75, "source": "anses_vm_2025", "note": "LSS du sodium (2 300 mg) × 2,5, facteur du règlement (UE) n° 1169/2011." }
+  },
+  "rapport_omega6_omega3": {
+    "calcul": "acide linoléique / ALA",
+    "type": "max",
+    "valeur": 5,
+    "source": "anses_2016",
+    "note": "L'ANSES demande de respecter un rapport acide linoléique / ALA inférieur à 5 (avis 2016, p. 16). Le rapport oméga 6 / oméga 3 total, (linoléique + arachidonique) / (ALA + EPA + DHA), est affiché à côté, sans référence."
+  }
+}

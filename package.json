@@ -1,0 +1,17 @@
+{
+  "name": "suivi-nutrition",
+  "private": true,
+  "type": "module",
+  "description": "Suivi calorique et nutritionnel personnel (PWA statique, sans serveur, données Ciqual 2025).",
+  "scripts": {
+    "serve": "node outils/serveur.mjs",
+    "verifier": "python3 -I outils/ciqual.py verifier",
+    "test:calculs": "node outils/test-calculs.mjs",
+    "test:navigateur": "node outils/test-navigateur.mjs",
+    "test": "python3 -I outils/ciqual.py verifier && node outils/test-calculs.mjs && node outils/test-navigateur.mjs",
+    "icones": "node outils/icones.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.63.0"
+  }
+}

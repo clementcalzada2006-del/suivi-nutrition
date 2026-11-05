@@ -1,0 +1,39 @@
+{
+  "explication": "Dépense du jour = dépense de repos × facteur d'une journée sédentaire + marche + salle. Repos : formule de Cunningham, avec la masse maigre = poids × (1 − masse grasse). La marche et la salle remplacent du temps passé assis : on ajoute (MET de l'activité − MET de la position assise) × poids × durée, 1 MET valant environ 1 kcal par kg et par heure (Compendium).",
+  "sources": {
+    "cunningham_1991": "Cunningham JJ. Body composition as a determinant of energy expenditure: a synthetic review and a proposed general prediction equation. Am J Clin Nutr 1991;54:963-969. Résumé : REE = 370 + 21,6 × FFM.",
+    "fao_2004": "FAO/WHO/UNU. Human energy requirements, Report of a Joint FAO/WHO/UNU Expert Consultation, 2004, chapitre 5, tableau 5.1 (journée sédentaire : total 36,7 = PAL 1,53, dont 1 h de marche à 3,2 et la position assise à 1,5). https://www.fao.org/4/y5686e/y5686e07.htm",
+    "compendium_2024": "Herrmann SD et al. 2024 Adult Compendium of Physical Activities: a third update of the energy costs of human activities. J Sport Health Sci 2024;13(1):6-12. doi:10.1016/j.jshs.2023.10.010. Valeurs consultées sur https://pacompendium.com le 04/11/2026."
+  },
+  "repos": { "a": 370, "b": 21.6, "source": "cunningham_1991" },
+  "masse_grasse_pct_defaut": 15,
+  "facteur_journee_sedentaire": {
+    "valeur": 1.4583333333333333,
+    "calcul": "(36,7 − 3,2 + 1,5) / 24 : l'heure de marche du tableau 5.1 est remplacée par une heure assise, car la marche est comptée à part (pas de l'iPhone)",
+    "source": "fao_2004"
+  },
+  "met_assis": { "valeur": 1.5, "source": "fao_2004", "note": "Coefficient de la position assise du tableau FAO (PAR 1,5, multiple du métabolisme de base) que remplacent la marche et la salle ; il est utilisé ici comme un MET, ce qui fait un écart de quelques kcal par heure d'activité (environ 5 %)." },
+  "marche": {
+    "met": 3.8,
+    "code": "17190",
+    "description": "Walking, 2.8 to 3.4 mph, level, moderate pace, firm surface",
+    "vitesse_kmh": 5,
+    "note": "5 km/h, milieu de la plage du code 17190 (4,5 à 5,5 km/h). Seule la distance de l'iPhone entre dans le calcul ; les pas sont affichés.",
+    "source": "compendium_2024"
+  },
+  "salle": {
+    "met": 3.5,
+    "code": "02054",
+    "description": "Resistance (weight) training, multiple exercises, 8-15 reps at varied resistance",
+    "minutes_effort_par_serie": 1,
+    "minutes_repos_par_serie": 2.5,
+    "note": "Durée estimée = séries × (1 min d'effort + 2,5 min de repos). C'est une hypothèse, pas une valeur publiée : repos annoncés de 2 à 3 min. Échauffement non compté. MET 3,5 plutôt que 6,0 (code 02050, effort vigoureux) car les repos sont longs.",
+    "source": "compendium_2024"
+  },
+  "seances": [
+    { "id": "pecs_epaules", "nom": "Pecs + épaules", "icone": "💪", "groupes": [ { "nom": "Pecs", "series": 6 }, { "nom": "Épaules", "series": 6 } ] },
+    { "id": "dos_epaules", "nom": "Dos + épaules", "icone": "🏋️", "groupes": [ { "nom": "Dos", "series": 6 }, { "nom": "Épaules", "series": 6 } ] },
+    { "id": "jambes", "nom": "Jambes", "icone": "🦵", "groupes": [ { "nom": "Quadriceps (extension)", "series": 4 }, { "nom": "Ischios (curls)", "series": 3 }, { "nom": "Adducteurs", "series": 3 } ] },
+    { "id": "jambes_epaules", "nom": "Jambes + épaules", "icone": "🦵", "groupes": [ { "nom": "Quadriceps (extension)", "series": 4 }, { "nom": "Ischios (curls)", "series": 3 }, { "nom": "Adducteurs", "series": 3 }, { "nom": "Épaules", "series": 6 } ] }
+  ]
+}
