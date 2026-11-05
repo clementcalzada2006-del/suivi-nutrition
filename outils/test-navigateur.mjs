@@ -379,8 +379,8 @@ console.log("\n7a. Calcul de la dépense");
   await onglet(page, "activite");
   verif(proche(await dep(), 1856.08 * 1.4583333333333333 + 228.16), "masse grasse 14 % : dépense recalculée");
   await onglet(page, "bilan");
-  // Protéines : 0,83 × 80 = 66,4 g
-  verif((await page.locator('#vue-bilan .ligne-nut[data-cle="proteines"] .nut-ref').textContent()).includes("66,4"), "référence des protéines : 66,4 g");
+  // Protéines (sportif de force, Afssa 2007) : 1,3 × 80 = 104 g à 2,5 × 80 = 200 g
+  verif(/104,0 à 200,0/.test(await page.locator('#vue-bilan .ligne-nut[data-cle="proteines"] .nut-ref').textContent()), "référence des protéines : 104,0 à 200,0 g");
 
   console.log("\n7b. Presse-papiers (Raccourci)");
   await onglet(page, "activite");

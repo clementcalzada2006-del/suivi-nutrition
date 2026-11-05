@@ -95,7 +95,7 @@ console.log("\nRéférences");
 const ctx = { poids: 80, depense: 3000 };
 const r = (c) => C.referenceConcrete(refs.nutriments[c], ctx);
 verif(r("energie").bas === 3000, "énergie = dépense");
-verif(proche(r("proteines").bas, 66.4), "protéines 0,83 × 80 = 66,4 g");
+verif(r("proteines").type === "fourchette" && proche(r("proteines").bas, 104) && proche(r("proteines").haut, 200), "protéines sportif de force : 1,3 à 2,5 g/kg × 80 = 104 à 200 g");
 verif(proche(r("glucides").bas, 300) && proche(r("glucides").haut, 412.5), "glucides 40-55 % de 3000 kcal / 4 = 300 à 412,5 g");
 verif(proche(r("lipides").bas, 116.66666666666667) && proche(r("lipides").haut, 133.33333333333334), "lipides 35-40 % de 3000 kcal / 9 = 116,7 à 133,3 g");
 verif(r("vitB8").bas === 40, "biotine : référence 40 µg pour mémoire");

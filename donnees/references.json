@@ -1,5 +1,5 @@
 {
-  "profil": "Homme de 18 à 24 ans (calcium de la tranche 18-24 ans, les autres références valent à partir de 18 ans)",
+  "profil": "Homme de 18 à 24 ans, sportif de force (musculation) avec un travail actif. Les références ANSES des vitamines et minéraux ne distinguent que l'âge, le sexe, la grossesse et l'allaitement : elles ne changent pas avec le sport, sauf B1 et B3, calculées par MJ de la dépense du jour. Les glucides, lipides et oméga, en % de l'énergie, suivent aussi la dépense du jour (marche et salle comprises). Protéines : référence spécifique aux sportifs de force (Afssa 2007).",
   "date": "2026-11-04",
   "explication": "« À atteindre » : apport conseillé par l'ANSES (RNP ou apport satisfaisant). « À ne pas dépasser » : limite. « Fourchette » : part de l'énergie à garder entre deux bornes. Les références exprimées en % de l'énergie ou par MJ sont calculées avec ta dépense estimée du jour, celles par kg avec ta dernière pesée. Sans référence officielle, seul le total est affiché.",
   "format": "Pour éditer ce fichier : type min = à atteindre ; max = à ne pas dépasser ; fourchette = entre deux bornes ; null = pas de référence officielle. valeur = quantité par jour dans l'unité du nutriment ; par_kg = par kg de poids corporel ; par_mj = par MJ de l'énergie de référence ; pct_ae = % de l'énergie de référence, converti en grammes avec kcal_par_g. L'énergie de référence est la dépense estimée du jour (donnees/activite.json).",
@@ -22,6 +22,12 @@
       "copie": "sources/anses/les-lipides.html",
       "consulte": "2026-11-04"
     },
+    "afssa_2007_proteines": {
+      "titre": "Afssa (aujourd'hui ANSES), rapport « Apport en protéines : consommation, qualité, besoins et recommandations », 2007 : athlètes confirmés en disciplines de force 1,3 à 1,5 g/kg/j ; pour développer la masse musculaire, 2 à 2,5 g/kg/j, sans dépasser 2,5 g/kg/j (p. 199 et « Points importants » p. 201)",
+      "url": "https://www.anses.fr/fr/system/files/NUT-Ra-Proteines.pdf",
+      "copie": "sources/anses/AFSSA_2007_proteines.pdf",
+      "consulte": "2026-11-05"
+    },
     "anses_proteines": {
       "titre": "ANSES, page « Les protéines » : référence de 0,83 g/kg/j pour l'adulte (2007), protéines entre 10 et 20 % de l'AET (2016)",
       "url": "https://www.anses.fr/fr/content/les-proteines",
@@ -31,7 +37,7 @@
   },
   "nutriments": {
     "energie": { "type": "egal", "base": "depense", "note": "Dépense estimée du jour (onglet Activité)." },
-    "proteines": { "type": "min", "par_kg": 0.83, "source": "anses_proteines", "note": "0,83 g/kg/j ; l'ANSES place aussi les protéines entre 10 et 20 % de l'AET." },
+    "proteines": { "type": "fourchette", "par_kg": [1.3, 2.5], "source": "afssa_2007_proteines", "note": "Sportif de force (musculation) : au moins 1,3 g/kg/j ; 2 à 2,5 g/kg/j pour développer la masse musculaire, sans dépasser 2,5 g/kg/j (Afssa 2007). Pour un adulte non sportif, la référence ANSES est 0,83 g/kg/j." },
     "glucides": { "type": "fourchette", "pct_ae": [40, 55], "kcal_par_g": 4, "source": "anses_2016" },
     "lipides": { "type": "fourchette", "pct_ae": [35, 40], "kcal_par_g": 9, "source": "anses_lipides" },
     "oleique": { "type": "fourchette", "pct_ae": [15, 20], "kcal_par_g": 9, "source": "anses_lipides" },
