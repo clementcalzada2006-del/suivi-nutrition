@@ -189,7 +189,7 @@ function ouvrirFiche(id) {
   const g0 = C.grammesManges(a, q0);
   const portion = `${C.libelleQuantite(a, q0)}${a.unite !== "g" || a.part_comestible !== 1 ? ` (${C.formater(g0, "g")} g mangés)` : ""}`;
   const provenance = (val) => {
-    if (val.source === "etiquette") return `Étiquette${val.date ? ` (${esc(val.date)})` : ""}`;
+    if (val.source === "etiquette") return `Étiquette${val.origine ? ` : ${esc(val.origine)}` : ""}${val.date ? ` (${esc(val.date)})` : ""}`;
     const base = `Ciqual ${val.code} « ${esc(a.ciqual.nom)} », constituant ${val.const}`;
     return val.source === "estime" ? `Estimé : aliment voisin ${base}` : base;
   };

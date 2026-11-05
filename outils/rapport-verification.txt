@@ -1,8 +1,8 @@
 Vérification Ciqual 2025 (2025-11-03) de donnees/foods.json
 Aliments : 28 ; nutriments suivis : 34
-Valeurs vérifiées contre le XML : 952
+Valeurs vérifiées contre le XML : 932
 Écarts : 0
-Avertissements de cohérence : 14
+Avertissements de cohérence : 12
   pain_complet : contrôle oméga en écart : oméga 3 + oméga 6 = 1.4200 g, polyinsaturés = 1.41 g
   pain_graines : contrôle oméga en écart : oméga 3 + oméga 6 = 2.4100 g, polyinsaturés = 2.4 g
   pain_petites : contrôle oméga en écart : oméga 3 + oméga 6 = 2.4100 g, polyinsaturés = 2.4 g
@@ -11,8 +11,6 @@ Avertissements de cohérence : 14
   echine_porc : contrôle acides gras ignoré : valeur manquante
   echine_porc : contrôle oméga ignoré : valeur manquante
   lapin : contrôle oméga ignoré : valeur manquante
-  ratatouille : contrôle acides gras ignoré : valeur manquante
-  ratatouille : contrôle oméga ignoré : valeur manquante
   oignons : contrôle oméga en écart : oméga 3 + oméga 6 = 0.0253 g, polyinsaturés = 0.025 g
   haricots_verts : contrôle oméga ignoré : valeur manquante
   comte : contrôle acides gras en écart : saturés + mono + poly = 33.860 g, lipides = 33.8 g
