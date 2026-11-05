@@ -319,8 +319,6 @@
     }
   ],
   "categories": [
-    "Œufs",
-    "Avocat",
     "Pains",
     "Féculents",
     "Viandes",
@@ -333,7 +331,7 @@
     {
       "id": "oeuf",
       "nom": "Œuf dur",
-      "categorie": "Œufs",
+      "categorie": "Viandes",
       "icone": "🥚",
       "unite": "œuf",
       "unite_pluriel": "œufs",
@@ -702,7 +700,7 @@
     {
       "id": "avocat",
       "nom": "Avocat",
-      "categorie": "Avocat",
+      "categorie": "Fruits",
       "icone": "🥑",
       "unite": "avocat",
       "unite_pluriel": "avocats",
