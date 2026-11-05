@@ -1079,8 +1079,8 @@
         4,
         5
       ],
-      "poids_unite_g": 35.7,
-      "poids_source": "Étiquette (fiche produit Système U du 2026-11-05) : « Pour 1 tranche (environ 35,7 g) ». Le titre annonce 12 tranches pour 500 g, soit 41,7 g : à vérifier en comptant les tranches d'un paquet.",
+      "poids_unite_g": 35.714285714285715,
+      "poids_source": "Paquet de 500 g en 14 tranches (nombre de tranches confirmé par Clément le 2026-11-05) : 500 / 14 = 35,7 g, comme le tableau nutritionnel de la fiche produit Système U (« environ 35,7 g » par tranche). Le titre de la fiche annonce 12 tranches, ce qui est faux pour ce paquet.",
       "part_comestible": 1,
       "part_comestible_source": null,
       "etat": "tel que vendu",
@@ -1448,8 +1448,8 @@
         4,
         5
       ],
-      "poids_unite_g": 35.7,
-      "poids_source": "Étiquette (fiche produit Système U du 2026-11-05) : « Pour 1 tranche (environ 35,7 g) ». Le titre annonce 12 tranches pour 500 g, soit 41,7 g : à vérifier en comptant les tranches d'un paquet.",
+      "poids_unite_g": 35.714285714285715,
+      "poids_source": "Paquet de 500 g en 14 tranches (nombre de tranches confirmé par Clément le 2026-11-05) : 500 / 14 = 35,7 g, comme le tableau nutritionnel de la fiche produit Système U (« environ 35,7 g » par tranche). Le titre de la fiche annonce 12 tranches, ce qui est faux pour ce paquet.",
       "part_comestible": 1,
       "part_comestible_source": null,
       "etat": "tel que vendu",
