@@ -1,6 +1,6 @@
 Vérification Ciqual 2025 (2025-11-03) de donnees/foods.json
-Aliments : 28 ; nutriments suivis : 46
-Valeurs vérifiées contre le XML : 1288
+Aliments : 28 ; nutriments suivis : 34
+Valeurs vérifiées contre le XML : 952
 Écarts : 0
 Avertissements de cohérence : 14
   pain_complet : contrôle oméga en écart : oméga 3 + oméga 6 = 1.4200 g, polyinsaturés = 1.41 g

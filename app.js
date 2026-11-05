@@ -8,7 +8,7 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 const ONGLETS = ["aliments", "journal", "bilan", "activite", "poids"];
 const GROUPES_BILAN = [
   { groupe: "macros", titre: "Macros" },
-  { groupe: "lipides", titre: "Lipides en détail" },
+  { groupe: "omega", titre: "Oméga" },
   { groupe: "vitamines", titre: "Vitamines" },
   { groupe: "mineraux", titre: "Minéraux" },
 ];
@@ -110,11 +110,8 @@ function rendreEntete({ t, dep }) {
   pose("#e-proteines", "proteines", "g");
   pose("#e-glucides", "glucides", "g");
   pose("#e-lipides", "lipides", "g");
-  pose("#e-sucres", "sucres", "g");
-  pose("#e-fibres", "fibres", "g");
-  pose("#e-sel", "sel", "g");
   $("#e-depense").textContent = dep ? `/ ${C.formater(dep.total, "kcal")} estimées` : "";
-  const cles = ["energie", "proteines", "glucides", "lipides", "sucres", "fibres", "sel"];
+  const cles = ["energie", "proteines", "glucides", "lipides"];
   $("#e-incomplet").hidden = !cles.some((c) => t[c].incomplet);
   const e = $("#entete");
   e.classList.remove("pulse");
@@ -202,19 +199,17 @@ function ouvrirFiche(id) {
       .map((n) => {
         const val = a.valeurs[n.cle];
         const nul = val?.v === null || val?.v === undefined;
+        const absent = C.absentDeLaTable(n);
         const p100 = esc(C.teneurTable(val, n)); // chiffre officiel, tel qu'écrit dans la table
-        const ppor = nul ? "non disponible" : C.formaterNutriment(C.apport(a, q0, n.cle), n);
+        const ppor = absent ? "absente de Ciqual" : nul ? "non disponible" : C.formaterNutriment(C.apport(a, q0, n.cle), n);
         return `<div class="fiche-ligne${nul ? " nul" : ""}" data-cle="${n.cle}">
           <div class="fiche-nom">${esc(n.nom)}</div>
           <div class="fiche-vals"><span class="fiche-100">${p100}<small> / 100 g</small></span><span>${ppor}<small> / ${esc(C.libelleQuantite(a, q0))}</small></span></div>
-          <div class="fiche-prov">${val ? provenance(val) : "non disponible"}${val?.trace ? " · traces ou valeur sous le seuil" : ""}</div>
+          <div class="fiche-prov">${absent ? esc(n.note || "Absente de la table Ciqual 2025") : val ? provenance(val) : "non disponible"}${val?.trace ? " · traces ou valeur sous le seuil" : ""}</div>
         </div>`;
       })
       .join("")}`;
   }).join("");
-  const controles = C.controlesCoherence(a.valeurs)
-    .map((c) => `<li class="${c.ok === null ? "ignore" : c.ok ? "ok" : "ecart"}">${c.ok === null ? "—" : c.ok ? "✓" : "⚠"} ${esc(c.nom)} : ${esc(c.detail)}</li>`)
-    .join("");
   ouvrirFeuille(`
     <div class="feuille-tete"><h2><span aria-hidden="true">${a.icone}</span> ${esc(a.nom)}</h2>${a.a_confirmer ? '<span class="badge">à confirmer</span>' : ""}</div>
     <dl class="fiche-meta">
@@ -226,7 +221,6 @@ function ouvrirFiche(id) {
       ${a.notes ? `<dt>Notes</dt><dd>${esc(a.notes)}</dd>` : ""}
     </dl>
     ${lignes}
-    <h3>Contrôles de cohérence</h3><ul class="controles">${controles}</ul>
     <button class="btn btn-large" data-act="fermer">Fermer</button>`);
 }
 
@@ -303,7 +297,7 @@ function rendreBilan({ t, dep, poids }) {
   const contexteRef = { poids, depense: dep ? dep.total : null };
   const groupes = GROUPES_BILAN.map(({ groupe, titre }) => {
     const lignes = foods.nutriments.filter((n) => n.groupe === groupe).map((n) => ligneBilan(n, t[n.cle], C.referenceConcrete(refs.nutriments[n.cle], contexteRef)));
-    if (groupe === "lipides") {
+    if (groupe === "omega") {
       const ri = refs.rapport_omega6_omega3;
       lignes.push(ligneRapport("rapport_la_ala", "Rapport acide linoléique / ALA", C.rapportLinoleiqueAla(t), C.referenceConcrete(ri, contexteRef), ri.note));
       lignes.push(ligneRapport("omega", "Rapport oméga 6 / oméga 3 total", C.rapportOmega(t), null, ""));
@@ -325,6 +319,13 @@ function rendreBilan({ t, dep, poids }) {
 }
 
 function ligneBilan(n, tot, r) {
+  if (tot.absent) {
+    // Absent de la table (biotine) : ni total ni barre, la référence reste affichée pour mémoire.
+    const ref = r && !r.inconnue ? ` · ${LIBELLE_TYPE[r.type]} : ${C.formaterNutriment(r.bas, n)} (pour mémoire)` : "";
+    return `<div class="ligne-nut t-aucun absent" data-cle="${n.cle}" data-total="" data-incomplet="0" data-absent="1">
+      <div class="nut-tete"><span class="nut-nom">${esc(n.nom)}</span><span class="nut-val">—</span></div>
+      <div class="nut-ref">Absente de la table Ciqual 2025${ref}</div></div>`;
+  }
   const et = C.etatReference(tot.total, r);
   let refTexte = "";
   let barre = "";

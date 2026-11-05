@@ -35,33 +35,6 @@
       ]
     },
     {
-      "cle": "sucres",
-      "nom": "dont sucres",
-      "unite": "g",
-      "groupe": "macros",
-      "ciqual": [
-        32000
-      ]
-    },
-    {
-      "cle": "amidon",
-      "nom": "dont amidon",
-      "unite": "g",
-      "groupe": "macros",
-      "ciqual": [
-        33110
-      ]
-    },
-    {
-      "cle": "fibres",
-      "nom": "Fibres",
-      "unite": "g",
-      "groupe": "macros",
-      "ciqual": [
-        34100
-      ]
-    },
-    {
       "cle": "lipides",
       "nom": "Lipides",
       "unite": "g",
@@ -71,46 +44,10 @@
       ]
     },
     {
-      "cle": "ags",
-      "nom": "Acides gras saturés",
-      "unite": "g",
-      "groupe": "lipides",
-      "ciqual": [
-        40302
-      ]
-    },
-    {
-      "cle": "agmi",
-      "nom": "Acides gras monoinsaturés",
-      "unite": "g",
-      "groupe": "lipides",
-      "ciqual": [
-        40303
-      ]
-    },
-    {
-      "cle": "agpi",
-      "nom": "Acides gras polyinsaturés",
-      "unite": "g",
-      "groupe": "lipides",
-      "ciqual": [
-        40304
-      ]
-    },
-    {
-      "cle": "cholesterol",
-      "nom": "Cholestérol",
-      "unite": "mg",
-      "groupe": "lipides",
-      "ciqual": [
-        75100
-      ]
-    },
-    {
       "cle": "oleique",
       "nom": "Oméga 9 : acide oléique",
       "unite": "g",
-      "groupe": "lipides",
+      "groupe": "omega",
       "ciqual": [
         41819
       ]
@@ -119,7 +56,7 @@
       "cle": "linoleique",
       "nom": "Oméga 6 : acide linoléique",
       "unite": "g",
-      "groupe": "lipides",
+      "groupe": "omega",
       "ciqual": [
         41826
       ]
@@ -128,7 +65,7 @@
       "cle": "arachidonique",
       "nom": "Oméga 6 : acide arachidonique",
       "unite": "g",
-      "groupe": "lipides",
+      "groupe": "omega",
       "ciqual": [
         42046
       ],
@@ -138,7 +75,7 @@
       "cle": "ala",
       "nom": "Oméga 3 : ALA",
       "unite": "g",
-      "groupe": "lipides",
+      "groupe": "omega",
       "ciqual": [
         41833
       ]
@@ -147,7 +84,7 @@
       "cle": "epa",
       "nom": "Oméga 3 : EPA",
       "unite": "g",
-      "groupe": "lipides",
+      "groupe": "omega",
       "ciqual": [
         42053
       ],
@@ -157,7 +94,7 @@
       "cle": "dha",
       "nom": "Oméga 3 : DHA",
       "unite": "g",
-      "groupe": "lipides",
+      "groupe": "omega",
       "ciqual": [
         42263
       ],
@@ -165,74 +102,11 @@
     },
     {
       "cle": "vitA",
-      "nom": "Vitamine A (équivalents rétinol)",
+      "nom": "Vitamine A",
       "unite": "µg",
       "groupe": "vitamines",
       "ciqual": [
         51104
-      ]
-    },
-    {
-      "cle": "retinol",
-      "nom": "dont rétinol",
-      "unite": "µg",
-      "groupe": "vitamines",
-      "ciqual": [
-        51200
-      ]
-    },
-    {
-      "cle": "betacarotene",
-      "nom": "Bêta-carotène",
-      "unite": "µg",
-      "groupe": "vitamines",
-      "ciqual": [
-        51330
-      ]
-    },
-    {
-      "cle": "vitD",
-      "nom": "Vitamine D",
-      "unite": "µg",
-      "groupe": "vitamines",
-      "ciqual": [
-        52100
-      ]
-    },
-    {
-      "cle": "vitE",
-      "nom": "Vitamine E (alpha-tocophérol)",
-      "unite": "mg",
-      "groupe": "vitamines",
-      "ciqual": [
-        71010
-      ]
-    },
-    {
-      "cle": "vitK1",
-      "nom": "Vitamine K1",
-      "unite": "µg",
-      "groupe": "vitamines",
-      "ciqual": [
-        54101
-      ]
-    },
-    {
-      "cle": "vitK2",
-      "nom": "Vitamine K2",
-      "unite": "µg",
-      "groupe": "vitamines",
-      "ciqual": [
-        54104
-      ]
-    },
-    {
-      "cle": "vitC",
-      "nom": "Vitamine C",
-      "unite": "mg",
-      "groupe": "vitamines",
-      "ciqual": [
-        55100
       ]
     },
     {
@@ -281,8 +155,16 @@
       ]
     },
     {
+      "cle": "vitB8",
+      "nom": "Vitamine B8 (biotine)",
+      "unite": "µg",
+      "groupe": "vitamines",
+      "ciqual": [],
+      "note": "Absente de la table Ciqual 2025 (aucun des 74 constituants) : pas de total possible."
+    },
+    {
       "cle": "vitB9",
-      "nom": "Vitamine B9 (folates totaux)",
+      "nom": "Vitamine B9 (folates)",
       "unite": "µg",
       "groupe": "vitamines",
       "ciqual": [
@@ -290,24 +172,6 @@
         56700
       ],
       "note": "56702 (équivalents folates alimentaires) si présent, sinon 56700 (folates totaux)"
-    },
-    {
-      "cle": "folatesNat",
-      "nom": "dont folates naturels",
-      "unite": "µg",
-      "groupe": "vitamines",
-      "ciqual": [
-        56704
-      ]
-    },
-    {
-      "cle": "acideFolique",
-      "nom": "dont acide folique ajouté",
-      "unite": "µg",
-      "groupe": "vitamines",
-      "ciqual": [
-        56708
-      ]
     },
     {
       "cle": "vitB12",
@@ -319,12 +183,48 @@
       ]
     },
     {
-      "cle": "calcium",
-      "nom": "Calcium",
+      "cle": "vitC",
+      "nom": "Vitamine C",
       "unite": "mg",
-      "groupe": "mineraux",
+      "groupe": "vitamines",
       "ciqual": [
-        10200
+        55100
+      ]
+    },
+    {
+      "cle": "vitD",
+      "nom": "Vitamine D",
+      "unite": "µg",
+      "groupe": "vitamines",
+      "ciqual": [
+        52100
+      ]
+    },
+    {
+      "cle": "vitE",
+      "nom": "Vitamine E (alpha-tocophérol)",
+      "unite": "mg",
+      "groupe": "vitamines",
+      "ciqual": [
+        71010
+      ]
+    },
+    {
+      "cle": "vitK1",
+      "nom": "Vitamine K1",
+      "unite": "µg",
+      "groupe": "vitamines",
+      "ciqual": [
+        54101
+      ]
+    },
+    {
+      "cle": "vitK2",
+      "nom": "Vitamine K2",
+      "unite": "µg",
+      "groupe": "vitamines",
+      "ciqual": [
+        54104
       ]
     },
     {
@@ -334,6 +234,15 @@
       "groupe": "mineraux",
       "ciqual": [
         10260
+      ]
+    },
+    {
+      "cle": "calcium",
+      "nom": "Calcium",
+      "unite": "mg",
+      "groupe": "mineraux",
+      "ciqual": [
+        10200
       ]
     },
     {
@@ -355,12 +264,12 @@
       ]
     },
     {
-      "cle": "phosphore",
-      "nom": "Phosphore",
+      "cle": "sodium",
+      "nom": "Sodium",
       "unite": "mg",
       "groupe": "mineraux",
       "ciqual": [
-        10150
+        10110
       ]
     },
     {
@@ -373,30 +282,12 @@
       ]
     },
     {
-      "cle": "selenium",
-      "nom": "Sélénium",
-      "unite": "µg",
-      "groupe": "mineraux",
-      "ciqual": [
-        10340
-      ]
-    },
-    {
-      "cle": "iode",
-      "nom": "Iode",
-      "unite": "µg",
-      "groupe": "mineraux",
-      "ciqual": [
-        10530
-      ]
-    },
-    {
-      "cle": "cuivre",
-      "nom": "Cuivre",
+      "cle": "phosphore",
+      "nom": "Phosphore",
       "unite": "mg",
       "groupe": "mineraux",
       "ciqual": [
-        10290
+        10150
       ]
     },
     {
@@ -409,21 +300,21 @@
       ]
     },
     {
-      "cle": "sodium",
-      "nom": "Sodium",
-      "unite": "mg",
+      "cle": "selenium",
+      "nom": "Sélénium",
+      "unite": "µg",
       "groupe": "mineraux",
       "ciqual": [
-        10110
+        10340
       ]
     },
     {
-      "cle": "sel",
-      "nom": "Sel",
-      "unite": "g",
+      "cle": "cuivre",
+      "nom": "Cuivre",
+      "unite": "mg",
       "groupe": "mineraux",
       "ciqual": [
-        10004
+        10290
       ]
     }
   ],
@@ -496,36 +387,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 0.52,
-          "brut": "0,52",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 22010,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 22010,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 22010,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 8.62,
           "brut": "8,62",
@@ -533,46 +394,6 @@
           "source": "ciqual",
           "code": 22010,
           "const": 40000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "ags": {
-          "v": 3.22,
-          "brut": "3,22",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 22010,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 4.01,
-          "brut": "4,01",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 22010,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 1.39,
-          "brut": "1,39",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 22010,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 355,
-          "brut": "355",
-          "unite": "mg",
-          "source": "ciqual",
-          "code": 22010,
-          "const": 75100,
           "date": "2025-11-03",
           "trace": false
         },
@@ -643,26 +464,6 @@
           "source": "ciqual",
           "code": 22010,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 61.5,
-          "brut": "61,5",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 22010,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 11,
-          "brut": "11",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 22010,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -776,26 +577,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 22010,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 22010,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 1.11,
           "brut": "1,11",
@@ -876,16 +657,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "iode": {
-          "v": 49.7,
-          "brut": "49,7",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 22010,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "cuivre": {
           "v": 0.068,
           "brut": "0,068",
@@ -916,13 +687,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 0.31,
-          "brut": "0,31",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "ciqual",
           "code": 22010,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -982,36 +753,6 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "sucres": {
-          "v": 0.4,
-          "brut": "0,4",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13004,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 0,
-          "brut": "< 0,35",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13004,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "fibres": {
-          "v": 3.6,
-          "brut": "3,6",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13004,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 20.6,
           "brut": "20,6",
@@ -1021,46 +762,6 @@
           "const": 40000,
           "date": "2025-11-03",
           "trace": false
-        },
-        "ags": {
-          "v": 4.51,
-          "brut": "4,51",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13004,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 12.3,
-          "brut": "12,3",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13004,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 2.83,
-          "brut": "2,83",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13004,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 0,
-          "brut": "< 0,5",
-          "unite": "mg",
-          "source": "ciqual",
-          "code": 13004,
-          "const": 75100,
-          "date": "2025-11-03",
-          "trace": true
         },
         "oleique": {
           "v": 8.72,
@@ -1131,26 +832,6 @@
           "const": 51104,
           "date": "2025-11-03",
           "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13004,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 0,
-          "brut": "< 5",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13004,
-          "const": 51330,
-          "date": "2025-11-03",
-          "trace": true
         },
         "vitD": {
           "v": 0,
@@ -1262,26 +943,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": 70.4,
-          "brut": "70,4",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13004,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13004,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0,
           "brut": "0",
@@ -1362,16 +1023,6 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "iode": {
-          "v": 0,
-          "brut": "< 20",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13004,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": true
-        },
         "cuivre": {
           "v": 0.18,
           "brut": "0,18",
@@ -1402,13 +1053,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 0.015,
-          "brut": "0,015",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "ciqual",
           "code": 13004,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -1471,36 +1122,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 5.63,
-          "brut": "5,63",
-          "unite": "g",
-          "source": "estime",
-          "code": 7111,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 34.2,
-          "brut": "34,2",
-          "unite": "g",
-          "source": "estime",
-          "code": 7111,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 7.3,
-          "brut": "7,3",
-          "unite": "g",
-          "source": "estime",
-          "code": 7111,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 4.1,
           "brut": "4,1",
@@ -1510,46 +1131,6 @@
           "const": 40000,
           "date": "2025-11-03",
           "trace": false
-        },
-        "ags": {
-          "v": 0.57,
-          "brut": "0,57",
-          "unite": "g",
-          "source": "estime",
-          "code": 7111,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 2.11,
-          "brut": "2,11",
-          "unite": "g",
-          "source": "estime",
-          "code": 7111,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 1.41,
-          "brut": "1,41",
-          "unite": "g",
-          "source": "estime",
-          "code": 7111,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 0,
-          "brut": "< 1",
-          "unite": "mg",
-          "source": "estime",
-          "code": 7111,
-          "const": 75100,
-          "date": "2025-11-03",
-          "trace": true
         },
         "oleique": {
           "v": 1.92,
@@ -1620,26 +1201,6 @@
           "const": 51104,
           "date": "2025-11-03",
           "trace": false
-        },
-        "retinol": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "estime",
-          "code": 7111,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 0,
-          "brut": "< 30",
-          "unite": "µg",
-          "source": "estime",
-          "code": 7111,
-          "const": 51330,
-          "date": "2025-11-03",
-          "trace": true
         },
         "vitD": {
           "v": null,
@@ -1751,26 +1312,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "estime",
-          "code": 7111,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "estime",
-          "code": 7111,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": null,
           "brut": "-",
@@ -1851,16 +1392,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "iode": {
-          "v": 0,
-          "brut": "< 2,5",
-          "unite": "µg",
-          "source": "estime",
-          "code": 7111,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": true
-        },
         "cuivre": {
           "v": 0.17,
           "brut": "0,17",
@@ -1891,13 +1422,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 1.07,
-          "brut": "1,07",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "estime",
           "code": 7111,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -1960,36 +1491,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 5.6,
-          "brut": "5,6",
-          "unite": "g",
-          "source": "estime",
-          "code": 7113,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 37.2,
-          "brut": "37,2",
-          "unite": "g",
-          "source": "estime",
-          "code": 7113,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 5.9,
-          "brut": "5,9",
-          "unite": "g",
-          "source": "estime",
-          "code": 7113,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 6.6,
           "brut": "6,6",
@@ -1999,46 +1500,6 @@
           "const": 40000,
           "date": "2025-11-03",
           "trace": false
-        },
-        "ags": {
-          "v": 1.07,
-          "brut": "1,07",
-          "unite": "g",
-          "source": "estime",
-          "code": 7113,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 3.13,
-          "brut": "3,13",
-          "unite": "g",
-          "source": "estime",
-          "code": 7113,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 2.4,
-          "brut": "2,4",
-          "unite": "g",
-          "source": "estime",
-          "code": 7113,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 0,
-          "brut": "< 1",
-          "unite": "mg",
-          "source": "estime",
-          "code": 7113,
-          "const": 75100,
-          "date": "2025-11-03",
-          "trace": true
         },
         "oleique": {
           "v": 3.13,
@@ -2109,26 +1570,6 @@
           "const": 51104,
           "date": "2025-11-03",
           "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "< 16",
-          "unite": "µg",
-          "source": "estime",
-          "code": 7113,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "betacarotene": {
-          "v": 0,
-          "brut": "< 30",
-          "unite": "µg",
-          "source": "estime",
-          "code": 7113,
-          "const": 51330,
-          "date": "2025-11-03",
-          "trace": true
         },
         "vitD": {
           "v": 0,
@@ -2240,26 +1681,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": 11.8,
-          "brut": "11,8",
-          "unite": "µg",
-          "source": "estime",
-          "code": 7113,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": 1.4,
-          "brut": "1,4",
-          "unite": "µg",
-          "source": "estime",
-          "code": 7113,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0,
           "brut": "< 0,1",
@@ -2340,16 +1761,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "iode": {
-          "v": 0,
-          "brut": "< 2,5",
-          "unite": "µg",
-          "source": "estime",
-          "code": 7113,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": true
-        },
         "cuivre": {
           "v": 0.23,
           "brut": "0,23",
@@ -2380,13 +1791,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 1.07,
-          "brut": "1,07",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "estime",
           "code": 7113,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -2449,36 +1860,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 5.6,
-          "brut": "5,6",
-          "unite": "g",
-          "source": "estime",
-          "code": 7113,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 37.2,
-          "brut": "37,2",
-          "unite": "g",
-          "source": "estime",
-          "code": 7113,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 5.9,
-          "brut": "5,9",
-          "unite": "g",
-          "source": "estime",
-          "code": 7113,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 6.6,
           "brut": "6,6",
@@ -2488,46 +1869,6 @@
           "const": 40000,
           "date": "2025-11-03",
           "trace": false
-        },
-        "ags": {
-          "v": 1.07,
-          "brut": "1,07",
-          "unite": "g",
-          "source": "estime",
-          "code": 7113,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 3.13,
-          "brut": "3,13",
-          "unite": "g",
-          "source": "estime",
-          "code": 7113,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 2.4,
-          "brut": "2,4",
-          "unite": "g",
-          "source": "estime",
-          "code": 7113,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 0,
-          "brut": "< 1",
-          "unite": "mg",
-          "source": "estime",
-          "code": 7113,
-          "const": 75100,
-          "date": "2025-11-03",
-          "trace": true
         },
         "oleique": {
           "v": 3.13,
@@ -2598,26 +1939,6 @@
           "const": 51104,
           "date": "2025-11-03",
           "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "< 16",
-          "unite": "µg",
-          "source": "estime",
-          "code": 7113,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "betacarotene": {
-          "v": 0,
-          "brut": "< 30",
-          "unite": "µg",
-          "source": "estime",
-          "code": 7113,
-          "const": 51330,
-          "date": "2025-11-03",
-          "trace": true
         },
         "vitD": {
           "v": 0,
@@ -2729,26 +2050,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": 11.8,
-          "brut": "11,8",
-          "unite": "µg",
-          "source": "estime",
-          "code": 7113,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": 1.4,
-          "brut": "1,4",
-          "unite": "µg",
-          "source": "estime",
-          "code": 7113,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0,
           "brut": "< 0,1",
@@ -2829,16 +2130,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "iode": {
-          "v": 0,
-          "brut": "< 2,5",
-          "unite": "µg",
-          "source": "estime",
-          "code": 7113,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": true
-        },
         "cuivre": {
           "v": 0.23,
           "brut": "0,23",
@@ -2869,13 +2160,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 1.07,
-          "brut": "1,07",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "estime",
           "code": 7113,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -2939,36 +2230,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 9102,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 71.4,
-          "brut": "71,4",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 9102,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 5,
-          "brut": "5",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 9102,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 2.8,
           "brut": "2,8",
@@ -2976,46 +2237,6 @@
           "source": "ciqual",
           "code": 9102,
           "const": 40000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "ags": {
-          "v": 0.56,
-          "brut": "0,56",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 9102,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 1.01,
-          "brut": "1,01",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 9102,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 1,
-          "brut": "1",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 9102,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "mg",
-          "source": "ciqual",
-          "code": 9102,
-          "const": 75100,
           "date": "2025-11-03",
           "trace": false
         },
@@ -3088,26 +2309,6 @@
           "const": 51104,
           "date": "2025-11-03",
           "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 9102,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 0,
-          "brut": "< 50",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 9102,
-          "const": 51330,
-          "date": "2025-11-03",
-          "trace": true
         },
         "vitD": {
           "v": 0,
@@ -3219,26 +2420,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": 48,
-          "brut": "48",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 9102,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 9102,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0,
           "brut": "0",
@@ -3319,16 +2500,6 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "iode": {
-          "v": 0,
-          "brut": "< 10",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 9102,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": true
-        },
         "cuivre": {
           "v": 0.27,
           "brut": "0,27",
@@ -3359,13 +2530,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 0.01,
-          "brut": "0,01",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "ciqual",
           "code": 9102,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -3433,36 +2604,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 28100,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 28100,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 28100,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 9.3,
           "brut": "9,3",
@@ -3470,46 +2611,6 @@
           "source": "ciqual",
           "code": 28100,
           "const": 40000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "ags": {
-          "v": 3.75,
-          "brut": "3,75",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 28100,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 4.23,
-          "brut": "4,23",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 28100,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 1.01,
-          "brut": "1,01",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 28100,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 56.4,
-          "brut": "56,4",
-          "unite": "mg",
-          "source": "ciqual",
-          "code": 28100,
-          "const": 75100,
           "date": "2025-11-03",
           "trace": false
         },
@@ -3580,26 +2681,6 @@
           "source": "ciqual",
           "code": 28100,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 3,
-          "brut": "3",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 28100,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 28100,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -3713,26 +2794,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 28100,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 28100,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0.35,
           "brut": "0,35",
@@ -3813,16 +2874,6 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "iode": {
-          "v": 3.4,
-          "brut": "3,4",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 28100,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "cuivre": {
           "v": 0.075,
           "brut": "0,075",
@@ -3853,13 +2904,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 0.12,
-          "brut": "0,12",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "ciqual",
           "code": 28100,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -3927,36 +2978,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 28302,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 28302,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 28302,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 18.8,
           "brut": "18,8",
@@ -3964,46 +2985,6 @@
           "source": "ciqual",
           "code": 28302,
           "const": 40000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "ags": {
-          "v": 5.4,
-          "brut": "5,4",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 28302,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": null,
-          "brut": "-",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 28302,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": null,
-          "brut": "-",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 28302,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 66,
-          "brut": "66",
-          "unite": "mg",
-          "source": "ciqual",
-          "code": 28302,
-          "const": 75100,
           "date": "2025-11-03",
           "trace": false
         },
@@ -4074,26 +3055,6 @@
           "source": "ciqual",
           "code": 28302,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 9,
-          "brut": "9",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 28302,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 28302,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -4207,26 +3168,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 28302,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 28302,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0.56,
           "brut": "0,56",
@@ -4307,16 +3248,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "iode": {
-          "v": 3.13,
-          "brut": "3,13",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 28302,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "cuivre": {
           "v": 0.083,
           "brut": "0,083",
@@ -4347,13 +3278,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 0.18,
-          "brut": "0,18",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "ciqual",
           "code": 28302,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -4421,36 +3352,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 0,
-          "brut": "traces",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 36002,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "amidon": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 36002,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 36002,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 13.5,
           "brut": "13,5",
@@ -4458,46 +3359,6 @@
           "source": "ciqual",
           "code": 36002,
           "const": 40000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "ags": {
-          "v": 3.85,
-          "brut": "3,85",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 36002,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 6.04,
-          "brut": "6,04",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 36002,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 2.96,
-          "brut": "2,96",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 36002,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 92.5,
-          "brut": "92,5",
-          "unite": "mg",
-          "source": "ciqual",
-          "code": 36002,
-          "const": 75100,
           "date": "2025-11-03",
           "trace": false
         },
@@ -4568,26 +3429,6 @@
           "source": "ciqual",
           "code": 36002,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 33.6,
-          "brut": "33,6",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 36002,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 36002,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -4701,26 +3542,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 36002,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 36002,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0.4,
           "brut": "0,4",
@@ -4801,16 +3622,6 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "iode": {
-          "v": 0,
-          "brut": "< 20",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 36002,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": true
-        },
         "cuivre": {
           "v": 0.05,
           "brut": "0,05",
@@ -4841,13 +3652,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 0.22,
-          "brut": "0,22",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "ciqual",
           "code": 36002,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -4915,36 +3726,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 0,
-          "brut": "traces",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 36017,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "amidon": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 36017,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 36017,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 1.5,
           "brut": "1,5",
@@ -4952,46 +3733,6 @@
           "source": "ciqual",
           "code": 36017,
           "const": 40000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "ags": {
-          "v": 0.44,
-          "brut": "0,44",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 36017,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 0.59,
-          "brut": "0,59",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 36017,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 0.31,
-          "brut": "0,31",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 36017,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 66,
-          "brut": "66",
-          "unite": "mg",
-          "source": "ciqual",
-          "code": 36017,
-          "const": 75100,
           "date": "2025-11-03",
           "trace": false
         },
@@ -5062,26 +3803,6 @@
           "source": "ciqual",
           "code": 36017,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "< 21",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 36017,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "betacarotene": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 36017,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -5195,26 +3916,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 36017,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 36017,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0.17,
           "brut": "0,17",
@@ -5295,16 +3996,6 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "iode": {
-          "v": 0,
-          "brut": "< 20",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 36017,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": true
-        },
         "cuivre": {
           "v": 0.03,
           "brut": "0,03",
@@ -5335,13 +4026,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 0.11,
-          "brut": "0,11",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "ciqual",
           "code": 36017,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -5409,36 +4100,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 34001,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 34001,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 34001,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 11.6,
           "brut": "11,6",
@@ -5446,46 +4107,6 @@
           "source": "ciqual",
           "code": 34001,
           "const": 40000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "ags": {
-          "v": 4.74,
-          "brut": "4,74",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 34001,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 3.87,
-          "brut": "3,87",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 34001,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 2.74,
-          "brut": "2,74",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 34001,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 58.5,
-          "brut": "58,5",
-          "unite": "mg",
-          "source": "ciqual",
-          "code": 34001,
-          "const": 75100,
           "date": "2025-11-03",
           "trace": false
         },
@@ -5556,26 +4177,6 @@
           "source": "ciqual",
           "code": 34001,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 34001,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 34001,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -5689,26 +4290,6 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "folatesNat": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 34001,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 34001,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 2.9,
           "brut": "2,9",
@@ -5789,16 +4370,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "iode": {
-          "v": 1.46,
-          "brut": "1,46",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 34001,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "cuivre": {
           "v": 0.15,
           "brut": "0,15",
@@ -5829,13 +4400,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 0.14,
-          "brut": "0,14",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "ciqual",
           "code": 34001,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -5897,36 +4468,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 0.83,
-          "brut": "0,83",
-          "unite": "g",
-          "source": "estime",
-          "code": 20083,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "estime",
-          "code": 20083,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 2.95,
-          "brut": "2,95",
-          "unite": "g",
-          "source": "estime",
-          "code": 20083,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 0.54,
           "brut": "0,54",
@@ -5934,46 +4475,6 @@
           "source": "estime",
           "code": 20083,
           "const": 40000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "ags": {
-          "v": 0.041,
-          "brut": "0,041",
-          "unite": "g",
-          "source": "estime",
-          "code": 20083,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 0.019,
-          "brut": "0,019",
-          "unite": "g",
-          "source": "estime",
-          "code": 20083,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 0.082,
-          "brut": "0,082",
-          "unite": "g",
-          "source": "estime",
-          "code": 20083,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "mg",
-          "source": "estime",
-          "code": 20083,
-          "const": 75100,
           "date": "2025-11-03",
           "trace": false
         },
@@ -6044,26 +4545,6 @@
           "source": "estime",
           "code": 20083,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20083,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 7040,
-          "brut": "7040",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20083,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -6177,26 +4658,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": 145,
-          "brut": "145",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20083,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20083,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0,
           "brut": "0",
@@ -6277,16 +4738,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "iode": {
-          "v": 2.75,
-          "brut": "2,75",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20083,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "cuivre": {
           "v": 0.14,
           "brut": "0,14",
@@ -6317,13 +4768,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 0.14,
-          "brut": "0,14",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "estime",
           "code": 20083,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -6385,36 +4836,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 2.88,
-          "brut": "2,88",
-          "unite": "g",
-          "source": "estime",
-          "code": 20266,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": null,
-          "brut": "-",
-          "unite": "g",
-          "source": "estime",
-          "code": 20266,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 1.67,
-          "brut": "1,67",
-          "unite": "g",
-          "source": "estime",
-          "code": 20266,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 0.089,
           "brut": "0,089",
@@ -6422,46 +4843,6 @@
           "source": "estime",
           "code": 20266,
           "const": 40000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "ags": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "estime",
-          "code": 20266,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": null,
-          "brut": "-",
-          "unite": "g",
-          "source": "estime",
-          "code": 20266,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "estime",
-          "code": 20266,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "mg",
-          "source": "estime",
-          "code": 20266,
-          "const": 75100,
           "date": "2025-11-03",
           "trace": false
         },
@@ -6532,26 +4913,6 @@
           "source": "estime",
           "code": 20266,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20266,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20266,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -6665,26 +5026,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20266,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20266,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": null,
           "brut": "-",
@@ -6765,16 +5106,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "iode": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20266,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "cuivre": {
           "v": null,
           "brut": "-",
@@ -6805,13 +5136,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 0.082,
-          "brut": "0,082",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "estime",
           "code": 20266,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -6873,36 +5204,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 1.24,
-          "brut": "1,24",
-          "unite": "g",
-          "source": "estime",
-          "code": 20204,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": null,
-          "brut": "-",
-          "unite": "g",
-          "source": "estime",
-          "code": 20204,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 2.75,
-          "brut": "2,75",
-          "unite": "g",
-          "source": "estime",
-          "code": 20204,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 0.42,
           "brut": "0,42",
@@ -6910,46 +5211,6 @@
           "source": "estime",
           "code": 20204,
           "const": 40000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "ags": {
-          "v": 0.076,
-          "brut": "0,076",
-          "unite": "g",
-          "source": "estime",
-          "code": 20204,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 0.024,
-          "brut": "0,024",
-          "unite": "g",
-          "source": "estime",
-          "code": 20204,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 0.16,
-          "brut": "0,16",
-          "unite": "g",
-          "source": "estime",
-          "code": 20204,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "mg",
-          "source": "estime",
-          "code": 20204,
-          "const": 75100,
           "date": "2025-11-03",
           "trace": false
         },
@@ -7020,26 +5281,6 @@
           "source": "estime",
           "code": 20204,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20204,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 675,
-          "brut": "675",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20204,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -7153,26 +5394,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": 94,
-          "brut": "94",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20204,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20204,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0,
           "brut": "0",
@@ -7253,16 +5474,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "iode": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20204,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "cuivre": {
           "v": 0.036,
           "brut": "0,036",
@@ -7293,13 +5504,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 0.046,
-          "brut": "0,046",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "estime",
           "code": 20204,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -7361,36 +5572,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 3.81,
-          "brut": "3,81",
-          "unite": "g",
-          "source": "estime",
-          "code": 20235,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": null,
-          "brut": "-",
-          "unite": "g",
-          "source": "estime",
-          "code": 20235,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 2.65,
-          "brut": "2,65",
-          "unite": "g",
-          "source": "estime",
-          "code": 20235,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 0.06,
           "brut": "0,06",
@@ -7398,46 +5579,6 @@
           "source": "estime",
           "code": 20235,
           "const": 40000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "ags": {
-          "v": 0.011,
-          "brut": "0,011",
-          "unite": "g",
-          "source": "estime",
-          "code": 20235,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 0.009,
-          "brut": "0,009",
-          "unite": "g",
-          "source": "estime",
-          "code": 20235,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 0.025,
-          "brut": "0,025",
-          "unite": "g",
-          "source": "estime",
-          "code": 20235,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "mg",
-          "source": "estime",
-          "code": 20235,
-          "const": 75100,
           "date": "2025-11-03",
           "trace": false
         },
@@ -7508,26 +5649,6 @@
           "source": "estime",
           "code": 20235,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20235,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 1,
-          "brut": "1",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20235,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -7641,26 +5762,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": 21,
-          "brut": "21",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20235,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20235,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0,
           "brut": "0",
@@ -7741,16 +5842,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "iode": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20235,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "cuivre": {
           "v": 0.05,
           "brut": "0,05",
@@ -7781,13 +5872,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 0.025,
-          "brut": "0,025",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "estime",
           "code": 20235,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -7849,36 +5940,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 2.21,
-          "brut": "2,21",
-          "unite": "g",
-          "source": "estime",
-          "code": 20070,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 1.53,
-          "brut": "1,53",
-          "unite": "g",
-          "source": "estime",
-          "code": 20070,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 2.6,
-          "brut": "2,6",
-          "unite": "g",
-          "source": "estime",
-          "code": 20070,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 0.21,
           "brut": "0,21",
@@ -7886,46 +5947,6 @@
           "source": "estime",
           "code": 20070,
           "const": 40000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "ags": {
-          "v": 0.047,
-          "brut": "0,047",
-          "unite": "g",
-          "source": "estime",
-          "code": 20070,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 0.008,
-          "brut": "0,008",
-          "unite": "g",
-          "source": "estime",
-          "code": 20070,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 0.11,
-          "brut": "0,11",
-          "unite": "g",
-          "source": "estime",
-          "code": 20070,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "mg",
-          "source": "estime",
-          "code": 20070,
-          "const": 75100,
           "date": "2025-11-03",
           "trace": false
         },
@@ -7996,26 +6017,6 @@
           "source": "estime",
           "code": 20070,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20070,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 292,
-          "brut": "292",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20070,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -8129,26 +6130,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": 15,
-          "brut": "15",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20070,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20070,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0,
           "brut": "0",
@@ -8229,16 +6210,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "iode": {
-          "v": 0.85,
-          "brut": "0,85",
-          "unite": "µg",
-          "source": "estime",
-          "code": 20070,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "cuivre": {
           "v": 0.049,
           "brut": "0,049",
@@ -8269,13 +6240,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 0.0075,
-          "brut": "0,0075",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "estime",
           "code": 20070,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -8335,36 +6306,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 8.9,
-          "brut": "8,9",
-          "unite": "g",
-          "source": "estime",
-          "code": 13021,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 0,
-          "brut": "< 0,35",
-          "unite": "g",
-          "source": "estime",
-          "code": 13021,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "fibres": {
-          "v": 2.4,
-          "brut": "2,4",
-          "unite": "g",
-          "source": "estime",
-          "code": 13021,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 0.6,
           "brut": "0,6",
@@ -8372,46 +6313,6 @@
           "source": "estime",
           "code": 13021,
           "const": 40000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "ags": {
-          "v": 0.13,
-          "brut": "0,13",
-          "unite": "g",
-          "source": "estime",
-          "code": 13021,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 0.16,
-          "brut": "0,16",
-          "unite": "g",
-          "source": "estime",
-          "code": 13021,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 0.25,
-          "brut": "0,25",
-          "unite": "g",
-          "source": "estime",
-          "code": 13021,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "mg",
-          "source": "estime",
-          "code": 13021,
-          "const": 75100,
           "date": "2025-11-03",
           "trace": false
         },
@@ -8482,26 +6383,6 @@
           "source": "estime",
           "code": 13021,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "estime",
-          "code": 13021,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 38,
-          "brut": "38",
-          "unite": "µg",
-          "source": "estime",
-          "code": 13021,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -8615,26 +6496,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": 22.2,
-          "brut": "22,2",
-          "unite": "µg",
-          "source": "estime",
-          "code": 13021,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "estime",
-          "code": 13021,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0,
           "brut": "0",
@@ -8715,16 +6576,6 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "iode": {
-          "v": 0,
-          "brut": "< 20",
-          "unite": "µg",
-          "source": "estime",
-          "code": 13021,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": true
-        },
         "cuivre": {
           "v": 0.15,
           "brut": "0,15",
@@ -8755,15 +6606,15 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "sel": {
-          "v": 0,
-          "brut": "< 0,013",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "estime",
           "code": 13021,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
-          "trace": true
+          "trace": false
         }
       }
     },
@@ -8821,36 +6672,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 8.9,
-          "brut": "8,9",
-          "unite": "g",
-          "source": "estime",
-          "code": 13021,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 0,
-          "brut": "< 0,35",
-          "unite": "g",
-          "source": "estime",
-          "code": 13021,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "fibres": {
-          "v": 2.4,
-          "brut": "2,4",
-          "unite": "g",
-          "source": "estime",
-          "code": 13021,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 0.6,
           "brut": "0,6",
@@ -8858,46 +6679,6 @@
           "source": "estime",
           "code": 13021,
           "const": 40000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "ags": {
-          "v": 0.13,
-          "brut": "0,13",
-          "unite": "g",
-          "source": "estime",
-          "code": 13021,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 0.16,
-          "brut": "0,16",
-          "unite": "g",
-          "source": "estime",
-          "code": 13021,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 0.25,
-          "brut": "0,25",
-          "unite": "g",
-          "source": "estime",
-          "code": 13021,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "mg",
-          "source": "estime",
-          "code": 13021,
-          "const": 75100,
           "date": "2025-11-03",
           "trace": false
         },
@@ -8968,26 +6749,6 @@
           "source": "estime",
           "code": 13021,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "estime",
-          "code": 13021,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 38,
-          "brut": "38",
-          "unite": "µg",
-          "source": "estime",
-          "code": 13021,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -9101,26 +6862,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": 22.2,
-          "brut": "22,2",
-          "unite": "µg",
-          "source": "estime",
-          "code": 13021,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "estime",
-          "code": 13021,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0,
           "brut": "0",
@@ -9201,16 +6942,6 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "iode": {
-          "v": 0,
-          "brut": "< 20",
-          "unite": "µg",
-          "source": "estime",
-          "code": 13021,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": true
-        },
         "cuivre": {
           "v": 0.15,
           "brut": "0,15",
@@ -9241,15 +6972,15 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "sel": {
-          "v": 0,
-          "brut": "< 0,013",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "estime",
           "code": 13021,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
-          "trace": true
+          "trace": false
         }
       }
     },
@@ -9309,36 +7040,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 15.6,
-          "brut": "15,6",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13005,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 3.8,
-          "brut": "3,8",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13005,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 2.7,
-          "brut": "2,7",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13005,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 0,
           "brut": "< 0,5",
@@ -9348,46 +7049,6 @@
           "const": 40000,
           "date": "2025-11-03",
           "trace": true
-        },
-        "ags": {
-          "v": 0,
-          "brut": "< 0,01",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13005,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "agmi": {
-          "v": 0,
-          "brut": "< 0,01",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13005,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "agpi": {
-          "v": 0,
-          "brut": "< 0,01",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13005,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "cholesterol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "mg",
-          "source": "ciqual",
-          "code": 13005,
-          "const": 75100,
-          "date": "2025-11-03",
-          "trace": false
         },
         "oleique": {
           "v": 0,
@@ -9456,26 +7117,6 @@
           "source": "ciqual",
           "code": 13005,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13005,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 28.5,
-          "brut": "28,5",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13005,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -9589,26 +7230,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": 19,
-          "brut": "19",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13005,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13005,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0,
           "brut": "0",
@@ -9689,16 +7310,6 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "iode": {
-          "v": 0,
-          "brut": "< 20",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13005,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": true
-        },
         "cuivre": {
           "v": 0.06,
           "brut": "0,06",
@@ -9729,15 +7340,15 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "sel": {
-          "v": 0,
-          "brut": "< 0,013",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "ciqual",
           "code": 13005,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
-          "trace": true
+          "trace": false
         }
       }
     },
@@ -9797,36 +7408,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 10.6,
-          "brut": "10,6",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13039,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 0.05,
-          "brut": "0,05",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13039,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 1.4,
-          "brut": "1,4",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13039,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 0.25,
           "brut": "0,25",
@@ -9834,46 +7415,6 @@
           "source": "ciqual",
           "code": 13039,
           "const": 40000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "ags": {
-          "v": 0.052,
-          "brut": "0,052",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13039,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 0.007,
-          "brut": "0,007",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13039,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 0.051,
-          "brut": "0,051",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13039,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "mg",
-          "source": "ciqual",
-          "code": 13039,
-          "const": 75100,
           "date": "2025-11-03",
           "trace": false
         },
@@ -9944,26 +7485,6 @@
           "source": "ciqual",
           "code": 13039,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13039,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 21.4,
-          "brut": "21,4",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13039,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -10077,26 +7598,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": 3,
-          "brut": "3",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13039,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13039,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0,
           "brut": "0",
@@ -10177,16 +7678,6 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "iode": {
-          "v": 0.37,
-          "brut": "0,37",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13039,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "cuivre": {
           "v": 0.041,
           "brut": "0,041",
@@ -10217,13 +7708,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 0.0037,
-          "brut": "0,0037",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "ciqual",
           "code": 13039,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -10287,36 +7778,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 6.7,
-          "brut": "6,7",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13000,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 0,
-          "brut": "< 0,35",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13000,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "fibres": {
-          "v": 1.7,
-          "brut": "1,7",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13000,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 0,
           "brut": "< 0,5",
@@ -10326,46 +7787,6 @@
           "const": 40000,
           "date": "2025-11-03",
           "trace": true
-        },
-        "ags": {
-          "v": 0,
-          "brut": "< 0,01",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13000,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "agmi": {
-          "v": 0,
-          "brut": "< 0,01",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13000,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "agpi": {
-          "v": 0,
-          "brut": "< 0,01",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13000,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "cholesterol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "mg",
-          "source": "ciqual",
-          "code": 13000,
-          "const": 75100,
-          "date": "2025-11-03",
-          "trace": false
         },
         "oleique": {
           "v": 0,
@@ -10434,26 +7855,6 @@
           "source": "ciqual",
           "code": 13000,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13000,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 2350,
-          "brut": "2350",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13000,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -10567,26 +7968,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": 7.6,
-          "brut": "7,6",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13000,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13000,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0,
           "brut": "0",
@@ -10667,16 +8048,6 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "iode": {
-          "v": 0,
-          "brut": "< 20",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13000,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": true
-        },
         "cuivre": {
           "v": 0.06,
           "brut": "0,06",
@@ -10707,15 +8078,15 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "sel": {
-          "v": 0,
-          "brut": "< 0,013",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "ciqual",
           "code": 13000,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
-          "trace": true
+          "trace": false
         }
       }
     },
@@ -10775,36 +8146,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 7.6,
-          "brut": "7,6",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13034,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 0,
-          "brut": "< 0,35",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13034,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "fibres": {
-          "v": 2.7,
-          "brut": "2,7",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13034,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 0,
           "brut": "< 0,5",
@@ -10814,46 +8155,6 @@
           "const": 40000,
           "date": "2025-11-03",
           "trace": true
-        },
-        "ags": {
-          "v": 0,
-          "brut": "< 0,01",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13034,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "agmi": {
-          "v": 0,
-          "brut": "< 0,01",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13034,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "agpi": {
-          "v": 0,
-          "brut": "< 0,01",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13034,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "cholesterol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "mg",
-          "source": "ciqual",
-          "code": 13034,
-          "const": 75100,
-          "date": "2025-11-03",
-          "trace": false
         },
         "oleique": {
           "v": 0,
@@ -10924,26 +8225,6 @@
           "const": 51104,
           "date": "2025-11-03",
           "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13034,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 0,
-          "brut": "< 5",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13034,
-          "const": 51330,
-          "date": "2025-11-03",
-          "trace": true
         },
         "vitD": {
           "v": 0,
@@ -11055,26 +8336,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": 25.9,
-          "brut": "25,9",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13034,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13034,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0,
           "brut": "0",
@@ -11155,16 +8416,6 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "iode": {
-          "v": 0,
-          "brut": "< 20",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13034,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": true
-        },
         "cuivre": {
           "v": 0.04,
           "brut": "0,04",
@@ -11195,15 +8446,15 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "sel": {
-          "v": 0,
-          "brut": "< 0,013",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "ciqual",
           "code": 13034,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
-          "trace": true
+          "trace": false
         }
       }
     },
@@ -11265,36 +8516,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 8.6,
-          "brut": "8,6",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 0,
-          "brut": "< 0,35",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "fibres": {
-          "v": 1.7,
-          "brut": "1,7",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 0,
           "brut": "< 0,5",
@@ -11304,46 +8525,6 @@
           "const": 40000,
           "date": "2025-11-03",
           "trace": true
-        },
-        "ags": {
-          "v": 0,
-          "brut": "< 0,01",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "agmi": {
-          "v": 0,
-          "brut": "< 0,01",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "agpi": {
-          "v": 0,
-          "brut": "< 0,01",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "cholesterol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "mg",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 75100,
-          "date": "2025-11-03",
-          "trace": false
         },
         "oleique": {
           "v": 0,
@@ -11412,26 +8593,6 @@
           "source": "ciqual",
           "code": 13024,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 147,
-          "brut": "147",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -11545,26 +8706,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": 27.6,
-          "brut": "27,6",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0,
           "brut": "0",
@@ -11645,16 +8786,6 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "iode": {
-          "v": 0,
-          "brut": "< 20",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": true
-        },
         "cuivre": {
           "v": 0.04,
           "brut": "0,04",
@@ -11685,15 +8816,15 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "sel": {
-          "v": 0,
-          "brut": "< 0,013",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "ciqual",
           "code": 13024,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
-          "trace": true
+          "trace": false
         }
       }
     },
@@ -11755,36 +8886,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 8.6,
-          "brut": "8,6",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 0,
-          "brut": "< 0,35",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "fibres": {
-          "v": 1.7,
-          "brut": "1,7",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 0,
           "brut": "< 0,5",
@@ -11794,46 +8895,6 @@
           "const": 40000,
           "date": "2025-11-03",
           "trace": true
-        },
-        "ags": {
-          "v": 0,
-          "brut": "< 0,01",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "agmi": {
-          "v": 0,
-          "brut": "< 0,01",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "agpi": {
-          "v": 0,
-          "brut": "< 0,01",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "cholesterol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "mg",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 75100,
-          "date": "2025-11-03",
-          "trace": false
         },
         "oleique": {
           "v": 0,
@@ -11902,26 +8963,6 @@
           "source": "ciqual",
           "code": 13024,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 147,
-          "brut": "147",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -12035,26 +9076,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": 27.6,
-          "brut": "27,6",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0,
           "brut": "0",
@@ -12135,16 +9156,6 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "iode": {
-          "v": 0,
-          "brut": "< 20",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 13024,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": true
-        },
         "cuivre": {
           "v": 0.04,
           "brut": "0,04",
@@ -12175,15 +9186,15 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "sel": {
-          "v": 0,
-          "brut": "< 0,013",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "ciqual",
           "code": 13024,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
-          "trace": true
+          "trace": false
         }
       }
     },
@@ -12243,36 +9254,6 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "sucres": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 12110,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 12110,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 12110,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 33.8,
           "brut": "33,8",
@@ -12280,46 +9261,6 @@
           "source": "ciqual",
           "code": 12110,
           "const": 40000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "ags": {
-          "v": 21.7,
-          "brut": "21,7",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 12110,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 10.2,
-          "brut": "10,2",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 12110,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 1.96,
-          "brut": "1,96",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 12110,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 115,
-          "brut": "115",
-          "unite": "mg",
-          "source": "ciqual",
-          "code": 12110,
-          "const": 75100,
           "date": "2025-11-03",
           "trace": false
         },
@@ -12390,26 +9331,6 @@
           "source": "ciqual",
           "code": 12110,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 263,
-          "brut": "263",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 12110,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 12110,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -12523,26 +9444,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 12110,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 12110,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 2.59,
           "brut": "2,59",
@@ -12623,16 +9524,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "iode": {
-          "v": 24.4,
-          "brut": "24,4",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 12110,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "cuivre": {
           "v": 0.61,
           "brut": "0,61",
@@ -12663,13 +9554,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 0.84,
-          "brut": "0,84",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "ciqual",
           "code": 12110,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -12731,36 +9622,6 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "sucres": {
-          "v": 0,
-          "brut": "traces",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 12001,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": true
-        },
-        "amidon": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 12001,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 12001,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 22.5,
           "brut": "22,5",
@@ -12768,46 +9629,6 @@
           "source": "ciqual",
           "code": 12001,
           "const": 40000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "ags": {
-          "v": 15.8,
-          "brut": "15,8",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 12001,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 4.73,
-          "brut": "4,73",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 12001,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 0.42,
-          "brut": "0,42",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 12001,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 73,
-          "brut": "73",
-          "unite": "mg",
-          "source": "ciqual",
-          "code": 12001,
-          "const": 75100,
           "date": "2025-11-03",
           "trace": false
         },
@@ -12878,26 +9699,6 @@
           "source": "ciqual",
           "code": 12001,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 185,
-          "brut": "185",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 12001,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 12001,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -13011,26 +9812,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 12001,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 12001,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 1.03,
           "brut": "1,03",
@@ -13111,16 +9892,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "iode": {
-          "v": 19,
-          "brut": "19",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 12001,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "cuivre": {
           "v": 0.03,
           "brut": "0,03",
@@ -13151,13 +9922,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 1.45,
-          "brut": "1,45",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "ciqual",
           "code": 12001,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -13219,36 +9990,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sucres": {
-          "v": 0.15,
-          "brut": "0,15",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 12020,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 12020,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 0.056,
-          "brut": "0,056",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 12020,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 30.4,
           "brut": "30,4",
@@ -13256,46 +9997,6 @@
           "source": "ciqual",
           "code": 12020,
           "const": 40000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "ags": {
-          "v": 21.5,
-          "brut": "21,5",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 12020,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 7.85,
-          "brut": "7,85",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 12020,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 0.82,
-          "brut": "0,82",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 12020,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 193,
-          "brut": "193",
-          "unite": "mg",
-          "source": "ciqual",
-          "code": 12020,
-          "const": 75100,
           "date": "2025-11-03",
           "trace": false
         },
@@ -13366,26 +10067,6 @@
           "source": "ciqual",
           "code": 12020,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 241,
-          "brut": "241",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 12020,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 9,
-          "brut": "9",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 12020,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -13499,26 +10180,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 12020,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": null,
-          "brut": "-",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 12020,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0.76,
           "brut": "0,76",
@@ -13599,16 +10260,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "iode": {
-          "v": 18.9,
-          "brut": "18,9",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 12020,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "cuivre": {
           "v": 0.041,
           "brut": "0,041",
@@ -13639,13 +10290,13 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "sel": {
-          "v": 1.43,
-          "brut": "1,43",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "ciqual",
           "code": 12020,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
           "trace": false
         }
@@ -13706,36 +10357,6 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "sucres": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 17270,
-          "const": 32000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "amidon": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 17270,
-          "const": 33110,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "fibres": {
-          "v": 0,
-          "brut": "0",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 17270,
-          "const": 34100,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "lipides": {
           "v": 99.9,
           "brut": "99,9",
@@ -13743,46 +10364,6 @@
           "source": "ciqual",
           "code": 17270,
           "const": 40000,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "ags": {
-          "v": 15.2,
-          "brut": "15,2",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 17270,
-          "const": 40302,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agmi": {
-          "v": 73.1,
-          "brut": "73,1",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 17270,
-          "const": 40303,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "agpi": {
-          "v": 7.17,
-          "brut": "7,17",
-          "unite": "g",
-          "source": "ciqual",
-          "code": 17270,
-          "const": 40304,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cholesterol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "mg",
-          "source": "ciqual",
-          "code": 17270,
-          "const": 75100,
           "date": "2025-11-03",
           "trace": false
         },
@@ -13853,26 +10434,6 @@
           "source": "ciqual",
           "code": 17270,
           "const": 51104,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "retinol": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 17270,
-          "const": 51200,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "betacarotene": {
-          "v": 210,
-          "brut": "210",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 17270,
-          "const": 51330,
           "date": "2025-11-03",
           "trace": false
         },
@@ -13986,26 +10547,6 @@
           "date": "2025-11-03",
           "trace": false
         },
-        "folatesNat": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 17270,
-          "const": 56704,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "acideFolique": {
-          "v": 0,
-          "brut": "0",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 17270,
-          "const": 56708,
-          "date": "2025-11-03",
-          "trace": false
-        },
         "vitB12": {
           "v": 0,
           "brut": "0",
@@ -14086,16 +10627,6 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "iode": {
-          "v": 0,
-          "brut": "< 20",
-          "unite": "µg",
-          "source": "ciqual",
-          "code": 17270,
-          "const": 10530,
-          "date": "2025-11-03",
-          "trace": true
-        },
         "cuivre": {
           "v": 0,
           "brut": "< 0,01",
@@ -14126,15 +10657,15 @@
           "date": "2025-11-03",
           "trace": true
         },
-        "sel": {
-          "v": 0,
-          "brut": "< 0,013",
-          "unite": "g",
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
           "source": "ciqual",
           "code": 17270,
-          "const": 10004,
+          "const": null,
           "date": "2025-11-03",
-          "trace": true
+          "trace": false
         }
       }
     }

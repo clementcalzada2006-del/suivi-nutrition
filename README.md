@@ -1,10 +1,16 @@
 # Suivi nutrition
 
 Appli web personnelle de suivi calorique et nutritionnel, pensée pour le téléphone et le pouce.
-Je touche un aliment, je choisis une quantité, et le total du jour se met à jour : calories, protéines, glucides, lipides, et les micronutriments qui comptent (vitamines, minéraux, oméga 3, 6 et 9, fibres), avec le pourcentage des références ANSES.
+Je touche un aliment, je choisis une quantité, et le total du jour se met à jour, avec le pourcentage des références ANSES.
+
+Nutriments suivis (34, liste `nutriments` de `donnees/foods.json`) :
+- macros : énergie, protéines, glucides, lipides ;
+- oméga : acide oléique (oméga 9), acides linoléique et arachidonique (oméga 6), ALA, EPA, DHA (oméga 3), plus les rapports acide linoléique / ALA (référence ANSES : moins de 5) et oméga 6 / oméga 3 total ;
+- vitamines : A, B1, B2, B3, B5, B6, B8, B9, B12, C, D, E, K1, K2. La vitamine B8 (biotine) est absente de la table Ciqual 2025 : pas de total, sa référence est affichée pour mémoire ;
+- minéraux : fer, calcium, magnésium, potassium, sodium, zinc, phosphore, manganèse, sélénium, cuivre.
 Site statique (HTML, CSS, JavaScript sans framework ni CDN), installable sur l'écran d'accueil, utilisable hors ligne. Aucune requête réseau à l'usage, aucun compte : tout reste dans le stockage du téléphone.
 
-Onglets : **Aliments** (ajout en un toucher, fiche « i » avec la provenance de chaque chiffre), **Journal** (ajouts du jour, suppression, remise à zéro), **Bilan** (tous les nutriments, références, marqueur « incomplet », rapport oméga 6 / oméga 3, dépense), **Activité** (pas et distance, séance de salle, créatine), **Poids** (pesées, courbe, moyenne sur 7 jours, masse grasse).
+Onglets : **Aliments** (ajout en un toucher, fiche « i » avec la provenance de chaque chiffre), **Journal** (ajouts du jour, suppression, remise à zéro), **Bilan** (tous les nutriments, références, marqueur « incomplet », rapports oméga, dépense), **Activité** (pas et distance, séance de salle, créatine), **Poids** (pesées, courbe, moyenne sur 7 jours, masse grasse).
 
 ## Fichiers
 
@@ -44,13 +50,13 @@ Une fois le site en ligne (GitHub Pages par exemple) : ouvrir l'adresse dans **S
 
 1. Chercher l'entrée Ciqual : `python3 -I outils/ciqual.py chercher "pois chiche"` (code, nom officiel, kcal, protéines, glucides, lipides). Prendre l'état tel que pesé (cru, surgelé cru…), jamais « cuit » pour un aliment pesé cru.
 2. Ajouter une entrée dans `donnees/foods.json > aliments` en copiant une entrée voisine : `id`, `nom`, `categorie` (une de `categories`), `icone`, `unite` (`"g"` ou le nom de la pièce, avec `unite_pluriel`), `quantites`, `poids_unite_g` et `poids_source` pour une pièce, `part_comestible` et sa source, `etat`, `a_confirmer`, `source_valeurs` (`"ciqual"` ou `"estime"`), `ciqual: { code, nom }` avec le nom officiel exact, `notes`, et `"valeurs": {}`.
-3. `python3 -I outils/ciqual.py remplir` puis `python3 -I outils/ciqual.py verifier` (doit finir sans écart) ; `python3 -I outils/ciqual.py manquants` montre ce qui manque.
+3. `python3 -I outils/ciqual.py remplir` puis `python3 -I outils/ciqual.py verifier` (doit finir sans écart ; il contrôle aussi la cohérence de chaque entrée Ciqual, énergie et acides gras, en lisant directement le XML, et écrit `outils/rapport-verification.txt`) ; `python3 -I outils/ciqual.py manquants` montre ce qui manque.
 4. `npm test`.
 5. Changer `VERSION` dans `sw.js`.
 
 ## Saisir une étiquette
 
-Pour un produit de marque, l'étiquette prime pour l'énergie, les macros, les sucres, les AG saturés, les fibres et le sel. Dans `valeurs` de l'aliment, remplacer chacun de ces nutriments par :
+Pour un produit de marque, l'étiquette prime pour l'énergie et les macros (protéines, glucides, lipides). Dans `valeurs` de l'aliment, remplacer chacun de ces nutriments par :
 
 ```json
 "energie": { "v": 255, "brut": "255", "unite": "kcal", "source": "etiquette", "date": "2026-11-10", "photo": "sources/etiquettes/pain_complet-2026-11-10.jpg", "trace": false }

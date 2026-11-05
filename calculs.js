@@ -16,16 +16,20 @@ export function apport(aliment, quantite, cle) {
   return (grammesManges(aliment, quantite) * v) / 100;
 }
 
+// Nutriment absent des 74 constituants de la table (ex. biotine, « ciqual »: []) : aucun total possible.
+export const absentDeLaTable = (n) => Array.isArray(n.ciqual) && n.ciqual.length === 0;
+
 // Totaux du jour : { cle: { total, incomplet, manquants: [noms d'aliments sans donnée] } }.
-// Valeurs complètes, jamais arrondies ici.
+// Valeurs complètes, jamais arrondies ici. Un nutriment absent de la table a total null et n'est jamais « incomplet ».
 export function totaux(journal, foods) {
   const parId = indexAliments(foods);
   const res = {};
-  for (const n of foods.nutriments) res[n.cle] = { total: 0, incomplet: false, manquants: [] };
+  for (const n of foods.nutriments) res[n.cle] = { total: absentDeLaTable(n) ? null : 0, incomplet: false, manquants: [], absent: absentDeLaTable(n) };
   for (const e of journal) {
     const al = parId[e.alimentId];
     if (!al) continue;
     for (const n of foods.nutriments) {
+      if (absentDeLaTable(n)) continue;
       const a = apport(al, e.quantite, n.cle);
       const t = res[n.cle];
       if (a === null) {
@@ -57,33 +61,6 @@ export const rapportLinoleiqueAla = (t) => rapport(t, ["linoleique"], ["ala"]);
 
 // Rapport oméga 6 / oméga 3 total = (linoléique + arachidonique) / (ALA + EPA + DHA), sans référence.
 export const rapportOmega = (t) => rapport(t, ["linoleique", "arachidonique"], ["ala", "epa", "dha"]);
-
-// Contrôles de cohérence d'un aliment (mêmes règles que outils/ciqual.py).
-// Renvoie [{ nom, ok (true/false/null si ignoré), detail }].
-export function controlesCoherence(valeurs) {
-  const v = (c) => valeurs[c]?.v ?? null;
-  const res = [];
-  const [p, g, l, f, e] = ["proteines", "glucides", "lipides", "fibres", "energie"].map(v);
-  if ([p, g, l, f, e].includes(null)) res.push({ nom: "Énergie", ok: null, detail: "non vérifiable : valeur manquante" });
-  else {
-    const calc = 4 * p + 4 * g + 9 * l + 2 * f;
-    const ecart = e ? Math.abs(e - calc) / e : 0;
-    res.push({ nom: "Énergie", ok: ecart <= 0.1, detail: `${formaterNombre(e)} kcal déclarées, ${fixe(calc, 1)} calculées (4 P + 4 G + 9 L + 2 F), écart ${fixe(ecart * 100, 1)} %` });
-  }
-  const [ags, agmi, agpi] = ["ags", "agmi", "agpi"].map(v);
-  if ([ags, agmi, agpi, l].includes(null)) res.push({ nom: "Acides gras", ok: null, detail: "non vérifiable : valeur manquante" });
-  else {
-    const s = ags + agmi + agpi;
-    res.push({ nom: "Acides gras", ok: s <= l + 1e-9, detail: `saturés + mono + poly = ${fixe(s, 3)} g ; lipides = ${formaterNombre(l)} g` });
-  }
-  const om = ["ala", "epa", "dha", "linoleique", "arachidonique"].map(v);
-  if (om.includes(null) || agpi === null) res.push({ nom: "Oméga", ok: null, detail: "non vérifiable : valeur manquante" });
-  else {
-    const s = om.reduce((a, b) => a + b, 0);
-    res.push({ nom: "Oméga", ok: s <= agpi + 1e-9, detail: `oméga 3 + oméga 6 = ${fixe(s, 4)} g ; polyinsaturés = ${formaterNombre(agpi)} g` });
-  }
-  return res;
-}
 
 // ---------- Dépense ----------
 
@@ -165,6 +142,7 @@ export function formaterNutriment(v, n) {
 
 // Teneur pour 100 g telle que la table l'écrit (« 0,06 g », « < 0,35 g (compté 0) », « traces (compté 0) »).
 export function teneurTable(val, n) {
+  if (val?.brut === "absent de la table") return "absente de Ciqual";
   if (!val || val.v === null || val.v === undefined) return "non disponible";
   if (val.brut === undefined || val.brut === "absent") return formaterNutriment(val.v, n);
   if (/^traces$/i.test(val.brut)) return "traces (compté 0)";
@@ -175,7 +153,6 @@ export function teneurTable(val, n) {
 
 // Nombre quelconque au format français (virgule décimale), jusqu'à 3 décimales.
 export const formaterNombre = (v) => fmt({ maximumFractionDigits: 4 }).format(v);
-const fixe = (v, d) => fmt({ minimumFractionDigits: d, maximumFractionDigits: d }).format(v);
 
 // Libellé d'un bouton de quantité : « ½ », « 1 œuf », « 2 œufs », « 150 g ».
 export function libelleQuantite(aliment, q) {

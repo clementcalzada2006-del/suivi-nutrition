@@ -66,11 +66,13 @@ const laE = la([{ alimentId: "echine_porc", quantite: 100 }, { alimentId: "kiwi_
 verif(laE.incomplet && laE.manquants.join() === parId.echine_porc.nom, "avec l'échine : linoléique / ALA incomplet, échine nommée");
 verif(la([]).valeur === null, "sans ALA : pas de rapport");
 
-console.log("\nContrôles de cohérence");
-const cc = C.controlesCoherence(parId.oeuf.valeurs);
-verif(cc.length === 3 && cc[0].ok === true, "œuf : énergie cohérente", JSON.stringify(cc[0]));
-verif(C.controlesCoherence(parId.echine_porc.valeurs)[1].ok === null, "échine : contrôle des acides gras ignoré (valeur manquante)");
-verif(C.controlesCoherence(parId.pain_complet.valeurs)[2].ok === false, "pain complet : oméga 3 + 6 > polyinsaturés signalé");
+console.log("\nNutriment absent de la table (biotine)");
+const b8 = foods.nutriments.find((n) => n.cle === "vitB8");
+verif(C.absentDeLaTable(b8) && !C.absentDeLaTable(foods.nutriments[0]), "vitB8 : absente de la table, énergie non");
+const tB8 = C.totaux([{ alimentId: "oeuf", quantite: 2 }, { alimentId: "echine_porc", quantite: 100 }], foods);
+verif(tB8.vitB8.total === null && tB8.vitB8.absent && !tB8.vitB8.incomplet && tB8.vitB8.manquants.length === 0, "vitB8 : pas de total, jamais « incomplet », aucun aliment manquant");
+verif(C.teneurTable(parId.oeuf.valeurs.vitB8, b8) === "absente de Ciqual", "fiche : vitB8 « absente de Ciqual »");
+verif(foods.nutriments.length === 34 && ["sucres", "fibres", "sel", "ags", "iode"].every((c) => !(c in tB8)), "34 nutriments, retirés absents des totaux");
 
 console.log("\nDépense");
 verif(C.depense(activite, null, 15, { km: 5, seance: null }) === null, "sans poids : dépense inconnue");
@@ -95,15 +97,16 @@ const r = (c) => C.referenceConcrete(refs.nutriments[c], ctx);
 verif(r("energie").bas === 3000, "énergie = dépense");
 verif(proche(r("proteines").bas, 66.4), "protéines 0,83 × 80 = 66,4 g");
 verif(proche(r("glucides").bas, 300) && proche(r("glucides").haut, 412.5), "glucides 40-55 % de 3000 kcal / 4 = 300 à 412,5 g");
-verif(proche(r("ags").bas, 40) && r("ags").type === "max", "AG saturés ≤ 12 % / 9 = 40 g");
+verif(proche(r("lipides").bas, 116.66666666666667) && proche(r("lipides").haut, 133.33333333333334), "lipides 35-40 % de 3000 kcal / 9 = 116,7 à 133,3 g");
+verif(r("vitB8").bas === 40, "biotine : référence 40 µg pour mémoire");
 verif(proche(r("vitB1").bas, 0.1 * 3000 * 0.004184), "B1 = 0,1 mg/MJ × 12,552 MJ");
 verif(r("vitC").bas === 110, "vitamine C = 110 mg");
 verif(r("manganese").bas === 2.8 && r("manganese").type === "min", "manganèse : à atteindre 2,8 mg");
 verif(r("agmi") === null, "AG monoinsaturés : pas de référence");
 verif(C.referenceConcrete(refs.nutriments.proteines, { poids: null, depense: null }).inconnue, "sans poids : référence inconnue");
 verif(C.referenceConcrete(refs.nutriments.vitC, { poids: null, depense: null }).bas === 110, "sans poids : référence fixe connue");
-verif(C.etatReference(6, r("sel")).etat === "depasse", "sel 6 g > 5,75 : dépassé");
-verif(C.etatReference(5, r("sel")).etat === "ok", "sel 5 g : ok");
+verif(C.etatReference(2400, r("sodium")).etat === "depasse", "sodium 2400 mg > 2300 : dépassé");
+verif(C.etatReference(2000, r("sodium")).etat === "ok", "sodium 2000 mg : ok");
 verif(C.etatReference(250, r("glucides")).etat === "sous", "glucides sous la fourchette");
 verif(proche(C.etatReference(55, r("vitC")).pct, 50), "vitamine C 55 mg = 50 %");
 

@@ -29,6 +29,17 @@ REFERENCES = RACINE / "donnees" / "references.json"
 RAPPORT = RACINE / "outils" / "rapport-verification.txt"
 DATE_TABLE = "2025-11-03"
 
+# Teneur notée pour un nutriment suivi absent des 74 constituants de la table (« ciqual »: [], ex. biotine) :
+# { "v": null, "brut": ABSENT_TABLE, "const": null, ... } ; ni total ni marqueur « incomplet » dans l'appli.
+ABSENT_TABLE = "absent de la table"
+
+# Constituants lus directement dans le XML pour les contrôles de cohérence (certains ne sont plus suivis par l'appli).
+CONST_COHERENCE = {
+    "energie": 328, "proteines": 25003, "glucides": 31000, "lipides": 40000, "fibres": 34100,
+    "ags": 40302, "agmi": 40303, "agpi": 40304,
+    "ala": 41833, "epa": 42053, "dha": 42263, "linoleique": 41826, "arachidonique": 42046,
+}
+
 # Unité de l'appli -> suffixe attendu dans const_nom_fr.
 SUFFIXES = {"g": "(g/100 g)", "mg": "(mg/100 g)", "µg": "(µg/100 g)", "kcal": "(kcal/100 g)"}
 
@@ -81,7 +92,10 @@ def interpreter(brut):
 
 
 def constituant_utilise(nutriment, code_alim, compo):
-    """Constituant à lire : le premier de la liste qui a une valeur, sinon le dernier (cas de vitB9 : 56702 puis 56700)."""
+    """Constituant à lire : le premier de la liste qui a une valeur, sinon le dernier (cas de vitB9 : 56702 puis 56700).
+    None si le nutriment n'existe pas dans la table (liste vide)."""
+    if not nutriment["ciqual"]:
+        return None
     for c in nutriment["ciqual"]:
         if interpreter(compo.get((code_alim, c)))[0] is not None:
             return c
@@ -111,17 +125,19 @@ def remplir():
     n = 0
     for al in foods["aliments"]:
         code = al["ciqual"]["code"]
-        valeurs = al.setdefault("valeurs", {})
+        cles = {n["cle"] for n in foods["nutriments"]}
+        # Les nutriments qui ne sont plus suivis disparaissent de valeurs.
+        valeurs = al["valeurs"] = {k: x for k, x in al.get("valeurs", {}).items() if k in cles}
         for nut in foods["nutriments"]:
             cle = nut["cle"]
             if valeurs.get(cle, {}).get("source") == "etiquette":
                 continue  # saisie depuis une étiquette : jamais écrasée
             const = constituant_utilise(nut, code, compo)
-            brut = compo.get((code, const))
+            brut = compo.get((code, const)) if const is not None else None
             v, trace = interpreter(brut)
             valeurs[cle] = {
                 "v": v,
-                "brut": brut if brut is not None else "absent",
+                "brut": ABSENT_TABLE if const is None else brut if brut is not None else "absent",
                 "unite": nut["unite"],
                 "source": al["source_valeurs"],
                 "code": code,
@@ -196,6 +212,8 @@ def verifier():
             continue
         if al["ciqual"]["nom"] != alims[code]:
             ecarts.append(f"{nom} : nom « {al['ciqual']['nom']} » ≠ nom officiel « {alims[code]} »")
+        for cle in sorted(set(al.get("valeurs", {})) - set(nuts)):
+            ecarts.append(f"{nom} : valeurs contient {cle}, qui n'est pas un nutriment suivi")
         for cle, nut in nuts.items():
             val = al.get("valeurs", {}).get(cle)
             if val is None:
@@ -209,6 +227,10 @@ def verifier():
                 ecarts.append(f"{nom} {cle} : source inconnue {val.get('source')!r}")
                 continue
             n_verif += 1
+            if not nut["ciqual"]:  # absent de la table : seule la forme attendue est acceptée
+                if val.get("v") is not None or val.get("const") is not None or val.get("brut") != ABSENT_TABLE or val.get("trace"):
+                    ecarts.append(f"{nom} {cle} : nutriment absent de la table, attendu v = null, const = null, brut « {ABSENT_TABLE} »")
+                continue
             attendu_const = constituant_utilise(nut, code, compo)
             if val.get("const") != attendu_const or val["const"] not in nut["ciqual"]:
                 ecarts.append(f"{nom} {cle} : constituant {val.get('const')} au lieu de {attendu_const}")
@@ -227,7 +249,9 @@ def verifier():
                 ecarts.append(f"{nom} {cle} : trace = {val.get('trace')!r}, XML = {brut!r}")
             if val.get("brut") != (brut if brut is not None else "absent"):
                 ecarts.append(f"{nom} {cle} : brut {val.get('brut')!r} ≠ XML {brut!r}")
-        for nom_c, ok, detail in controles_coherence(al.get("valeurs", {})):
+        # Cohérence de l'entrée Ciqual elle-même, lue dans le XML (fibres et acides gras ne sont plus suivis).
+        xml = {k: {"v": interpreter(compo.get((code, c)))[0]} for k, c in CONST_COHERENCE.items()}
+        for nom_c, ok, detail in controles_coherence(xml):
             if ok is None:
                 avert.append(f"{al['id']} : contrôle {nom_c} {detail}")
             elif not ok:
@@ -249,8 +273,10 @@ def verifier():
 
 def manquants():
     foods = charger(FOODS)
+    absents = [n["cle"] for n in foods["nutriments"] if not n["ciqual"]]
+    print(f"Absents de la table pour tous les aliments : {', '.join(absents) or 'aucun'}")
     for al in foods["aliments"]:
-        nuls = [n["cle"] for n in foods["nutriments"] if al["valeurs"].get(n["cle"], {}).get("v") is None]
+        nuls = [n["cle"] for n in foods["nutriments"] if n["ciqual"] and al["valeurs"].get(n["cle"], {}).get("v") is None]
         traces = [n["cle"] for n in foods["nutriments"] if al["valeurs"].get(n["cle"], {}).get("trace")]
         print(f"{al['nom']} (Ciqual {al['ciqual']['code']})")
         print(f"  sans valeur ({len(nuls)}) : {', '.join(nuls) or 'aucun'}")

@@ -21,7 +21,7 @@
   --piste: #e6e9e4;
   --ombre: 0 1px 2px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.06);
   --rayon: 14px;
-  --haut-entete: 122px;
+  --haut-entete: 98px;
   --bas-onglets: 66px;
   color-scheme: light;
 }
@@ -101,8 +101,6 @@ small { font-size: 0.9em; }
 .m-prot { border-color: var(--prot); } .m-prot .macro-val { color: var(--prot); }
 .m-gluc { border-color: var(--gluc); } .m-gluc .macro-val { color: var(--gluc); }
 .m-lip { border-color: var(--lip); } .m-lip .macro-val { color: var(--lip); }
-.entete-petit { display: flex; gap: 12px; flex-wrap: wrap; font-size: 16px; color: var(--texte2); margin-top: 2px; }
-.entete-petit b { color: var(--texte); }
 .est-incomplet::after { content: "*"; color: var(--avert); }
 .entete.pulse .kcal, .entete.pulse .macro-val { animation: pulse 0.45s ease-out; }
 @keyframes pulse { 0% { transform: scale(1.12); } 100% { transform: scale(1); } }
@@ -269,9 +267,6 @@ details summary { min-height: 48px; display: flex; align-items: center; font-wei
 .fiche-vals small { color: var(--texte2); }
 .fiche-prov { font-size: 14px; color: var(--texte2); overflow-wrap: anywhere; }
 .fiche-ligne.nul .fiche-vals { color: var(--avert); font-weight: 700; }
-.controles { padding-left: 0; list-style: none; font-size: 16px; }
-.controles li { padding: 4px 0; }
-.controles .ok { color: var(--min); } .controles .ecart { color: var(--avert); font-weight: 700; } .controles .ignore { color: var(--texte2); }
 
 /* ---------- Toast ---------- */
 .toast {

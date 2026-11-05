@@ -169,6 +169,11 @@ console.log("\n2. Toute la grille (chaque aliment, chaque quantité, chaque nutr
       await ajouter(page, al.id, q);
       const t = await totaux(page);
       for (const n of FOODS.nutriments) {
+        if (n.ciqual.length === 0) {
+          // Absent de la table (biotine) : jamais de total ni de marqueur « incomplet ».
+          if (t[n.cle].total !== null || t[n.cle].incomplet) erreurs.push(`${al.id} × ${q} ${n.cle} : absent de la table mais total ${t[n.cle].total}`);
+          continue;
+        }
         const v = al.valeurs[n.cle].v;
         // Attendu : quantité × poids × part comestible × v / 100 ; null → rien ajouté (0) et total marqué incomplet.
         const att = v === null ? 0 : (q * poids * al.part_comestible * v) / 100;
@@ -210,6 +215,15 @@ console.log("\n3. Donnée manquante");
   await toucher(la.locator('[data-act="manquants"]'));
   verif((await la.locator(".manquants").textContent()).includes("Côte d'échine de porc"), "rapport linoléique / ALA : le toucher nomme l'échine");
   verif((await page.locator('#vue-bilan .ligne-nut[data-cle="energie"]').getAttribute("data-incomplet")) === "0", "énergie : complète");
+  // Biotine (absente de Ciqual) : ni total, ni barre, ni « incomplet », référence pour mémoire.
+  const b8 = page.locator('#vue-bilan .ligne-nut[data-cle="vitB8"]');
+  verif((await b8.getAttribute("data-total")) === "" && (await b8.getAttribute("data-incomplet")) === "0" && (await b8.locator(".barre, .marque-incomplet").count()) === 0, "biotine : sans total, sans barre, sans « incomplet »");
+  verif((await b8.textContent()).includes("Absente de la table Ciqual 2025") && (await b8.textContent()).includes("40 µg (pour mémoire)"), "biotine : « Absente de la table Ciqual 2025 », référence 40 µg pour mémoire");
+  // Les nutriments marqués « incomplet » sont exactement ceux où l'échine ou l'orange ont null (biotine exclue).
+  const vals = (id) => FOODS.aliments.find((x) => x.id === id).valeurs;
+  const attendusIncomplets = FOODS.nutriments.filter((n) => n.ciqual.length && (vals("echine_porc")[n.cle].v === null || vals("orange")[n.cle].v === null)).map((n) => n.cle);
+  const incomplets = await page.locator('#vue-bilan .ligne-nut[data-incomplet="1"]').evaluateAll((els) => els.map((e) => e.dataset.cle).filter((c) => !["omega", "rapport_la_ala"].includes(c)));
+  verif(JSON.stringify(incomplets) === JSON.stringify(attendusIncomplets), "« incomplet » exactement là où une donnée manque (biotine jamais)", `${incomplets} ≠ ${attendusIncomplets}`);
   await page.screenshot({ path: join(captures, "bilan-clair.png"), fullPage: true });
   // Fiche de l'échine : null affiché « non disponible », jamais 0.
   await onglet(page, "aliments");
@@ -449,7 +463,8 @@ console.log("\n7c. Affichage à 375 px, cibles de 48 px, captures");
   await toucher(page.locator('.al-info[data-id="pain_graines"]'));
   await controle("fiche ouverte");
   verif((await page.locator('#feuille .fiche-ligne[data-cle="energie"]').textContent()).includes("Estimé"), "fiche pain : provenance « Estimé »");
-  verif((await page.locator("#feuille").textContent()).includes("Contrôles de cohérence"), "fiche : contrôles de cohérence");
+  verif((await page.locator("#feuille .fiche-ligne").count()) === FOODS.nutriments.length, `fiche : les ${FOODS.nutriments.length} nutriments suivis`);
+  verif((await page.locator('#feuille .fiche-ligne[data-cle="vitB8"]').textContent()).includes("absente de Ciqual"), "fiche : biotine « absente de Ciqual »");
   await page.screenshot({ path: join(captures, "fiche-ouverte.png") });
   await ctx.close();
 }
@@ -536,7 +551,7 @@ console.log("\n7f. Unités d'affichage, teneurs brutes, textes visibles");
   await f("oeuf", "fer", "1,72 mg", "fiche œuf : fer « 1,72 mg » (brut de la table)");
   await f("oeuf", "epa", "0,0042 g (4,2 mg)", "fiche œuf : EPA « 0,0042 g (4,2 mg) »");
   await f("pain_complet", "arachidonique", "< 0,003 g (compté 0)", "fiche pain : « < 0,003 g (compté 0) »");
-  await f("filet_poulet", "sucres", "traces (compté 0)", "fiche filet de poulet : sucres « traces (compté 0) »");
+  await f("avocat", "glucides", "traces (compté 0)", "fiche avocat : glucides « traces (compté 0) »");
   await f("echine_porc", "vitC", "non disponible", "fiche échine : vitamine C « non disponible »");
   // Aucun nom de clé technique ni nombre à point décimal visibles (citations bibliographiques exclues : DOI, n° de tableau).
   const CLES = ["facteur_journee", "met_assis", "pct_ae", "par_kg", "par_mj", "kcal_par_g", "source_valeurs", "a_confirmer", "poids_unite_g", "masse_grasse_pct", "vitesse_kmh", "minutes_effort"];
@@ -561,6 +576,20 @@ console.log("\n7f. Unités d'affichage, teneurs brutes, textes visibles");
     await controler(`fiche ${al.id}`);
     await toucher(page.locator('#feuille [data-act="fermer"]'));
   }
+  // Nutriments retirés de la liste : aucune ligne, aucun nom visible dans le Bilan, l'en-tête et les fiches.
+  const RETIRES = ["sucres", "amidon", "fibres", "ags", "agmi", "agpi", "cholesterol", "retinol", "betacarotene", "folatesNat", "acideFolique", "iode", "sel"];
+  const NOMS_RETIRES = ["dont sucres", "amidon", "Fibres", "saturés", "monoinsaturés", "polyinsaturés", "Cholestérol", "rétinol", "Bêta-carotène", "folates naturels", "acide folique", "Iode", "Sel"];
+  const vus = await page.evaluate(() => ({
+    cles: [...document.querySelectorAll("[data-cle]")].map((e) => e.dataset.cle),
+    noms: [...document.querySelectorAll("#entete, .nut-nom, .fiche-nom")].map((e) => e.textContent).join(" | "),
+    lignes: document.querySelectorAll("#vue-bilan .ligne-nut[data-cle]").length,
+  }));
+  verif(!vus.cles.some((c) => RETIRES.includes(c)) && !NOMS_RETIRES.some((n) => vus.noms.includes(n)), "aucun nutriment retiré dans l'interface (en-tête, Bilan)", vus.cles.filter((c) => RETIRES.includes(c)).join());
+  verif(vus.lignes === FOODS.nutriments.length + 2, `Bilan : ${FOODS.nutriments.length} nutriments + 2 rapports`, String(vus.lignes));
+  await toucher(page.locator('.al-info[data-id="pain_complet"]'));
+  const nomsFiche = await page.locator("#feuille .fiche-nom").allTextContents();
+  verif(nomsFiche.length === FOODS.nutriments.length && !NOMS_RETIRES.some((n) => nomsFiche.join("|").includes(n)), "fiche : seulement les nutriments suivis");
+  await toucher(page.locator('#feuille [data-act="fermer"]'));
   verif(problemes.length === 0, `5 onglets et ${FOODS.aliments.length} fiches : aucune clé technique, aucun nombre à point décimal`, problemes.slice(0, 6).join(" ; "));
   verif(!(await page.locator("#vue-bilan").textContent()).includes("Pour éditer ce fichier"), "Bilan : le champ « format » de references.json n'est pas affiché");
   await ctx.close();
