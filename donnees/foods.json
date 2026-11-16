@@ -1803,6 +1803,375 @@
       }
     },
     {
+      "id": "tartines_campagne",
+      "nom": "Tartines Spécial Campagne La Boulangère",
+      "categorie": "Pains",
+      "icone": "🥖",
+      "unite": "tranche",
+      "unite_pluriel": "tranches",
+      "quantites": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "poids_unite_g": 37.5,
+      "poids_source": "Étiquette du paquet (photo du 2026-11-16) : « Ce sachet contient 12 tranches de 37,5 g environ »",
+      "part_comestible": 1,
+      "part_comestible_source": null,
+      "etat": "tel que vendu",
+      "a_confirmer": false,
+      "source_valeurs": "estime",
+      "ciqual": {
+        "code": 7100,
+        "nom": "Pain de campagne"
+      },
+      "valeurs": {
+        "energie": {
+          "v": 274.0,
+          "brut": "274",
+          "unite": "kcal",
+          "source": "etiquette",
+          "origine": "étiquette du paquet (photo)",
+          "photo": "sources/etiquettes/tartines_campagne-etiquette-2026-11-16.webp",
+          "date": "2026-11-16",
+          "trace": false
+        },
+        "proteines": {
+          "v": 8.9,
+          "brut": "8,9",
+          "unite": "g",
+          "source": "etiquette",
+          "origine": "étiquette du paquet (photo)",
+          "photo": "sources/etiquettes/tartines_campagne-etiquette-2026-11-16.webp",
+          "date": "2026-11-16",
+          "trace": false
+        },
+        "glucides": {
+          "v": 43.0,
+          "brut": "43",
+          "unite": "g",
+          "source": "etiquette",
+          "origine": "étiquette du paquet (photo)",
+          "photo": "sources/etiquettes/tartines_campagne-etiquette-2026-11-16.webp",
+          "date": "2026-11-16",
+          "trace": false
+        },
+        "lipides": {
+          "v": 6.5,
+          "brut": "6,5",
+          "unite": "g",
+          "source": "etiquette",
+          "origine": "étiquette du paquet (photo)",
+          "photo": "sources/etiquettes/tartines_campagne-etiquette-2026-11-16.webp",
+          "date": "2026-11-16",
+          "trace": false
+        },
+        "oleique": {
+          "v": 0.26,
+          "brut": "0,26",
+          "unite": "g",
+          "source": "estime",
+          "code": 7100,
+          "const": 41819,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "linoleique": {
+          "v": 0.49,
+          "brut": "0,49",
+          "unite": "g",
+          "source": "estime",
+          "code": 7100,
+          "const": 41826,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "arachidonique": {
+          "v": 0,
+          "brut": "< 0,01",
+          "unite": "g",
+          "source": "estime",
+          "code": 7100,
+          "const": 42046,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "ala": {
+          "v": 0.04,
+          "brut": "0,04",
+          "unite": "g",
+          "source": "estime",
+          "code": 7100,
+          "const": 41833,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "epa": {
+          "v": 0,
+          "brut": "< 0,01",
+          "unite": "g",
+          "source": "estime",
+          "code": 7100,
+          "const": 42053,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "dha": {
+          "v": 0,
+          "brut": "< 0,01",
+          "unite": "g",
+          "source": "estime",
+          "code": 7100,
+          "const": 42263,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "vitA": {
+          "v": 0.21,
+          "brut": "0,21",
+          "unite": "µg",
+          "source": "estime",
+          "code": 7100,
+          "const": 51104,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB1": {
+          "v": 0.097,
+          "brut": "0,097",
+          "unite": "mg",
+          "source": "estime",
+          "code": 7100,
+          "const": 56100,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB2": {
+          "v": 0,
+          "brut": "< 0,01",
+          "unite": "mg",
+          "source": "estime",
+          "code": 7100,
+          "const": 56200,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "vitB3": {
+          "v": 0,
+          "brut": "< 0,1",
+          "unite": "mg",
+          "source": "estime",
+          "code": 7100,
+          "const": 56310,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "vitB5": {
+          "v": 0.39,
+          "brut": "0,39",
+          "unite": "mg",
+          "source": "estime",
+          "code": 7100,
+          "const": 56400,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB6": {
+          "v": 0.051,
+          "brut": "0,051",
+          "unite": "mg",
+          "source": "estime",
+          "code": 7100,
+          "const": 56500,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
+          "source": "estime",
+          "code": 7100,
+          "const": null,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB9": {
+          "v": 30.2,
+          "brut": "30,2",
+          "unite": "µg",
+          "source": "estime",
+          "code": 7100,
+          "const": 56702,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB12": {
+          "v": null,
+          "brut": "-",
+          "unite": "µg",
+          "source": "estime",
+          "code": 7100,
+          "const": 56600,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitC": {
+          "v": 0,
+          "brut": "< 0,5",
+          "unite": "mg",
+          "source": "estime",
+          "code": 7100,
+          "const": 55100,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "vitD": {
+          "v": 0,
+          "brut": "< 0,25",
+          "unite": "µg",
+          "source": "estime",
+          "code": 7100,
+          "const": 52100,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "vitE": {
+          "v": 0,
+          "brut": "< 0,08",
+          "unite": "mg",
+          "source": "estime",
+          "code": 7100,
+          "const": 71010,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "vitK1": {
+          "v": 0,
+          "brut": "< 0,8",
+          "unite": "µg",
+          "source": "estime",
+          "code": 7100,
+          "const": 54101,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "vitK2": {
+          "v": null,
+          "brut": "-",
+          "unite": "µg",
+          "source": "estime",
+          "code": 7100,
+          "const": 54104,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "fer": {
+          "v": 1.5,
+          "brut": "1,5",
+          "unite": "mg",
+          "source": "estime",
+          "code": 7100,
+          "const": 10260,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "calcium": {
+          "v": 23,
+          "brut": "23",
+          "unite": "mg",
+          "source": "estime",
+          "code": 7100,
+          "const": 10200,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "magnesium": {
+          "v": 33,
+          "brut": "33",
+          "unite": "mg",
+          "source": "estime",
+          "code": 7100,
+          "const": 10120,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "potassium": {
+          "v": 190,
+          "brut": "190",
+          "unite": "mg",
+          "source": "estime",
+          "code": 7100,
+          "const": 10190,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "sodium": {
+          "v": 474,
+          "brut": "474",
+          "unite": "mg",
+          "source": "estime",
+          "code": 7100,
+          "const": 10110,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "zinc": {
+          "v": 0.88,
+          "brut": "0,88",
+          "unite": "mg",
+          "source": "estime",
+          "code": 7100,
+          "const": 10300,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "phosphore": {
+          "v": 120,
+          "brut": "120",
+          "unite": "mg",
+          "source": "estime",
+          "code": 7100,
+          "const": 10150,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "manganese": {
+          "v": 0.82,
+          "brut": "0,82",
+          "unite": "mg",
+          "source": "estime",
+          "code": 7100,
+          "const": 10251,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "selenium": {
+          "v": 0,
+          "brut": "< 20",
+          "unite": "µg",
+          "source": "estime",
+          "code": 7100,
+          "const": 10340,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "cuivre": {
+          "v": 0.15,
+          "brut": "0,15",
+          "unite": "mg",
+          "source": "estime",
+          "code": 7100,
+          "const": 10290,
+          "date": "2025-11-03",
+          "trace": false
+        }
+      },
+      "notes": "Paquet de 12 tranches (non bio), avec huile de colza. Énergie et macros : étiquette du paquet, photo du 2026-11-16 (sources/etiquettes/tartines_campagne-etiquette-2026-11-16.webp) ; vitamines, minéraux et oméga : entrée Ciqual voisine 7100 « Pain de campagne », marqués « estimé » (l'entrée 7099 « préemballé » n'a presque aucun micronutriment). Écarts de plus de 15 % avec Ciqual 7100 : lipides 6,5 contre 1,3 (+400 %). Ce pain contient de l'huile de colza : ses oméga sont sous-estimés par l'entrée 7100, plus maigre."
+    },
+    {
       "id": "riz_complet",
       "nom": "Riz complet (pesé cru)",
       "categorie": "Féculents",
