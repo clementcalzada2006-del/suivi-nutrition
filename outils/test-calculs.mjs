@@ -244,5 +244,23 @@ console.log("\nBilan de la semaine");
   verif(!/\d\.\d/.test(csv.replace(/\d{4}-\d{2}-\d{2}/g, "")), "CSV : aucun point décimal");
 }
 
+console.log("\nExplications des nutriments");
+{
+  const ex = lire("explications.json");
+  const TEXTES = ["role", "sante", "fourchette", "trop_peu", "trop"];
+  const cles = foods.nutriments.map((n) => n.cle).sort();
+  verif(JSON.stringify(Object.keys(ex.nutriments).sort()) === JSON.stringify(cles), `les ${cles.length} nutriments de foods.json, ni plus ni moins`);
+  verif(Object.keys(ex.rapports).sort().join() === "rapport_linoleique_ala,rapport_omega_total", "les 2 rapports");
+  const entrees = [...Object.entries(ex.nutriments), ...Object.entries(ex.rapports)];
+  const incompletes = entrees.filter(([, e]) => TEXTES.some((c) => typeof e[c] !== "string" || !e[c].trim()) || !Array.isArray(e.sources) || !e.sources.length).map(([k]) => k);
+  verif(incompletes.length === 0, "chaque entrée : 5 textes non vides et au moins une source", incompletes.join());
+  const inconnues = entrees.flatMap(([k, e]) => e.sources.filter((s) => !ex.sources[s]).map((s) => `${k} → ${s}`));
+  verif(inconnues.length === 0, "chaque source citée est déclarée", inconnues.join());
+  verif(Object.values(ex.sources).every((s) => s.titre && s.url), "chaque source a un titre et une URL");
+  const points = entrees.flatMap(([k, e]) => TEXTES.filter((c) => /\d\.\d/.test(e[c])).map((c) => `${k}.${c}`));
+  verif(points.length === 0 && !/\d\.\d/.test(ex.avertissement), "aucun nombre à point décimal dans les textes", points.join());
+  verif(typeof ex.avertissement === "string" && ex.avertissement.trim().length > 0, "avertissement présent");
+}
+
 console.log(echecs ? `\nÉCHEC : ${echecs} sur ${total} vérifications` : `\nOK : ${total} vérifications des calculs`);
 process.exit(echecs ? 1 : 0);

@@ -14,7 +14,7 @@ const GROUPES_BILAN = [
 ];
 const LIBELLE_TYPE = { min: "À atteindre", max: "À ne pas dépasser", fourchette: "Fourchette", egal: "Objectif" };
 
-let foods, refs, activite, parId, nutParCle;
+let foods, refs, activite, explications, parId, nutParCle;
 let etat, historique;
 // Champs saisis au clavier : bornes de validation (lues par calculs.lireSaisie).
 const CHAMPS = {
@@ -30,7 +30,7 @@ const ui = { bilanVue: "jour", lundi: null, saisie: {}, onglet: "aliments", repl
 
 async function demarrer() {
   const charger = (f) => fetch(f).then((r) => (r.ok ? r.json() : Promise.reject(new Error(f))));
-  [foods, refs, activite] = await Promise.all(["donnees/foods.json", "donnees/references.json", "donnees/activite.json"].map(charger));
+  [foods, refs, activite, explications] = await Promise.all(["donnees/foods.json", "donnees/references.json", "donnees/activite.json", "donnees/explications.json"].map(charger));
   parId = C.indexAliments(foods);
   nutParCle = Object.fromEntries(foods.nutriments.map((n) => [n.cle, n]));
 
@@ -50,6 +50,13 @@ async function demarrer() {
   // Champs : enregistrement au « change » (perte du focus ou Entrée) ; Entrée ferme le clavier.
   document.addEventListener("change", (e) => e.target.dataset?.champ && surSaisie(e.target));
   document.addEventListener("keydown", (e) => e.key === "Enter" && e.target.dataset?.champ && e.target.blur());
+  // Éléments role="button" (lignes du Bilan) : Entrée et Espace comme un toucher.
+  document.addEventListener("keydown", (e) => {
+    if ((e.key === "Enter" || e.key === " ") && e.target.getAttribute?.("role") === "button" && e.target.dataset.act) {
+      e.preventDefault();
+      e.target.click();
+    }
+  });
   // Remise à zéro à minuit : au retour au premier plan, au retour depuis le cache de navigation, et toutes les 30 s.
   document.addEventListener("visibilitychange", () => document.visibilityState === "visible" && verifierJour());
   window.addEventListener("pageshow", () => verifierJour());
@@ -468,8 +475,8 @@ function ligneBilan(n, tot, r) {
     // Absent de la table (biotine) : ni total ni barre, la référence reste affichée pour mémoire.
     const ref = r && !r.inconnue ? ` · ${LIBELLE_TYPE[r.type]} : ${C.formaterNutriment(r.bas, n)} (pour mémoire)` : "";
     return `<div class="ligne-nut t-aucun absent" data-cle="${n.cle}" data-total="" data-incomplet="0" data-absent="1">
-      <div class="nut-tete"><span class="nut-nom">${esc(n.nom)}</span><span class="nut-val">—</span></div>
-      <div class="nut-ref">Absente de la table Ciqual 2025${ref}</div></div>`;
+      ${zoneExplication(n.cle, n.nom, `<div class="nut-tete"><span class="nut-nom">${esc(n.nom)}</span><span class="nut-val">—</span></div>
+      <div class="nut-ref">Absente de la table Ciqual 2025${ref}</div>`)}</div>`;
   }
   const et = C.etatReference(tot.total, r);
   let refTexte = "";
@@ -483,13 +490,52 @@ function ligneBilan(n, tot, r) {
   }
   const ouvert = ui.manquantsOuverts.has(n.cle);
   return `<div class="ligne-nut t-${r?.type || "aucun"}" data-cle="${n.cle}" data-total="${tot.total}" data-incomplet="${tot.incomplet ? 1 : 0}">
-    <div class="nut-tete"><span class="nut-nom">${esc(n.nom)}</span>
+    ${zoneExplication(n.cle, n.nom, `<div class="nut-tete"><span class="nut-nom">${esc(n.nom)}</span>
       <span class="nut-val">${C.formaterNutriment(tot.total, n)}</span></div>
     ${barre}
-    ${refTexte ? `<div class="nut-ref">${refTexte}</div>` : ""}
+    ${refTexte ? `<div class="nut-ref">${refTexte}</div>` : ""}`)}
     ${tot.incomplet ? `<button class="marque-incomplet" data-act="manquants" data-cle="${n.cle}" aria-expanded="${ouvert}">incomplet</button>
       <p class="manquants" ${ouvert ? "" : "hidden"}>Pas de donnée pour : ${tot.manquants.map(esc).join(", ")}</p>` : ""}
   </div>`;
+}
+
+// Partie d'une ligne du Bilan qui ouvre l'explication du nutriment. Le marqueur « incomplet », à côté,
+// garde son propre geste (liste des aliments sans donnée).
+function zoneExplication(cle, nom, html) {
+  return `<div class="nut-zone" role="button" tabindex="0" data-act="explication" data-cle="${cle}" aria-label="Explication : ${esc(nom)}">${html}</div>`;
+}
+
+// Clés des rapports du Bilan → clés de donnees/explications.json.
+const EXPLICATION_RAPPORT = { rapport_la_ala: "rapport_linoleique_ala", omega: "rapport_omega_total" };
+const SECTIONS_EXPLICATION = [
+  ["role", "À quoi ça sert"],
+  ["sante", "Est-ce bon d'en manger ?"],
+  ["fourchette", "Ce qui est conseillé"],
+  ["trop_peu", "Si tu en manges trop peu"],
+  ["trop", "Si tu en manges trop"],
+];
+
+// Feuille d'explication : la ligne du jour (copie exacte de celle du Bilan), les 5 sections, les sources.
+function ouvrirExplication(cle) {
+  const ex = EXPLICATION_RAPPORT[cle] ? explications.rapports[EXPLICATION_RAPPORT[cle]] : explications.nutriments[cle];
+  const ligne = $(`#vue-bilan .ligne-nut[data-cle="${cle}"]`);
+  if (!ex || !ligne) return;
+  const copie = ligne.cloneNode(true);
+  const zone = copie.querySelector(".nut-zone");
+  for (const a of ["role", "tabindex", "data-act", "aria-label"]) zone.removeAttribute(a);
+  const nom = ligne.querySelector(".nut-nom").textContent;
+  const sources = ex.sources
+    .map((k) => explications.sources[k])
+    .filter(Boolean)
+    .map((s) => `<li>${esc(s.titre)}${s.url ? ` <span class="url">${esc(s.url)}</span>` : ""}</li>`)
+    .join("");
+  ouvrirFeuille(`
+    <div class="feuille-tete"><h2>${esc(nom)}</h2></div>
+    <div class="explication-jour"><h3>Aujourd'hui</h3>${copie.outerHTML}</div>
+    ${SECTIONS_EXPLICATION.map(([k, titre]) => `<section class="explication" data-section="${k}"><h3>${titre}</h3><p>${esc(ex[k])}</p></section>`).join("")}
+    <h3>Sources</h3><ul class="citation explication-sources">${sources}</ul>
+    <p class="avertissement">${esc(explications.avertissement)}</p>
+    <button class="btn btn-large" data-act="fermer">Fermer</button>`);
 }
 
 // Ligne d'un rapport (sans unité) : valeur, référence éventuelle avec barre, note, marqueur « incomplet ».
@@ -501,10 +547,10 @@ function ligneRapport(cle, nom, r, ref, note) {
   const refTexte = ref ? `${LIBELLE_TYPE[ref.type]} : ${nombre(ref.bas)}${et ? ` · <b>${Math.round(et.pct)} %</b>` : ""}` : "";
   const barre = et ? `<div class="barre t-${ref.type} e-${et.etat}" role="img" aria-label="${Math.round(et.pct)} %"><span style="width:${Math.min(100, et.pct)}%"></span></div>` : "";
   return `<div class="ligne-nut t-${ref?.type || "aucun"}" data-cle="${cle}" data-total="${r.valeur ?? ""}" data-incomplet="${r.incomplet ? 1 : 0}" data-etat="${et?.etat ?? ""}">
-    <div class="nut-tete"><span class="nut-nom">${nom}</span><span class="nut-val">${val}</span></div>
+    ${zoneExplication(cle, nom, `<div class="nut-tete"><span class="nut-nom">${nom}</span><span class="nut-val">${val}</span></div>
     ${barre}
     ${refTexte ? `<div class="nut-ref">${refTexte}</div>` : ""}
-    ${note ? `<div class="nut-ref">${esc(note)}</div>` : ""}
+    ${note ? `<div class="nut-ref">${esc(note)}</div>` : ""}`)}
     ${r.incomplet ? `<button class="marque-incomplet" data-act="manquants" data-cle="${cle}" aria-expanded="${ouvert}">incomplet</button>
       <p class="manquants" ${ouvert ? "" : "hidden"}>Pas de donnée pour : ${r.manquants.map(esc).join(", ")}</p>` : ""}
   </div>`;
@@ -695,6 +741,7 @@ const dateCourte = (j) => enDate(j).toLocaleDateString("fr-FR", { day: "2-digit"
 // ---------- Gestes ----------
 
 const ACTIONS = {
+  explication: (b) => ouvrirExplication(b.dataset.cle),
   "bilan-vue": (b) => {
     ui.bilanVue = b.dataset.vue;
     ui.lundi = null; // retour à la semaine en cours
@@ -775,7 +822,7 @@ function surClic(ev) {
   const b = ev.target.closest("[data-act]");
   if (!b || !ACTIONS[b.dataset.act]) return;
   // Chaque geste commence par vérifier la date : un ajout après minuit va dans la bonne journée.
-  if (!["annuler", "fermer", "onglet", "categorie", "aliment", "fiche", "manquants"].includes(b.dataset.act)) verifierJour();
+  if (!["annuler", "fermer", "onglet", "categorie", "aliment", "fiche", "manquants", "explication"].includes(b.dataset.act)) verifierJour();
   ACTIONS[b.dataset.act](b);
 }
 

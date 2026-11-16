@@ -828,6 +828,83 @@ async function construireSemaine(page) {
   await ctx.close();
 }
 
+console.log("\n10. Explications des nutriments (Bilan, vue Jour)");
+{
+  const EX = JSON.parse(readFileSync(join(racine, "donnees", "explications.json"), "utf8"));
+  const RAPPORTS = { rapport_la_ala: "rapport_linoleique_ala", omega: "rapport_omega_total" };
+  const { ctx, page } = await nouveauContexte();
+  await ouvrir(page);
+  await ajouter(page, "echine_porc", 200);
+  await ajouter(page, "orange", 1);
+  await ajouter(page, "oeuf", 2);
+  await onglet(page, "bilan");
+  // Sans pesée : la ligne du jour de la feuille montre « — » pour une référence qui dépend du poids.
+  await toucher(page.locator('#vue-bilan .nut-zone[data-cle="proteines"]'));
+  verif((await page.locator("#feuille .explication-jour .nut-ref").first().textContent()).includes("—"), "sans pesée : référence « — » dans la feuille, comme dans le Bilan");
+  await toucher(page.locator('#feuille [data-act="fermer"]'));
+  await peser(page, 80);
+  await onglet(page, "bilan");
+  verif((await page.locator('#vue-bilan [aria-label="Explication : Potassium"][role="button"]').count()) === 1, "ligne du potassium : role=button, libellé « Explication : Potassium »");
+  const cles = [...FOODS.nutriments.map((n) => n.cle), ...Object.keys(RAPPORTS)];
+  const erreurs = [];
+  for (const cle of cles) {
+    const ex = RAPPORTS[cle] ? EX.rapports[RAPPORTS[cle]] : EX.nutriments[cle];
+    await toucher(page.locator(`#vue-bilan .nut-zone[data-cle="${cle}"]`));
+    const f = page.locator("#feuille");
+    if (!(await f.isVisible())) {
+      erreurs.push(`${cle} : feuille fermée`);
+      continue;
+    }
+    const r = await page.evaluate((cle) => {
+      const f = document.querySelector("#feuille");
+      return {
+        titre: f.querySelector("h2").textContent,
+        nomBilan: document.querySelector(`#vue-bilan .ligne-nut[data-cle="${cle}"] .nut-nom`).textContent,
+        jour: f.querySelector(".explication-jour .nut-zone").textContent,
+        jourBilan: document.querySelector(`#vue-bilan .ligne-nut[data-cle="${cle}"] .nut-zone`).textContent,
+        sections: [...f.querySelectorAll(".explication")].map((s) => [s.dataset.section, s.querySelector("h3").textContent, s.querySelector("p").textContent]),
+        sources: [...f.querySelectorAll(".explication-sources li")].map((l) => l.textContent),
+        avertissement: f.querySelector(".avertissement").textContent,
+      };
+    }, cle);
+    const ordre = ["role:À quoi ça sert", "sante:Est-ce bon d'en manger ?", "fourchette:Ce qui est conseillé", "trop_peu:Si tu en manges trop peu", "trop:Si tu en manges trop"];
+    if (r.titre !== r.nomBilan) erreurs.push(`${cle} : titre ${r.titre}`);
+    if (r.jour !== r.jourBilan) erreurs.push(`${cle} : ligne du jour différente du Bilan`);
+    if (r.sections.map(([k, t]) => `${k}:${t}`).join("|") !== ordre.join("|")) erreurs.push(`${cle} : sections ${r.sections.map(([k]) => k)}`);
+    if (r.sections.some(([k, , p]) => !p.trim() || p !== ex[k])) erreurs.push(`${cle} : texte vide ou différent du fichier`);
+    if (r.sources.length !== ex.sources.length || !ex.sources.every((k, i) => r.sources[i].includes(EX.sources[k].titre) && r.sources[i].includes(EX.sources[k].url))) erreurs.push(`${cle} : sources`);
+    if (r.avertissement !== EX.avertissement) erreurs.push(`${cle} : avertissement`);
+    await toucher(page.locator('#feuille [data-act="fermer"]'));
+    if (!(await f.isHidden())) erreurs.push(`${cle} : la feuille ne se ferme pas`);
+  }
+  verif(erreurs.length === 0, `${cles.length} lignes (34 nutriments + 2 rapports) : feuille ouverte, ligne du jour identique au Bilan, 5 sections dans l'ordre, sources, avertissement, fermeture`, erreurs.slice(0, 5).join(" ; "));
+  // Le marqueur « incomplet » garde son geste : il montre les aliments manquants sans ouvrir la feuille.
+  const vitC = page.locator('#vue-bilan .ligne-nut[data-cle="vitC"]');
+  await toucher(vitC.locator('[data-act="manquants"]'));
+  verif((await vitC.locator(".manquants").isVisible()) && (await vitC.locator(".manquants").textContent()).includes("Côte d'échine de porc") && (await page.locator("#feuille").isHidden()), "« incomplet » : liste les aliments manquants, sans ouvrir l'explication");
+  // Clavier : Entrée sur une ligne ouvre aussi l'explication.
+  await page.locator('#vue-bilan .nut-zone[data-cle="fer"]').focus();
+  await page.keyboard.press("Enter");
+  verif((await page.locator("#feuille h2").textContent()) === "Fer", "Entrée sur la ligne du fer ouvre son explication");
+  await toucher(page.locator('#feuille [data-act="fermer"]'));
+  await toucher(page.locator('#vue-bilan .nut-zone[data-cle="potassium"]'));
+  await page.screenshot({ path: join(captures, "clair-explication.png") });
+  await ctx.close();
+}
+{
+  const { ctx, page } = await nouveauContexte({ colorScheme: "dark" });
+  await ouvrir(page);
+  await peser(page, 80);
+  await onglet(page, "aliments");
+  await ajouter(page, "banane", 2);
+  await ajouter(page, "pomme_de_terre", 300);
+  await page.waitForTimeout(5500); // le toast d'ajout disparaît
+  await onglet(page, "bilan");
+  await toucher(page.locator('#vue-bilan .nut-zone[data-cle="potassium"]'));
+  await page.screenshot({ path: join(captures, "sombre-explication.png") });
+  await ctx.close();
+}
+
 console.log("\n7g. Stockage indisponible");
 {
   const ctx = await nav.newContext(TELEPHONE);

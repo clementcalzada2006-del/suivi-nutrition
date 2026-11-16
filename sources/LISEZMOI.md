@@ -41,3 +41,26 @@ URL d'origine : voir `sources` dans `donnees/references.json`. MD5 calculés loc
 ## `etiquettes/` (à venir)
 
 Photos des étiquettes des produits de marque (pains, légumes surgelés Super U), nommées `<id de l'aliment>-<AAAA-MM-JJ>.jpg`.
+
+## Sources ajoutées les 5 et 16/11/2026 (explications des nutriments, protéines des sportifs, os du lapin)
+
+MD5 calculés localement :
+
+| Fichier | URL d'origine | MD5 |
+|---|---|---|
+| anses/AFSSA_2007_proteines.pdf | https://www.anses.fr/fr/system/files/NUT-Ra-Proteines.pdf | 676b614dc7f9d495874e19221f62bb89 |
+| anses/sel-chlorure-sodium.html | https://www.anses.fr/fr/article/savoir-consommation-du-sel-chlorure-sodium | 5eef485dc93b658110afba7a6544678e |
+| anses/sucres-alimentation.html | https://www.anses.fr/fr/article/sucres-lalimentation | 1988a1cd1d93dd7dcdd7fcfd53e8986f |
+| anses/acides-gras-omega-3.html | https://www.anses.fr/fr/article/acides-gras-omega-3 | 007ffea459548725f09f9951a1ac6dc7 |
+| anses/que-sont-vitamines.html | https://www.anses.fr/fr/article/que-sont-vitamines | cde4d37a6bf03a93fbbab2ba639d3f5a |
+| anses/vitamine-a.html | https://www.anses.fr/fr/article/vitamine-carotenoides-provitaminiques | e7418677bed77f6b3074d180be0cb291 |
+| anses/vitamine-b9.html | https://www.anses.fr/fr/article/savoir-vitamine-b9 | 47c36936ba33f2fff8df6d07102d20f1 |
+| anses/vitamine-c.html | https://www.anses.fr/fr/article/vitamine-c | 2b4f86156b98cdd10e1584b37cbc4586 |
+| anses/vitamine-d.html | https://www.anses.fr/fr/article/vitamine-pourquoi-comment-assurer-apport-suffisant | 25a9c4070792e4273a9f6cc4f11c52d0 |
+| anses/calcium.html | https://www.anses.fr/fr/article/calcium-pourquoi-comment-consommer | 7fb1d46728130a6afbe15d433650a0a6 |
+| anses/mineraux.html | https://www.anses.fr/fr/article/mineraux | 019029fc4cfdc88530719d1d926e73ea |
+| efsa/EFSA_2006_UL_vitamines_mineraux.pdf | https://www.efsa.europa.eu/sites/default/files/efsa_rep/blobserver_assets/ndatolerableuil.pdf | d3caae22ff44bb7abe809388b78d4867 |
+| efsa/EFSA_2025_UL_synthese.pdf | https://www.efsa.europa.eu/sites/default/files/2024-05/ul-summary-report.pdf | 029972b8412673d8f74f647948e53211 |
+| lapin/ah102.pdf | https://www.ars.usda.gov/ARSUserFiles/80400525/Data/Classics/ah102.pdf | 9e742fa7995e7ec920d2dc688893d333 |
+
+`etiquettes/` contient aussi les photos et copies texte des étiquettes et des fiches Système U (pains, légumes U BIO, chocolats, tartines, huiles).

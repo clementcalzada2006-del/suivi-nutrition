@@ -20,6 +20,7 @@ Onglets : **Aliments** (ajout en un toucher, fiche « i » avec la provenance de
 - `donnees/foods.json` : nutriments suivis et aliments. Les `valeurs` sont remplies par `outils/ciqual.py`, jamais à la main.
 - `donnees/references.json` : références ANSES (homme adulte), avec sources et date.
 - `donnees/activite.json` : méthode de calcul de la dépense et modules de séance.
+- `donnees/explications.json` : pour chaque nutriment et chaque rapport, à quoi il sert, son intérêt, les apports conseillés, ce qui se passe en dessous et au-dessus, avec les sources (ANSES, EFSA). Dans le Bilan (vue Jour), toucher une ligne ouvre cette explication avec le total du jour.
 - `manifest.webmanifest`, `sw.js`, `icons/` : installation et hors ligne.
 - `outils/` : `ciqual.py` (remplissage et vérification des données), `serveur.mjs`, `icones.mjs`, tests.
 - `sources/` : fichiers officiels téléchargés (Ciqual 2025, USDA, ANSES), gardés sur le PC ; voir `sources/LISEZMOI.md`.

@@ -1,0 +1,529 @@
+{
+  "date": "2026-11-16",
+  "avertissement": "Informations générales tirées des avis de l'ANSES et de l'EFSA, pas un avis médical.",
+  "sources": {
+    "anses_vm_2025": {
+      "titre": "ANSES, « Les références nutritionnelles en vitamines et minéraux », page mise à jour le 21/02/2025 (tableaux « Hommes de 18 ans et plus » ou « Hommes et femmes de 18 ans et plus »)",
+      "url": "https://www.anses.fr/fr/content/les-references-nutritionnelles-en-vitamines-et-mineraux",
+      "copie": "sources/anses/references-vitamines-mineraux.html",
+      "consulte": "2026-11-04"
+    },
+    "anses_2016": {
+      "titre": "ANSES, avis et rapport « Actualisation des repères du PNNS : révision des repères de consommations alimentaires », saisine 2012-SA-0103, décembre 2016 (avis p. 15-17, tableau 2 p. 20, tableau 4 p. 23)",
+      "url": "https://www.anses.fr/fr/system/files/NUT2012SA0103Ra-1.pdf",
+      "copie": "sources/anses/ANSES_2016_NUT2012SA0103Ra.pdf",
+      "consulte": "2026-11-04"
+    },
+    "anses_lipides": {
+      "titre": "ANSES, page « Les lipides » : références en acides gras de l'adulte (avis 2011) et lipides totaux 35 à 40 % de l'apport énergétique",
+      "url": "https://www.anses.fr/fr/content/les-lipides",
+      "copie": "sources/anses/les-lipides.html",
+      "consulte": "2026-11-04"
+    },
+    "anses_proteines": {
+      "titre": "ANSES, page « Les protéines » : référence de 0,83 g/kg/j pour l'adulte (2007), protéines entre 10 et 20 % de l'AET (2016)",
+      "url": "https://www.anses.fr/fr/content/les-proteines",
+      "copie": "sources/anses/les-proteines.html",
+      "consulte": "2026-11-04"
+    },
+    "afssa_2007_proteines": {
+      "titre": "Afssa (aujourd'hui ANSES), rapport « Apport en protéines : consommation, qualité, besoins et recommandations », 2007 : athlètes confirmés en disciplines de force 1,3 à 1,5 g/kg/j ; pour développer la masse musculaire, 2 à 2,5 g/kg/j, sans dépasser 2,5 g/kg/j (p. 199 et « Points importants » p. 201)",
+      "url": "https://www.anses.fr/fr/system/files/NUT-Ra-Proteines.pdf",
+      "copie": "sources/anses/AFSSA_2007_proteines.pdf",
+      "consulte": "2026-11-05"
+    },
+    "anses_sel": {
+      "titre": "ANSES, « Tout savoir sur la consommation du sel (ou chlorure de sodium) », article du 27/10/2022",
+      "url": "https://www.anses.fr/fr/article/savoir-consommation-du-sel-chlorure-sodium",
+      "copie": "sources/anses/sel-chlorure-sodium.html",
+      "consulte": "2026-11-16"
+    },
+    "anses_sucres": {
+      "titre": "ANSES, « Sucres dans l'alimentation », article du 18/03/2024",
+      "url": "https://www.anses.fr/fr/article/sucres-lalimentation",
+      "copie": "sources/anses/sucres-alimentation.html",
+      "consulte": "2026-11-16"
+    },
+    "anses_omega3": {
+      "titre": "ANSES, « Les acides gras oméga 3 », article du 03/09/2025",
+      "url": "https://www.anses.fr/fr/article/acides-gras-omega-3",
+      "copie": "sources/anses/acides-gras-omega-3.html",
+      "consulte": "2026-11-16"
+    },
+    "anses_mineraux": {
+      "titre": "ANSES, « Les minéraux », article du 13/04/2025",
+      "url": "https://www.anses.fr/fr/article/mineraux",
+      "copie": "sources/anses/mineraux.html",
+      "consulte": "2026-11-16"
+    },
+    "anses_vitamines": {
+      "titre": "ANSES, « Que sont les vitamines ? », article du 15/12/2012",
+      "url": "https://www.anses.fr/fr/article/que-sont-vitamines",
+      "copie": "sources/anses/que-sont-vitamines.html",
+      "consulte": "2026-11-16"
+    },
+    "anses_vitamine_a": {
+      "titre": "ANSES, « Vitamine A & caroténoïdes provitaminiques », article du 14/12/2012",
+      "url": "https://www.anses.fr/fr/article/vitamine-carotenoides-provitaminiques",
+      "copie": "sources/anses/vitamine-a.html",
+      "consulte": "2026-11-16"
+    },
+    "anses_vitamine_b9": {
+      "titre": "ANSES, « Tout savoir sur la vitamine B9 », article du 19/12/2024",
+      "url": "https://www.anses.fr/fr/article/savoir-vitamine-b9",
+      "copie": "sources/anses/vitamine-b9.html",
+      "consulte": "2026-11-16"
+    },
+    "anses_vitamine_c": {
+      "titre": "ANSES, « Vitamine C », article du 27/10/2022",
+      "url": "https://www.anses.fr/fr/article/vitamine-c",
+      "copie": "sources/anses/vitamine-c.html",
+      "consulte": "2026-11-16"
+    },
+    "anses_vitamine_d": {
+      "titre": "ANSES, « Vitamine D : pourquoi et comment assurer un apport suffisant ? », article du 02/03/2022",
+      "url": "https://www.anses.fr/fr/article/vitamine-pourquoi-comment-assurer-apport-suffisant",
+      "copie": "sources/anses/vitamine-d.html",
+      "consulte": "2026-11-16"
+    },
+    "anses_calcium": {
+      "titre": "ANSES, « Le calcium : pourquoi et comment en consommer ? », article du 27/10/2022",
+      "url": "https://www.anses.fr/fr/article/calcium-pourquoi-comment-consommer",
+      "copie": "sources/anses/calcium.html",
+      "consulte": "2026-11-16"
+    },
+    "efsa_ul_2006": {
+      "titre": "EFSA, « Tolerable Upper Intake Levels for Vitamins and Minerals », recueil des avis du SCF et du groupe NDA, 2006 (en anglais) : effets indésirables des apports élevés, nutriment par nutriment",
+      "url": "https://www.efsa.europa.eu/sites/default/files/efsa_rep/blobserver_assets/ndatolerableuil.pdf",
+      "copie": "sources/efsa/EFSA_2006_UL_vitamines_mineraux.pdf",
+      "consulte": "2026-11-16"
+    },
+    "efsa_ul_synthese": {
+      "titre": "EFSA, « Overview on Tolerable Upper Intake Levels as derived by the SCF and the EFSA NDA Panel », version 11, août 2025 (en anglais)",
+      "url": "https://www.efsa.europa.eu/sites/default/files/2024-05/ul-summary-report.pdf",
+      "copie": "sources/efsa/EFSA_2025_UL_synthese.pdf",
+      "consulte": "2026-11-16"
+    }
+  },
+  "nutriments": {
+    "energie": {
+      "role": "L'énergie (en kcal) vient de trois familles de nutriments : les glucides, les lipides et les protéines. Les vitamines, elles, n'apportent pas d'énergie.",
+      "sante": "Il en faut forcément, car ton corps dépense de l'énergie en permanence. Tous les aliments qui contiennent des glucides, des lipides ou des protéines en apportent.",
+      "fourchette": "L'appli compare ce que tu manges à ta dépense estimée du jour (onglet Activité, marche et salle comprises). L'ANSES estime le besoin à partir du métabolisme de base et du niveau d'activité physique, et ses fourchettes pour les glucides, lipides et protéines supposent un bilan équilibré entre apports et dépenses.",
+      "trop_peu": "Manger moins que ta dépense crée un bilan énergétique négatif : le corps puise dans ses réserves et tu perds du poids. Chez les sportifs de force qui se restreignent, l'Afssa note que le métabolisme des protéines est perturbé et que le principal risque est la fonte musculaire ; elle conseille de garder la même quantité de protéines et de privilégier les glucides. Les régimes très basses calories sont réservés aux personnes en surpoids, avec un suivi médical, et ne doivent pas servir à maigrir quand le poids est normal.",
+      "trop": "Les sources lues ne chiffrent pas l'effet d'un surplus d'énergie. L'ANSES relie un apport en lipides au-delà de 40 % de l'énergie à un risque de déséquilibre énergétique, et les sucres en excès à la prise de poids.",
+      "sources": [
+        "anses_2016",
+        "afssa_2007_proteines",
+        "anses_lipides",
+        "anses_vitamines",
+        "anses_sucres"
+      ]
+    },
+    "proteines": {
+      "role": "Les protéines construisent et renouvellent tes tissus : muscles, peau, cheveux, ongles, os. Elles servent aussi d'enzymes, d'hormones, d'anticorps et d'hémoglobine. Elles sont faites d'acides aminés, dont 9 doivent obligatoirement venir de l'alimentation.",
+      "sante": "Oui, elles sont indispensables. On en trouve dans la viande, le poisson, les œufs, le lait et les produits laitiers, et côté végétal dans les légumes secs, les oléagineux et les céréales ; les protéines animales sont en général plus riches en acides aminés indispensables.",
+      "fourchette": "Pour un sportif de force, l'Afssa conseille 1,3 à 1,5 g par kg et par jour pour entretenir le muscle, et 2 à 2,5 g/kg pour le développer, sans dépasser 2,5 g/kg ni 6 mois par an. L'appli retient donc de 1,3 à 2,5 g/kg, calculés avec ta dernière pesée. Pour un adulte non sportif, la référence de l'ANSES est 0,83 g/kg.",
+      "trop_peu": "Un apport nettement trop bas expose à la dénutrition. En restriction calorique, l'Afssa explique qu'il faut plus de protéines pour équilibrer le bilan azoté : dans une étude qu'elle cite, des haltérophiles au régime avaient besoin d'au moins 1,6 g/kg/j, et le risque principal est la fonte musculaire.",
+      "trop": "L'ANSES n'a pas pu fixer de limite supérieure de sécurité, faute de données. L'Afssa rappelle que les acides aminés en trop sont transformés en urée, que de très gros apports pourraient peser sur les reins (sans alerte chez d'anciens culturistes, mais les données manquent) et augmentent les pertes d'eau, donc pense à boire. Elle juge très difficile de justifier plus de 3 g/kg/j.",
+      "sources": [
+        "afssa_2007_proteines",
+        "anses_proteines"
+      ]
+    },
+    "glucides": {
+      "role": "Les glucides regroupent les sucres (glucose, fructose, saccharose, lactose…) et les amidons. Les amidons sont indispensables pour l'énergie qu'ils apportent : ils sont digérés et absorbés surtout sous forme de glucose.",
+      "sante": "Oui, en soignant la qualité : l'ANSES conseille de limiter les sucres, de privilégier les glucides complexes à faible index glycémique et d'avoir assez de fibres. Les sucres viennent notamment des fruits, du miel, des produits laitiers (lactose) et du sucre de table.",
+      "fourchette": "L'ANSES conseille que les glucides fassent 40 à 55 % de ton énergie ; l'appli convertit cette fourchette en grammes avec ta dépense du jour. En sèche, l'Afssa conseille aux sportifs de force de privilégier les glucides plutôt que les lipides, ce qui aide à préserver la masse maigre.",
+      "trop_peu": "Sous 40 % de l'énergie, l'ANSES estime que le risque de désordres métaboliques peut augmenter. Pendant l'effort, les glucides limitent aussi l'utilisation des acides aminés comme carburant (Afssa).",
+      "trop": "Au-delà de 55 %, l'ANSES voit un risque accru d'insulinorésistance, de diabète, de maladies cardiovasculaires et de certains cancers. Les sucres en excès favorisent aussi la prise de poids, la hausse des triglycérides du sang et les caries ; l'ANSES fixe pour eux une limite maximale (hors lactose et galactose), que l'appli ne suit pas à part.",
+      "sources": [
+        "anses_2016",
+        "anses_sucres",
+        "afssa_2007_proteines"
+      ]
+    },
+    "lipides": {
+      "role": "Les lipides (graisses) stockent l'énergie dans le tissu adipeux et construisent les membranes de tes cellules. Ils apportent les acides gras indispensables (oméga 6 et oméga 3) que ton corps ne sait pas fabriquer. Le cholestérol, un autre lipide, sert à fabriquer des hormones comme la testostérone.",
+      "sante": "Oui, il en faut, mais tous les acides gras ne se valent pas. On en trouve dans les poissons, les œufs, les fromages, la charcuterie, la viande, les huiles et les graines oléagineuses, et de façon cachée dans des produits transformés comme les viennoiseries.",
+      "fourchette": "L'ANSES conseille 35 à 40 % de ton énergie en lipides : assez pour couvrir les acides gras indispensables tout en prévenant certaines maladies. L'appli convertit cette fourchette en grammes avec ta dépense du jour.",
+      "trop_peu": "Sous 35 %, l'ANSES estime que tu risques de ne pas couvrir tes besoins en acides gras indispensables, et tu t'éloignes de l'objectif de prévention des maladies chroniques visé par la fourchette.",
+      "trop": "Au-delà de 40 %, le risque de déséquilibre énergétique augmente ; environ 43 % des adultes en France dépassent cette borne. Côté qualité, trois acides gras saturés (laurique, myristique, palmitique) favorisent en excès les dépôts de cholestérol dans les artères.",
+      "sources": [
+        "anses_lipides",
+        "anses_2016"
+      ]
+    },
+    "oleique": {
+      "role": "L'acide oléique est un oméga 9, l'acide gras mono-insaturé le plus présent dans ton alimentation. Il fait partie des acides gras dits non essentiels : ton corps n'en dépend pas comme des oméga 3 et 6.",
+      "sante": "Oui : l'ANSES lui fixe une fourchette, car en manger assez évite de le remplacer par des graisses saturées « athérogènes ». Les pages lues ne citent pas d'aliments précis pour l'acide oléique ; l'ANSES renvoie à la table Ciqual.",
+      "fourchette": "L'ANSES conseille 15 à 20 % de ton énergie en acide oléique ; l'appli convertit cette fourchette en grammes avec ta dépense du jour.",
+      "trop_peu": "Sous 15 %, le risque vient de ce qui le remplace : des acides gras saturés qui, en excès, favorisent les dépôts de cholestérol dans les artères.",
+      "trop": "La borne haute de 20 % repose, selon l'ANSES, sur des données épidémiologiques et cliniques sur les facteurs de risque cardiovasculaire ; l'avis lu ne détaille pas ces effets.",
+      "sources": [
+        "anses_lipides",
+        "anses_2016"
+      ]
+    },
+    "linoleique": {
+      "role": "L'acide linoléique est le chef de file des oméga 6. Il est indispensable : ton corps ne sait pas le fabriquer, alors qu'il en a besoin pour se développer et bien fonctionner. Il sert à fabriquer l'acide arachidonique.",
+      "sante": "Oui, il en faut un minimum. Les pages lues ne listent pas ses aliments sources ; elles citent seulement les sources de lipides en général (huiles, graines oléagineuses, produits animaux).",
+      "fourchette": "L'ANSES conseille au moins 4 % de ton énergie, que l'appli convertit en grammes avec ta dépense du jour. Ce niveau vise un total d'acides gras polyinsaturés favorable au cœur, tout en restant assez bas pour garder le rapport acide linoléique / ALA sous 5.",
+      "trop_peu": "Comme il est indispensable, un manque prive ton corps d'un acide gras nécessaire. Les sources lues ne décrivent pas de signes précis de carence.",
+      "trop": "Aucune limite chiffrée n'est donnée pour lui seul. Mais l'ANSES demande d'en limiter l'apport pour garder le rapport acide linoléique / ALA sous 5 : un excès d'acide linoléique, surtout avec peu d'ALA, déséquilibre les oméga 6 et les oméga 3.",
+      "sources": [
+        "anses_lipides",
+        "anses_2016",
+        "anses_omega3"
+      ]
+    },
+    "arachidonique": {
+      "role": "L'acide arachidonique est un oméga 6 que ton corps fabrique à partir de l'acide linoléique ; c'en est le principal dérivé. Il est dit « conditionnellement indispensable » : il devient indispensable seulement si l'acide linoléique manque.",
+      "sante": "Oui, c'est un acide gras essentiel. Les pages lues ne citent pas ses aliments sources.",
+      "fourchette": "L'ANSES ne donne pas de référence pour l'acide arachidonique chez l'adulte : l'appli affiche seulement ton total. Il compte dans le rapport oméga 6 / oméga 3 total de l'onglet Bilan.",
+      "trop_peu": "Les sources lues ne décrivent pas les effets d'un manque. Si tu manges assez d'acide linoléique, ton corps peut le fabriquer.",
+      "trop": "Les sources lues ne donnent ni limite ni effet d'un excès.",
+      "sources": [
+        "anses_lipides"
+      ]
+    },
+    "ala": {
+      "role": "L'ALA (acide alpha-linolénique) est le chef de file des oméga 3. Il est indispensable et ton corps s'en sert pour fabriquer l'EPA et le DHA. Les oméga 3 sont nécessaires au développement et au fonctionnement de la rétine, du cerveau et du système nerveux.",
+      "sante": "Oui. On le trouve dans des végétaux : noix, huiles de colza, de soja, de lin. Ces huiles supportent mal la friture et les fortes chaleurs : garde-les pour l'assaisonnement.",
+      "fourchette": "L'ANSES conseille au moins 1 % de ton énergie en ALA, pour prévenir les maladies cardiovasculaires ; l'appli le convertit en grammes avec ta dépense du jour.",
+      "trop_peu": "Un manque d'ALA déséquilibre le rapport entre oméga 6 et oméga 3 (rapport acide linoléique / ALA de l'onglet Bilan). Selon l'ANSES, ce déséquilibre pèse encore plus s'il manque aussi de l'EPA et du DHA.",
+      "trop": "Les sources lues ne donnent ni limite supérieure ni effet d'un excès d'ALA.",
+      "sources": [
+        "anses_omega3",
+        "anses_2016",
+        "anses_lipides"
+      ]
+    },
+    "epa": {
+      "role": "L'EPA est un oméga 3 à longue chaîne. Ton corps peut le fabriquer à partir de l'ALA : il est « conditionnellement indispensable ». Avec le DHA, il joue un rôle dans le fonctionnement du cerveau et dans la prévention de la DMLA, une maladie de l'œil liée à l'âge.",
+      "sante": "Oui. Il vient surtout des poissons gras : saumon, maquereau, hareng, sardine, anchois. En France, pour les oméga 3 en général, ce sont pourtant viandes, œufs et produits laitiers qui contribuent le plus, car on en mange beaucoup.",
+      "fourchette": "L'ANSES conseille 250 mg d'EPA par jour (apport satisfaisant), une valeur fondée sur des données de prévention, notamment des maladies cardiovasculaires.",
+      "trop_peu": "Un déficit en EPA et en DHA peut augmenter le risque de DMLA. Il aggrave aussi le déséquilibre entre oméga 6 et oméga 3.",
+      "trop": "L'EFSA n'a pas pu fixer de limite supérieure de sécurité pour l'EPA et le DHA, faute de données suffisantes. Les sources lues ne décrivent pas d'effet d'un excès.",
+      "sources": [
+        "anses_omega3",
+        "anses_2016",
+        "efsa_ul_synthese"
+      ]
+    },
+    "dha": {
+      "role": "Le DHA est un oméga 3 à longue chaîne. Ton corps en fabrique trop peu à partir de l'ALA : il est donc considéré comme indispensable et doit venir de l'alimentation. Il est nécessaire à la rétine, au cerveau et au système nerveux.",
+      "sante": "Oui. Il vient surtout des poissons gras : saumon, maquereau, hareng, sardine, anchois. En France, pour les oméga 3 en général, ce sont pourtant viandes, œufs et produits laitiers qui contribuent le plus, car on en mange beaucoup.",
+      "fourchette": "L'ANSES conseille 250 mg de DHA par jour (apport satisfaisant), justement parce que sa fabrication à partir de l'ALA est très faible.",
+      "trop_peu": "Un déficit en EPA et en DHA peut augmenter le risque de DMLA. L'ANSES cite aussi un effet possible sur la santé mentale avec l'âge, encore à confirmer.",
+      "trop": "L'EFSA n'a pas pu fixer de limite supérieure de sécurité pour l'EPA et le DHA, faute de données suffisantes. Les sources lues ne décrivent pas d'effet d'un excès.",
+      "sources": [
+        "anses_omega3",
+        "anses_2016",
+        "anses_lipides",
+        "efsa_ul_synthese"
+      ]
+    },
+    "vitA": {
+      "role": "La vitamine A sert à la vision, surtout quand la lumière baisse, au système immunitaire et au renouvellement de la peau et des muqueuses. Elle agit en réglant l'activité de tes gènes.",
+      "sante": "Oui. Le rétinol, la vitamine A toute prête, ne se trouve que dans les produits animaux (foie, jaune d'œuf, beurre). Les végétaux colorés (carotte, patate douce, melon, mangue, légumes verts à feuilles) apportent du bêta-carotène, que ton corps transforme en vitamine A.",
+      "fourchette": "La référence (RNP) de l'ANSES est 750 µg d'équivalents rétinol par jour pour un homme adulte : une quantité qui couvre les besoins de presque tout le monde.",
+      "trop_peu": "Un manque fait perdre la vision crépusculaire (tu vois moins bien quand il fait sombre) et assèche la conjonctive de l'œil. Selon l'ANSES, la carence semble ne pas exister dans les pays industrialisés.",
+      "trop": "La limite supérieure de sécurité (LSS) de l'ANSES est 3 000 µg par jour : au-delà, le rétinol devient toxique pour le foie et peut causer des malformations du fœtus. Cette limite vise le rétinol, pas le bêta-carotène des fruits et légumes, jugé sans danger ; or le total de l'appli (« équivalents rétinol ») compte les deux, donc il surestime ce qui compte pour cette limite.",
+      "sources": [
+        "anses_vm_2025",
+        "anses_vitamine_a",
+        "anses_2016",
+        "efsa_ul_synthese"
+      ]
+    },
+    "vitB1": {
+      "role": "La vitamine B1 (thiamine) sert surtout à utiliser les glucides. C'est pour ça que ton besoin dépend de ce que tu manges et dépenses en énergie.",
+      "sante": "Oui. On la trouve surtout dans les céréales complètes, la viande (en particulier le porc) et les oléagineux.",
+      "fourchette": "L'ANSES conseille 0,1 mg par mégajoule (MJ) d'énergie : l'appli calcule ta cible avec ta dépense du jour, donc elle monte les jours où tu bouges plus.",
+      "trop_peu": "Un manque peut abîmer les nerfs ou donner des signes d'insuffisance cardiaque, jusqu'au béribéri. Il ne vient pas toujours de l'alimentation : l'alcoolisme ou une mauvaise absorption intestinale peuvent aussi en être la cause.",
+      "trop": "Il n'y a pas de limite supérieure de sécurité (LSS) : l'EFSA n'a pas pu en fixer, vu la faible toxicité observée même à forte dose.",
+      "sources": [
+        "anses_vm_2025",
+        "anses_2016"
+      ]
+    },
+    "vitB2": {
+      "role": "La vitamine B2 (riboflavine) intervient dans la production d'énergie par tes cellules. Elle supporte la chaleur mais elle est sensible à la lumière.",
+      "sante": "Oui. Ses principales sources sont le foie, les produits laitiers (fromage, lait, yaourt) et les œufs.",
+      "fourchette": "La référence (RNP) de l'ANSES est 1,6 mg par jour pour un adulte, une quantité qui couvre les besoins de presque tout le monde.",
+      "trop_peu": "Les carences sont rares et leurs signes peu spécifiques : problèmes de peau et des lèvres, ou yeux secs.",
+      "trop": "Il n'y a pas de limite supérieure de sécurité (LSS) : l'EFSA n'a pas pu en proposer, la toxicité observée à forte dose étant faible.",
+      "sources": [
+        "anses_vm_2025",
+        "anses_2016"
+      ]
+    },
+    "vitB3": {
+      "role": "La vitamine B3 (niacine) aide tes cellules à tirer de l'énergie du glucose, des acides aminés et des acides gras. Ton foie peut aussi en fabriquer à partir du tryptophane, un acide aminé.",
+      "sante": "Oui. Ses principales sources sont le foie, les viandes, les poissons, les produits de la mer et les céréales complètes.",
+      "fourchette": "L'ANSES conseille 1,6 mg d'équivalents niacine par MJ d'énergie ; l'appli calcule ta cible avec ta dépense du jour. L'appli ne compte que la niacine des aliments, sans celle tirée du tryptophane : ton total est donc sous-estimé.",
+      "trop_peu": "Un manque prolongé peut mener à la pellagre : lésions de la peau sensibles au soleil, vomissements, diarrhées, dépression, voire démence.",
+      "trop": "L'ANSES fixe deux limites supérieures de sécurité (LSS) : 10 mg par jour pour l'acide nicotinique et 900 mg pour le nicotinamide ; les tables d'aliments ne distinguent pas ces deux formes, donc l'appli ne peut pas comparer ton total à ces limites. Selon l'EFSA (2006), l'acide nicotinique pris en compléments donne d'abord des rougeurs et bouffées de chaleur, puis à très forte dose des troubles digestifs et une atteinte du foie.",
+      "sources": [
+        "anses_vm_2025",
+        "anses_2016",
+        "efsa_ul_2006"
+      ]
+    },
+    "vitB5": {
+      "role": "La vitamine B5 (acide pantothénique) sert à fabriquer le coenzyme A. Elle est donc indispensable pour fabriquer et utiliser les glucides, les acides aminés et les acides gras.",
+      "sante": "Oui, et elle est présente dans presque tous les aliments. Ses principales sources sont la viande, le pain, le lait et les produits laitiers.",
+      "fourchette": "L'ANSES donne un apport satisfaisant de 6 mg par jour pour un homme adulte : c'est l'apport moyen d'une population en bonne santé, faute de données pour calculer un besoin précis.",
+      "trop_peu": "La carence est rare. Chez des personnes nourries sans vitamine B5, on a observé des changements d'humeur, des troubles du sommeil et des troubles nerveux, cardiaques et digestifs.",
+      "trop": "Il n'y a pas de limite supérieure de sécurité (LSS). Selon l'ANSES, qui cite l'EFSA, des apports très au-dessus des niveaux habituels ne semblent pas poser de problème de sécurité.",
+      "sources": [
+        "anses_vm_2025",
+        "anses_2016"
+      ]
+    },
+    "vitB6": {
+      "role": "La vitamine B6 sert à utiliser les acides aminés, donc les protéines, et à fabriquer les neurotransmetteurs, les messagers chimiques du cerveau.",
+      "sante": "Oui. On la trouve dans les céréales, les légumes riches en amidon, les produits à base de soja, les fruits autres que les agrumes, le foie et le poisson.",
+      "fourchette": "La référence (RNP) de l'ANSES est 1,7 mg par jour pour un homme adulte ; elle ne change pas avec le sport. L'EFSA notait en 2006 que le besoin dépend de l'apport en protéines.",
+      "trop_peu": "Un manque peut causer une anémie, des convulsions et des problèmes de peau (eczéma, dermite).",
+      "trop": "La limite supérieure de sécurité (LSS) de l'ANSES est 12 mg par jour (valeur de l'EFSA de 2023). Le risque principal d'un excès est une atteinte des nerfs, sensitive et motrice, observée après de longues prises à forte dose ; en 2006, l'EFSA ne voyait aucun problème avec la vitamine B6 des seuls aliments.",
+      "sources": [
+        "anses_vm_2025",
+        "efsa_ul_2006"
+      ]
+    },
+    "vitB8": {
+      "role": "La vitamine B8 (biotine) aide plusieurs enzymes à fabriquer des acides gras, à produire du glucose et à dégrader certains acides aminés. Ton corps ne sait pas la fabriquer ; tes bactéries intestinales en produisent beaucoup, sans qu'on sache si cela aide à couvrir tes besoins.",
+      "sante": "Oui. La table Ciqual ne donne pas la biotine des aliments, donc l'appli ne peut pas calculer ton total. D'après l'EFSA, citée par l'ANSES, les principales sources sont le foie, les œufs cuits, les champignons et certains fromages ; la viande maigre, les fruits, les céréales et le pain en contiennent moins.",
+      "fourchette": "L'ANSES donne un apport satisfaisant de 40 µg par jour pour un adulte ; l'appli l'affiche pour mémoire, sans total possible.",
+      "trop_peu": "La carence est rare. Elle donne des inflammations de la peau (dermatites), une perte de cheveux, des conjonctivites et des troubles de l'équilibre (ataxie).",
+      "trop": "La page de l'ANSES ne dit rien d'un excès et ne fixe pas de limite supérieure de sécurité (LSS). L'EFSA (2006) juge le risque faible avec l'alimentation habituelle et les compléments courants, mais manque de données sur les compléments très dosés.",
+      "sources": [
+        "anses_vm_2025",
+        "efsa_ul_2006"
+      ]
+    },
+    "vitB9": {
+      "role": "La vitamine B9 (folates) sert à utiliser les acides aminés et à la division des cellules. Elle compte donc surtout pour les tissus qui se renouvellent vite, comme le sang.",
+      "sante": "Oui. Ses principales sources sont les légumineuses (lentilles, pois chiches), les légumes à feuilles vertes (épinards, brocolis, salade) et le foie.",
+      "fourchette": "La référence (RNP) de l'ANSES est 330 µg d'équivalents folates alimentaires par jour pour un adulte.",
+      "trop_peu": "Un manque donne une anémie dite mégaloblastique (globules rouges anormalement grands), avec fatigue, maux de tête, vertiges, essoufflement et pâleur.",
+      "trop": "La limite supérieure de sécurité (LSS) de l'ANSES, 1 000 µg par jour, ne concerne que l'acide folique, la forme de synthèse des aliments enrichis et des compléments. Pour les folates naturels des aliments, l'EFSA ne voit pas de risque à forte consommation.",
+      "sources": [
+        "anses_vm_2025",
+        "anses_vitamine_b9",
+        "anses_2016"
+      ]
+    },
+    "vitB12": {
+      "role": "La vitamine B12 (cobalamine) intervient dans le métabolisme de la vitamine B9, avec laquelle elle travaille de près. Elle est fabriquée par des micro-organismes, surtout des bactéries.",
+      "sante": "Oui. Ses principales sources sont les abats (surtout le foie), les poissons, les œufs, la viande, le lait et les produits laitiers. La carence est particulièrement fréquente chez les végétaliens.",
+      "fourchette": "L'ANSES donne un apport satisfaisant de 4 µg par jour pour un adulte.",
+      "trop_peu": "Un manque donne une anémie (globules rouges trop grands) avec fatigue et essoufflement. Il peut aussi abîmer le cerveau et la moelle épinière (troubles moteurs, de la sensibilité, de la mémoire, de l'humeur), souvent avec des séquelles.",
+      "trop": "Il n'y a pas de limite supérieure de sécurité (LSS) : l'EFSA n'a pas observé de toxicité aux doses étudiées.",
+      "sources": [
+        "anses_vm_2025",
+        "anses_2016"
+      ]
+    },
+    "vitC": {
+      "role": "La vitamine C consolide le collagène, qui soutient et structure tes tissus. Elle protège tes cellules contre l'oxydation, aide à fabriquer des messagers nerveux et facilite l'absorption du fer des végétaux.",
+      "sante": "Oui. Les meilleures sources sont les fruits (cassis, agrumes) et les légumes, surtout le persil et le poivron rouge.",
+      "fourchette": "La référence (RNP) de l'ANSES est 110 mg par jour pour un adulte, une quantité qui couvre les besoins de presque tout le monde.",
+      "trop_peu": "Une carence mène au scorbut : gencives qui saignent, dents qui se déchaussent, douleurs articulaires.",
+      "trop": "Il n'y a pas de limite supérieure de sécurité (LSS), faute de données. Selon l'EFSA (2006), à forte dose en compléments l'absorption plafonne, et l'effet indésirable le mieux établi est une intolérance digestive passagère.",
+      "sources": [
+        "anses_vm_2025",
+        "anses_vitamine_c",
+        "anses_2016",
+        "efsa_ul_2006"
+      ]
+    },
+    "vitD": {
+      "role": "La vitamine D fait monter le calcium et le phosphore dans ton sang. Elle sert ainsi à la minéralisation des os et des dents, à la contraction des muscles, à la transmission nerveuse et au système immunitaire.",
+      "sante": "Oui. Ta peau en fabrique au soleil (UV-B), selon la saison, la latitude, ta couleur de peau et tes vêtements. Dans l'assiette : poissons gras, huile de foie de morue, jaune d'œuf et produits enrichis.",
+      "fourchette": "L'ANSES donne un apport satisfaisant de 15 µg par jour, défini en ne comptant que l'alimentation, sans le soleil.",
+      "trop_peu": "Un manque fragilise les os (ostéomalacie chez l'adulte, baisse de la masse osseuse, plus de risque de fracture) et peut donner des troubles musculaires (baisse de tonus, crises de tétanie).",
+      "trop": "La limite supérieure de sécurité (LSS) de l'ANSES est 100 µg par jour (valeur de l'EFSA). Un excès, surtout via des compléments, peut faire monter le calcium du sang (hypercalcémie), avec calcification de tissus et effets sur le cœur et les reins, mais aussi maux de tête, nausées, vomissements et grande fatigue.",
+      "sources": [
+        "anses_vm_2025",
+        "anses_vitamine_d"
+      ]
+    },
+    "vitE": {
+      "role": "La vitamine E est surtout un antioxydant : elle protège les graisses de tes cellules contre l'oxydation, en équipe avec d'autres antioxydants comme la vitamine C.",
+      "sante": "Oui. Ses principales sources sont certaines huiles végétales, l'huile de foie de morue et certains fruits à coque.",
+      "fourchette": "L'ANSES donne un apport satisfaisant de 10 mg par jour pour un homme adulte, c'est-à-dire un apport jugé suffisant dans une population en bonne santé.",
+      "trop_peu": "La carence donne des troubles nerveux, comme des troubles de l'équilibre (ataxie). On la voit surtout avec une maladie qui gêne l'absorption des graisses, une maladie du foie ou une dénutrition sévère.",
+      "trop": "La limite supérieure de sécurité (LSS) de l'ANSES est 300 mg par jour (valeur de l'EFSA de 2024). Des apports élevés en vitamine E (alpha-tocophérol) peuvent gêner la coagulation chez une personne qui manque de vitamine K.",
+      "sources": [
+        "anses_vm_2025"
+      ]
+    },
+    "vitK1": {
+      "role": "La vitamine K1 (phylloquinone) active des protéines qui servent à la coagulation du sang.",
+      "sante": "Oui. On la trouve surtout dans les légumes à feuilles vert foncé (herbes aromatiques, chou frisé, épinards, salades, choux) et dans certaines huiles végétales.",
+      "fourchette": "L'ANSES donne un apport satisfaisant de 79 µg par jour pour un adulte.",
+      "trop_peu": "Un manque gêne la coagulation : le sang met plus de temps à coaguler. Les carences d'origine alimentaire sont rares.",
+      "trop": "L'ANSES ne fixe pas de limite supérieure de sécurité (LSS) et ne décrit pas d'excès. L'EFSA (2006) n'a pas trouvé d'effet indésirable dans les études disponibles, mais rappelle que les personnes sous certains anticoagulants (coumariniques) ne doivent pas changer leur apport sans avis médical.",
+      "sources": [
+        "anses_vm_2025",
+        "efsa_ul_2006"
+      ]
+    },
+    "vitK2": {
+      "role": "La vitamine K2 (ménaquinones) active des protéines qui servent au métabolisme des os. Elle est fabriquée par des bactéries.",
+      "sante": "On la trouve surtout dans des produits animaux (foie, bœuf, volaille, jaune d'œuf, produits laitiers fermentés) et dans des produits fermentés. L'ANSES prévient qu'on connaît mal les teneurs des aliments et leur absorption par l'intestin.",
+      "fourchette": "L'ANSES ne donne pas de référence pour la vitamine K2 : sa référence ne porte que sur la K1. L'appli affiche seulement ton total.",
+      "trop_peu": "Selon l'ANSES, un manque de K2 fait produire dans les os une ostéocalcine mal activée (« insuffisamment carboxylée ») ; la page n'en décrit pas les conséquences.",
+      "trop": "L'ANSES ne donne aucune information sur un excès de vitamine K2.",
+      "sources": [
+        "anses_vm_2025"
+      ]
+    },
+    "fer": {
+      "role": "Le fer transporte l'oxygène : il entre dans l'hémoglobine des globules rouges et dans la myoglobine, qui apporte l'oxygène aux muscles.",
+      "sante": "Oui. Sources : foie, viandes, poissons et fruits de mer, légumineuses, noix, céréales, jaune d'œuf, légumes verts à feuilles. Le fer « héminique » des viandes et poissons s'absorbe mieux que celui des végétaux, et la vitamine C aide à absorber ce dernier.",
+      "fourchette": "La référence (RNP) de l'ANSES est 11 mg par jour pour un homme adulte.",
+      "trop_peu": "Un manque peut causer une anémie par manque de fer. Les plus exposés sont les personnes en croissance, celles qui perdent beaucoup de sang, ou qui absorbent mal le fer (inflammation, infection).",
+      "trop": "Dans sa colonne LSS, l'ANSES indique 40 mg par jour, une valeur d'apport sans risque de l'EFSA (2024). Ton corps règle l'absorption pour éviter une surcharge, car le fer en excès favorise l'oxydation ; de fortes doses prises en dehors des repas peuvent donner nausées, constipation et maux d'estomac.",
+      "sources": [
+        "anses_vm_2025",
+        "anses_mineraux",
+        "anses_2016"
+      ]
+    },
+    "calcium": {
+      "role": "Le calcium est le minéral le plus abondant du corps, presque entièrement dans le squelette. Il construit tes os et sert aussi à la contraction des muscles et du cœur, à la coagulation du sang et à la transmission nerveuse.",
+      "sante": "Oui. Sources : produits laitiers, légumineuses, fruits à coque, céréales, certains légumes-feuilles (choux, blettes, épinards), fruits de mer et certaines eaux riches en calcium. La vitamine D aide à l'absorber.",
+      "fourchette": "La référence (RNP) de l'ANSES est 1 000 mg par jour entre 18 et 24 ans, car la croissance n'est pas encore achevée ; elle passe à 950 mg à partir de 25 ans.",
+      "trop_peu": "Un manque fait baisser la masse osseuse : ostéoporose ou ostéomalacie, et plus de risque de fractures.",
+      "trop": "La limite supérieure de sécurité (LSS) de l'ANSES est 2 500 mg par jour. À long terme, des excès peuvent, chez des personnes sensibles, charger les urines en calcium et favoriser les calculs rénaux, surtout avec un excès de vitamine D.",
+      "sources": [
+        "anses_vm_2025",
+        "anses_calcium",
+        "anses_mineraux",
+        "anses_2016"
+      ]
+    },
+    "magnesium": {
+      "role": "Le magnésium participe à plus de trois cents systèmes d'enzymes : production d'énergie (ATP), fonctionnement des membranes des cellules, équilibre du potassium et du calcium. Une grande partie se trouve dans les os, environ un quart dans les muscles.",
+      "sante": "Oui. Sources : oléagineux, chocolat, café, céréales complètes, mollusques et crustacés, certaines eaux minérales. En 2016, l'ANSES relevait que des apports plus élevés en magnésium sont associés à moins de diabète de type 2.",
+      "fourchette": "L'ANSES donne un apport satisfaisant de 380 mg par jour pour un homme adulte.",
+      "trop_peu": "Un déficit peut causer des troubles digestifs et rénaux, et faire baisser le calcium et le potassium du sang, avec des symptômes au cœur et aux nerfs.",
+      "trop": "La limite supérieure de sécurité (LSS) de l'ANSES, 250 mg par jour, ne vise que le magnésium des compléments ou ajouté aux aliments et boissons, pas celui naturellement présent dans les aliments. Elle a été fixée pour éviter la diarrhée.",
+      "sources": [
+        "anses_vm_2025",
+        "anses_2016"
+      ]
+    },
+    "potassium": {
+      "role": "Le potassium est essentiel à la transmission nerveuse, à la contraction des muscles et au fonctionnement du cœur. Il intervient aussi dans la sécrétion d'insuline et l'équilibre acide-base du corps.",
+      "sante": "Oui. Ses principales sources sont le chocolat, la banane, les légumes et les produits laitiers. Selon l'EFSA, manger plus de potassium est associé à une tension artérielle plus basse.",
+      "fourchette": "L'ANSES donne un apport satisfaisant de 3 500 mg par jour pour un adulte. En 2016, elle avait raisonné cette référence en lien avec le sodium, pour équilibrer les deux.",
+      "trop_peu": "Un manque (hypokaliémie) donne surtout des troubles du rythme cardiaque, des crampes, de la fatigue et des urines abondantes. Il vient souvent de pertes (diarrhée, vomissements) ou d'un apport trop faible, le plus souvent lors de régimes très hypocaloriques ou de malnutrition.",
+      "trop": "Il n'y a pas de limite supérieure de sécurité (LSS) : avec les aliments, l'EFSA n'a pas observé d'effet indésirable chez les personnes en bonne santé. Les risques viennent des compléments à forte dose (troubles digestifs, effets sur le cœur) et concernent surtout les personnes dont les reins fonctionnent mal.",
+      "sources": [
+        "anses_vm_2025",
+        "anses_2016",
+        "efsa_ul_2006"
+      ]
+    },
+    "sodium": {
+      "role": "Le sodium, apporté surtout par le sel (chlorure de sodium), règle l'équilibre de l'eau dans ton corps et le volume du liquide autour des cellules. Il sert aux nerfs, aux muscles et à l'absorption de l'eau, du glucose et des acides aminés.",
+      "sante": "Il en faut, mais on en mange en général trop : l'ANSES note que les Français consomment bien plus de sel que recommandé. Il vient du sel de table, des condiments et sauces, de la charcuterie et du fromage ; en France, la première source de sel est le pain.",
+      "fourchette": "L'ANSES donne deux repères pour un adulte : un apport satisfaisant de 1 500 mg par jour et une limite supérieure de sécurité (LSS) de 2 300 mg. L'appli suit la LSS : le but est de rester en dessous.",
+      "trop_peu": "Une carence sévère est rare mais grave : œdème du cerveau, avec malaises, nausées, pertes de connaissance et convulsions. Tu perds du sodium par les urines et par la transpiration.",
+      "trop": "Au-delà de la LSS, l'excès de sel est reconnu comme un facteur de risque d'hypertension artérielle, donc de maladies cardiovasculaires. Pour limiter : moins d'aliments très salés, lire les étiquettes, saler moins en cuisine et à table.",
+      "sources": [
+        "anses_vm_2025",
+        "anses_sel"
+      ]
+    },
+    "zinc": {
+      "role": "Le zinc fait fonctionner près de 300 enzymes et plus de 2 500 facteurs qui règlent tes gènes. Il compte pour le renouvellement des cellules, la cicatrisation et l'immunité.",
+      "sante": "Oui. Sources : viande, abats, fromage, légumineuses, poissons et fruits de mer. Les phytates des céréales et des légumineuses réduisent son absorption.",
+      "fourchette": "La référence (RNP) de l'ANSES dépend des phytates mangés. L'appli retient 11,7 mg par jour, la valeur pour un apport intermédiaire en phytates (9,4 mg s'il y en a peu, 14 mg s'il y en a beaucoup), car elle ne suit pas les phytates.",
+      "trop_peu": "Un manque ralentit la croissance et affaiblit le système immunitaire.",
+      "trop": "La limite supérieure de sécurité (LSS) de l'ANSES est 25 mg par jour. Elle a été fixée car de fortes doses de zinc perturbent le statut en cuivre.",
+      "sources": [
+        "anses_vm_2025",
+        "anses_mineraux",
+        "anses_2016"
+      ]
+    },
+    "phosphore": {
+      "role": "Le phosphore forme avec le calcium l'essentiel de tes os et de tes dents. Il sert aussi à stocker et transporter l'énergie (ATP), à l'équilibre acide-base et à la construction des membranes des cellules.",
+      "sante": "Oui. Sources : lait et produits laitiers, œufs, oléagineux, poisson, abats (surtout le foie) et viande.",
+      "fourchette": "L'ANSES donne un apport satisfaisant de 550 mg par jour pour un adulte.",
+      "trop_peu": "Une carence vient rarement de l'alimentation, plutôt de maladies ou de l'alcoolisme. Ses signes : perte d'appétit, anémie, faiblesse musculaire, douleurs osseuses, ostéomalacie.",
+      "trop": "Il n'y a pas de limite supérieure de sécurité (LSS) : l'EFSA n'a pas pu en fixer. Des troubles digestifs ont été vus chez quelques personnes prenant des compléments de phosphore.",
+      "sources": [
+        "anses_vm_2025",
+        "anses_mineraux",
+        "anses_2016"
+      ]
+    },
+    "manganese": {
+      "role": "Le manganèse fait partie de plusieurs enzymes (arginase, pyruvate carboxylase, superoxyde dismutase) et en aide d'autres à fonctionner. La page de l'ANSES de 2025 ne traite pas le manganèse : ces informations viennent de l'EFSA (2006).",
+      "sante": "Oui, en petite quantité. Selon l'EFSA (2006), les céréales, le riz et les noix en sont les plus riches, et le thé peut en apporter beaucoup.",
+      "fourchette": "L'appli retient l'apport satisfaisant de l'ANSES de 2016 : 2,8 mg par jour pour un homme adulte. C'est l'apport moyen des Français, car rien n'indique de carence dans cette population.",
+      "trop_peu": "Chez l'humain, aucun syndrome de carence précis n'a été décrit. Chez l'animal, un manque perturbe la croissance, le squelette et le métabolisme des graisses et des sucres (EFSA 2006).",
+      "trop": "Il n'y a pas de limite supérieure de sécurité (LSS), faute de données (ANSES 2016) ; en 2023, l'EFSA a donné à la place un « niveau d'apport sûr ». L'EFSA (2006) désigne le système nerveux comme la cible principale de la toxicité et juge qu'aller au-delà de ce qu'apportent aliments et boissons pourrait présenter un risque sans bénéfice.",
+      "sources": [
+        "anses_2016",
+        "efsa_ul_2006",
+        "efsa_ul_synthese"
+      ]
+    },
+    "selenium": {
+      "role": "Le sélénium entre dans des enzymes antioxydantes et dans le métabolisme des hormones de la thyroïde. Il contribue aussi aux défenses immunitaires.",
+      "sante": "Oui. Sources : certains poissons et fruits de mer, viande, œufs et oléagineux, en particulier la noix du Brésil. Selon l'EFSA, citée par l'ANSES en 2016, en manger plus que nécessaire n'apporte pas de bénéfice démontré.",
+      "fourchette": "L'ANSES donne un apport satisfaisant de 70 µg par jour pour un adulte.",
+      "trop_peu": "Des carences ont été vues chez des personnes nourries par perfusion sans sélénium ; elles donnent notamment une faiblesse musculaire.",
+      "trop": "La limite supérieure de sécurité (LSS) de l'ANSES est 255 µg par jour (valeur de l'EFSA de 2023). Un excès chronique provoque une sélénose : cheveux cassants, ongles abîmés, lésions de la peau, haleine d'ail (EFSA 2006). La noix du Brésil est une source particulièrement riche.",
+      "sources": [
+        "anses_vm_2025",
+        "anses_mineraux",
+        "anses_2016",
+        "efsa_ul_2006"
+      ]
+    },
+    "cuivre": {
+      "role": "Le cuivre fait partie de nombreuses enzymes. Il joue un rôle dans les cartilages et le tissu conjonctif, la minéralisation des os, le cœur, l'immunité et l'utilisation du fer.",
+      "sante": "Oui. Ses principales sources sont les abats, les crustacés et mollusques, et les oléagineux.",
+      "fourchette": "L'ANSES donne un apport satisfaisant de 1,9 mg par jour pour un homme adulte.",
+      "trop_peu": "Une carence peut donner une anémie, un cholestérol élevé, une baisse de certains globules blancs et des atteintes des nerfs et de la moelle épinière.",
+      "trop": "La limite supérieure de sécurité (LSS) de l'ANSES est 5 mg par jour. Une consommation élevée et prolongée de cuivre peut gravement abîmer le foie.",
+      "sources": [
+        "anses_vm_2025",
+        "anses_2016"
+      ]
+    }
+  },
+  "rapports": {
+    "rapport_linoleique_ala": {
+      "role": "Ce rapport divise ta quantité d'acide linoléique (le principal oméga 6) par ta quantité d'ALA (le chef de file des oméga 3).",
+      "sante": "Il mesure l'équilibre entre oméga 6 et oméga 3. L'ANSES le juge peu utile tant que tes besoins en acide linoléique et en ALA sont couverts, mais important en cas de déséquilibre.",
+      "fourchette": "L'ANSES demande de garder ce rapport sous 5 ; c'est pour ça que sa référence en acide linoléique (4 % de l'énergie) n'est pas plus haute.",
+      "trop_peu": "Les sources ne fixent pas de borne basse pour ce rapport.",
+      "trop": "Au-dessus de 5, tu manques d'ALA, tu as trop d'acide linoléique, ou les deux. Selon l'ANSES, ce déséquilibre compte encore plus si tu manques aussi d'EPA et de DHA.",
+      "sources": [
+        "anses_2016",
+        "anses_omega3"
+      ]
+    },
+    "rapport_omega_total": {
+      "role": "Ce rapport divise tous les oméga 6 suivis (acide linoléique + acide arachidonique) par tous les oméga 3 suivis (ALA + EPA + DHA).",
+      "sante": "C'est un indicateur de l'équilibre entre les deux familles d'acides gras essentiels. Les sources lues ne lui donnent pas de valeur cible.",
+      "fourchette": "Aucune référence officielle : l'ANSES ne fixe de limite que pour le rapport acide linoléique / ALA (sous 5). L'appli affiche celui-ci à côté, sans référence.",
+      "trop_peu": "Les sources lues ne disent rien d'un rapport bas.",
+      "trop": "Les sources lues ne donnent pas de seuil. Un rapport élevé signale peu d'oméga 3 par rapport aux oméga 6 ; l'ANSES rappelle que le déséquilibre pèse surtout quand l'ALA, l'EPA et le DHA manquent.",
+      "sources": [
+        "anses_2016",
+        "anses_omega3"
+      ]
+    }
+  }
+}
