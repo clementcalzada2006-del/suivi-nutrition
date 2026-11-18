@@ -10,7 +10,7 @@ Nutriments suivis (34, liste `nutriments` de `donnees/foods.json`) :
 - minéraux : fer, calcium, magnésium, potassium, sodium, zinc, phosphore, manganèse, sélénium, cuivre.
 Site statique (HTML, CSS, JavaScript sans framework ni CDN), installable sur l'écran d'accueil, utilisable hors ligne. Aucune requête réseau à l'usage, aucun compte : tout reste dans le stockage du téléphone.
 
-Onglets : **Aliments** (ajout en un toucher, fiche « i » avec la provenance de chaque chiffre), **Journal** (ajouts du jour, suppression, remise à zéro), **Bilan** (tous les nutriments, références, marqueur « incomplet », rapports oméga, dépense), **Activité** (pas et distance, séance de salle, créatine), **Poids** (pesées, variation, courbe, masse grasse).
+Onglets : **Aliments** (ajout en un toucher, fiche « i » avec la provenance de chaque chiffre), **Journal** (ajouts du jour, suppression, remise à zéro), **Bilan** (tous les nutriments, références, marqueur « incomplet », rapports oméga, dépense), **Activité** (pas et distance, exercices de salle cochés, créatine), **Poids** (pesées, variation, courbe, masse grasse).
 
 ## Fichiers
 
@@ -19,7 +19,7 @@ Onglets : **Aliments** (ajout en un toucher, fiche « i » avec la provenance de
 - `stockage.js` : enregistrement sur l'appareil (localStorage), avec bandeau d'avertissement si le stockage est indisponible.
 - `donnees/foods.json` : nutriments suivis et aliments. Les `valeurs` sont remplies par `outils/ciqual.py`, jamais à la main.
 - `donnees/references.json` : références ANSES (homme adulte), avec sources et date.
-- `donnees/activite.json` : méthode de calcul de la dépense et modules de séance.
+- `donnees/activite.json` : méthode de calcul de la dépense, liste des exercices de salle (et anciens modules, pour les journées déjà enregistrées).
 - `donnees/explications.json` : pour chaque nutriment et chaque rapport, à quoi il sert, son intérêt, les apports conseillés, ce qui se passe en dessous et au-dessus, avec les sources (ANSES, EFSA). Dans le Bilan (vue Jour), toucher une ligne ouvre cette explication avec le total du jour.
 - `manifest.webmanifest`, `sw.js`, `icons/` : installation et hors ligne.
 - `outils/` : `ciqual.py` (remplissage et vérification des données), `serveur.mjs`, `icones.mjs`, tests.
@@ -75,6 +75,15 @@ Une appli web ne peut pas lire l'app Santé. Un Raccourci copie les chiffres, l'
 4. Action **Texte** : `[pas] pas [distance] km` (insérer chaque résultat avec la barre au-dessus du clavier).
 5. Action **Copier dans le presse-papiers**.
 6. Lancer le raccourci, ouvrir l'appli, onglet Activité → **Importer depuis le Raccourci**. Le texte peut aussi être « Pas : 8432 ; Distance : 6,2 km » ou dans un autre ordre. À défaut, tape les pas et la distance dans les champs (virgule ou point).
+
+## Salle
+
+Onglet Activité, carte **Salle** : tous les exercices, groupés par muscle (Pecs, Dos, Épaules, Jambes), chacun avec son nombre de séries (`exercices` dans `donnees/activite.json`). Toucher un exercice le coche, retoucher le décoche ; « Tout décocher » efface la journée. Le total affiche le nombre d'exercices, de séries, la durée estimée et les kcal ajoutées.
+
+- Toutes les séries vont à l'échec : 1 min d'effort par série, comptée à 6,0 MET (Compendium 2024, code 02050). Dépense ajoutée = séries × 1/60 × (6,0 − 1,5) × poids, soit 6,3 kcal par série à 84 kg. Les 4 min de repos ne dépensent rien de plus qu'assis (déjà dans la journée sédentaire).
+- Durée affichée = séries × (1 + 4) min. Ces durées sont des hypothèses, pas des valeurs publiées.
+- Ajouter un exercice : une entrée `{ "id", "nom", "groupe", "series" }` dans `exercices`, puis `npm test` et changer `VERSION`.
+- Les journées enregistrées avec l'ancien format (un module `seance`) restent comptées grâce à `seances_anciennes`, avec la même formule.
 
 ## Bilan de la semaine et export
 

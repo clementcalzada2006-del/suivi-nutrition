@@ -332,15 +332,6 @@ details[open] summary::after { content: "−"; }
 .message { background: var(--surface2); border-radius: var(--rayon-petit); padding: 10px 14px; margin: 12px 0 0; font-size: 15px; }
 .aide-raccourci ol { padding-left: 22px; font-size: 15px; color: var(--texte2); }
 .aide-raccourci li { margin-bottom: 8px; }
-.seances { display: grid; gap: 10px; }
-.seance {
-  text-align: left; border: 1px solid var(--trait-fort); border-radius: var(--rayon-petit); background: var(--surface);
-  padding: 14px 16px; min-height: 72px; display: flex; flex-direction: column; gap: 3px;
-}
-.seance-titre { font-weight: 650; }
-.seance-detail { color: var(--texte2); font-size: 14px; font-variant-numeric: tabular-nums; }
-.seance.choisie { border-color: var(--encre); box-shadow: inset 0 0 0 1px var(--encre); background: var(--surface2); }
-.seance.choisie .seance-titre::after { content: "  ·  choisie"; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--min); }
 .case { display: flex; align-items: center; gap: 12px; text-align: left; }
 .case-boite { width: 22px; height: 22px; border: 1.5px solid var(--trait-fort); border-radius: 6px; flex: none; position: relative; }
 .case.cochee .case-boite { background: var(--encre); border-color: var(--encre); }
@@ -478,3 +469,23 @@ details[open] summary::after { content: "−"; }
 .explication-sources { padding-left: 18px; font-size: 14px; color: var(--texte2); }
 .explication-sources li { margin-bottom: 6px; }
 .avertissement { font-size: 13px; color: var(--texte3); font-style: italic; margin: 14px 0 0; }
+
+/* ---------- Salle : exercices à cocher ---------- */
+.salle-total { margin: 4px 0 6px; padding: 12px 14px; border-radius: var(--rayon-petit); background: var(--surface2); font-size: 15px; font-variant-numeric: tabular-nums; }
+.salle-total b { font-weight: 650; }
+.tout-decocher { font-size: 15px; color: var(--texte2); }
+.groupe-exercices h3 { margin: 20px 0 8px; }
+.groupe-exercices h3 span { font-size: 15px; margin-right: 2px; }
+.exercice {
+  width: 100%; min-height: 56px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; padding: 10px 14px;
+  border: 1px solid var(--trait-fort); border-radius: var(--rayon-petit); background: var(--surface); text-align: left;
+}
+.exercice-nom { flex: 1; min-width: 0; font-weight: 550; overflow-wrap: anywhere; }
+.exercice-series { flex: none; font-size: 14px; color: var(--texte3); font-variant-numeric: tabular-nums; }
+.exercice.coche { border-color: var(--encre); box-shadow: inset 0 0 0 1px var(--encre); background: var(--surface2); }
+.exercice.coche .exercice-series { color: var(--texte); font-weight: 650; }
+.exercice.coche .case-boite { background: var(--encre); border-color: var(--encre); }
+.exercice.coche .case-boite::after {
+  content: ""; position: absolute; left: 7px; top: 3px; width: 5px; height: 10px;
+  border: solid var(--sur-encre); border-width: 0 2px 2px 0; transform: rotate(45deg);
+}

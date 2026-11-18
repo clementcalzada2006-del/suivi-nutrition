@@ -22,15 +22,36 @@
     "source": "compendium_2024"
   },
   "salle": {
-    "met": 3.5,
-    "code": "02054",
-    "description": "Resistance (weight) training, multiple exercises, 8-15 reps at varied resistance",
+    "met": 6.0,
+    "code": "02050",
+    "description": "Resistance (weight lifting – free weight, nautilus or universal-type), power lifting or body building, vigorous effort",
     "minutes_effort_par_serie": 1,
-    "minutes_repos_par_serie": 2.5,
-    "note": "Durée estimée = séries × (1 min d'effort + 2,5 min de repos). C'est une hypothèse, pas une valeur publiée : repos annoncés de 2 à 3 min. Échauffement non compté. MET 3,5 plutôt que 6,0 (code 02050, effort vigoureux) car les repos sont longs.",
+    "minutes_repos_par_serie": 4,
+    "note": "Toutes les séries sont menées jusqu'à l'échec, d'où le code 02050 (effort vigoureux, 6,0 MET), appliqué au seul temps d'effort : dépense ajoutée = séries × minutes d'effort / 60 × (6,0 − 1,5) × poids. Le repos de 4 min entre les séries ne dépense rien de plus que la position assise, déjà comptée dans la journée sédentaire. Durée affichée = séries × (1 min d'effort + 4 min de repos). La durée de l'effort et du repos par série sont des hypothèses, pas des valeurs publiées. Échauffement non compté.",
     "source": "compendium_2024"
   },
-  "seances": [
+  "groupes_exercices": [
+    { "id": "pecs", "nom": "Pecs", "icone": "💪" },
+    { "id": "dos", "nom": "Dos", "icone": "🏋️" },
+    { "id": "epaules", "nom": "Épaules", "icone": "🎯" },
+    { "id": "jambes", "nom": "Jambes", "icone": "🦵" }
+  ],
+  "exercices": [
+    { "id": "developpe_couche", "nom": "Développé couché", "groupe": "pecs", "series": 2 },
+    { "id": "developpe_incline_smith", "nom": "Développé incliné 15° (Smith machine)", "groupe": "pecs", "series": 2 },
+    { "id": "pec_fly", "nom": "Pec fly", "groupe": "pecs", "series": 3 },
+    { "id": "tirage_vertical", "nom": "Tirage vertical à la poulie", "groupe": "dos", "series": 2 },
+    { "id": "tirage_convergent", "nom": "Tirage convergent (machine Hammer, grands dorsaux)", "groupe": "dos", "series": 2 },
+    { "id": "rowing_trapezes", "nom": "Rowing trapèzes (machine Gym80)", "groupe": "dos", "series": 2 },
+    { "id": "elevation_poulie", "nom": "Élévations latérales à la poulie", "groupe": "epaules", "series": 3 },
+    { "id": "elevation_gym80", "nom": "Élévations latérales debout (machine Gym80)", "groupe": "epaules", "series": 3 },
+    { "id": "elevation_halteres", "nom": "Élévations latérales aux haltères", "groupe": "epaules", "series": 3 },
+    { "id": "leg_extension", "nom": "Leg extension (Technogym)", "groupe": "jambes", "series": 4 },
+    { "id": "leg_curl", "nom": "Leg curl (Technogym)", "groupe": "jambes", "series": 3 },
+    { "id": "adducteurs", "nom": "Adducteurs", "groupe": "jambes", "series": 3 }
+  ],
+  "seances_anciennes_note": "Anciens modules de séance, plus affichés : ils servent seulement à calculer la dépense des journées enregistrées avec « seance ».",
+  "seances_anciennes": [
     { "id": "pecs_epaules", "nom": "Pecs + épaules", "icone": "💪", "groupes": [ { "nom": "Pecs", "series": 6 }, { "nom": "Épaules", "series": 6 } ] },
     { "id": "dos_epaules", "nom": "Dos + épaules", "icone": "🏋️", "groupes": [ { "nom": "Dos", "series": 6 }, { "nom": "Épaules", "series": 6 } ] },
     { "id": "jambes", "nom": "Jambes", "icone": "🦵", "groupes": [ { "nom": "Quadriceps (extension)", "series": 4 }, { "nom": "Ischios (curls)", "series": 3 }, { "nom": "Adducteurs", "series": 3 } ] },

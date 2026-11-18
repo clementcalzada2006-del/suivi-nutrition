@@ -65,24 +65,50 @@ export const rapportOmega = (t) => rapport(t, ["linoleique", "arachidonique"], [
 // ---------- Dépense ----------
 
 // Dépense du jour (kcal) ou null sans poids. activite = donnees/activite.json.
-// jour = { km, seance (id ou null) } ; poids en kg ; mg = masse grasse en %.
+// jour = { km, exercices: [ids], seance (ancien format, id de module ou absent) } ; poids en kg ; mg = masse grasse en %.
 export function depense(activite, poids, mg, jour) {
   if (!(poids > 0)) return null;
   const assis = activite.met_assis.valeur;
   const repos = activite.repos.a + activite.repos.b * poids * (1 - mg / 100);
   const sedentaire = repos * activite.facteur_journee_sedentaire.valeur;
   const marche = ((jour.km || 0) * (activite.marche.met - assis) * poids) / activite.marche.vitesse_kmh;
-  const s = seance(activite, jour.seance);
-  const salle = s ? (s.minutes / 60) * (activite.salle.met - assis) * poids : 0;
-  return { total: sedentaire + marche + salle, repos, sedentaire, marche, salle, minutesSalle: s ? s.minutes : 0 };
+  const s = salleDuJour(activite, jour);
+  const salle = kcalSalle(activite, s.series, poids);
+  return { total: sedentaire + marche + salle, repos, sedentaire, marche, salle, minutesSalle: s.minutes };
 }
 
-// Séries et durée estimée d'un module de séance.
+// Durée affichée d'une séance : séries × (minutes d'effort + minutes de repos).
+const minutesPourSeries = (activite, series) => series * (activite.salle.minutes_effort_par_serie + activite.salle.minutes_repos_par_serie);
+
+// Dépense ajoutée par la salle : séries menées à l'échec, MET 02050 sur le seul temps d'effort ;
+// le repos entre les séries ne dépense rien de plus que la position assise (déjà dans la journée sédentaire).
+export function kcalSalle(activite, series, poids) {
+  if (!(poids > 0)) return null;
+  return ((series * activite.salle.minutes_effort_par_serie) / 60) * (activite.salle.met - activite.met_assis.valeur) * poids;
+}
+
+// Ancien module de séance (format d'avant les exercices : activite.seance), lu dans seances_anciennes.
 export function seance(activite, id) {
-  const s = activite.seances.find((x) => x.id === id);
+  const s = (activite.seances_anciennes || []).find((x) => x.id === id);
   if (!s) return null;
   const series = s.groupes.reduce((n, g) => n + g.series, 0);
-  return { ...s, series, minutes: series * (activite.salle.minutes_effort_par_serie + activite.salle.minutes_repos_par_serie) };
+  return { ...s, series, minutes: minutesPourSeries(activite, series) };
+}
+
+// Salle du jour : exercices cochés (ids inconnus ignorés) plus, pour une journée à l'ancien format, le module « seance ».
+export function salleDuJour(activite, jour) {
+  const exercices = (jour.exercices || []).map((id) => activite.exercices.find((e) => e.id === id)).filter(Boolean);
+  const ancienne = seance(activite, jour.seance);
+  const series = exercices.reduce((n, e) => n + e.series, 0) + (ancienne ? ancienne.series : 0);
+  return { exercices, ancienne, series, minutes: minutesPourSeries(activite, series) };
+}
+
+// Libellé court de la salle pour le CSV : « Développé couché, Pec fly (5 séries) » ou « Jambes (10 séries) ».
+export function libelleSalle(activite, jour) {
+  const s = salleDuJour(activite, jour);
+  if (!s.series) return "";
+  const noms = [...s.exercices.map((e) => e.nom.replace(/ \(.*\)$/, "")), ...(s.ancienne ? [s.ancienne.nom] : [])];
+  return `${noms.join(", ")} (${s.series} séries)`;
 }
 
 // ---------- Références ----------
@@ -171,7 +197,7 @@ export function jourLocal(d = new Date()) {
 }
 
 export function activiteVide() {
-  return { pas: 0, km: 0, seance: null, creatine: false };
+  return { pas: 0, km: 0, exercices: [], creatine: false };
 }
 
 // Archive la journée en cours puis la vide. Renvoie { etat, historique } nouveaux (sans modifier les anciens).
@@ -303,7 +329,7 @@ export function bilanSemaine({ lundi, aujourdhui, etat, historique, foods, activ
       journal,
       totaux: tot,
       activite: act,
-      seanceNom: seance(activite, act.seance)?.nom ?? null,
+      salle: libelleSalle(activite, act),
       poids: pesee ? pesee.kg : null,
       depense: dep ? dep.total : null,
       solde: etatJour === "rempli" ? tot.energie - dep.total : null,
@@ -388,7 +414,7 @@ export function csvSemaine(b, { genereLe, profil, masseGrasse }) {
         j.date, j.nomJour, j.etat,
         vide ? "" : nb(j.totaux.energie, 0), nb(j.depense, 0), nb(j.solde, 0),
         vide ? "" : nb(j.totaux.proteines, 1), vide ? "" : nb(j.totaux.glucides, 1), vide ? "" : nb(j.totaux.lipides, 1),
-        venir ? "" : j.activite.pas, venir ? "" : nb(j.activite.km, 2), j.seanceNom ?? "", venir ? "" : j.activite.creatine ? "oui" : "non", nb(j.poids, 1),
+        venir ? "" : j.activite.pas, venir ? "" : nb(j.activite.km, 2), j.salle, venir ? "" : j.activite.creatine ? "oui" : "non", nb(j.poids, 1),
       );
     }),
     "",

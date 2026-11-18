@@ -334,7 +334,7 @@ function supprimer(id) {
 function demanderRaz() {
   ouvrirFeuille(`
     <h2>Remettre la journée à zéro ?</h2>
-    <p>Le journal et l'activité du jour (pas, distance, séance, créatine) seront vidés. Une copie est gardée dans l'historique de l'appareil. Les pesées ne bougent pas.</p>
+    <p>Le journal et l'activité du jour (pas, distance, exercices de salle, créatine) seront vidés. Une copie est gardée dans l'historique de l'appareil. Les pesées ne bougent pas.</p>
     <div class="rangee"><button class="btn btn-large" data-act="fermer">Garder</button>
     <button class="btn btn-large btn-danger" data-act="raz-ok">Remettre à zéro</button></div>`);
 }
@@ -580,18 +580,29 @@ function blocEnergie(t, dep, poids) {
 
 function rendreActivite({ dep, poids }) {
   const a = etat.activite;
-  const seances = activite.seances
-    .map((s0) => {
-      const s = C.seance(activite, s0.id);
-      const kcal = poids ? (s.minutes / 60) * (activite.salle.met - activite.met_assis.valeur) * poids : null;
-      const choisi = a.seance === s.id;
-      return `<button class="seance${choisi ? " choisie" : ""}" data-act="seance" data-id="${s.id}" aria-pressed="${choisi}">
-        <span class="seance-titre"><span aria-hidden="true">${s.icone}</span> ${esc(s.nom)}</span>
-        <span class="seance-detail">${s.groupes.map((g) => `${esc(g.nom)} ${g.series}`).join(" · ")}</span>
-        <span class="seance-detail">${s.series} séries · ~${C.formater(s.minutes, "kcal")} min · ${kcal === null ? "— kcal" : `+${C.formater(kcal, "kcal")} kcal`}</span>
-      </button>`;
+  // Salle : tous les exercices, groupés par muscle ; chaque bouton se coche et se décoche.
+  const coches = new Set(a.exercices || []);
+  const groupes = activite.groupes_exercices
+    .map((g) => {
+      const boutons = activite.exercices
+        .filter((e) => e.groupe === g.id)
+        .map((e) => {
+          const ok = coches.has(e.id);
+          return `<button class="exercice${ok ? " coche" : ""}" data-act="exercice" data-id="${e.id}" aria-pressed="${ok}">
+            <span class="case-boite" aria-hidden="true"></span><span class="exercice-nom">${esc(e.nom)}</span><span class="exercice-series">${e.series} séries</span></button>`;
+        })
+        .join("");
+      return `<div class="groupe-exercices"><h3><span aria-hidden="true">${g.icone}</span> ${esc(g.nom)}</h3>${boutons}</div>`;
     })
     .join("");
+  const salle = C.salleDuJour(activite, a);
+  const kcalSalle = C.kcalSalle(activite, salle.series, poids);
+  const nbEx = salle.exercices.length;
+  const totalSalle = `<p class="salle-total" id="salle-total" data-series="${salle.series}" data-kcal="${kcalSalle ?? ""}">${
+    salle.series
+      ? `<b>${nbEx} exercice${nbEx > 1 ? "s" : ""}${salle.ancienne ? ` + ${esc(salle.ancienne.nom)} (ancien module)` : ""}</b> · ${salle.series} séries · ~${C.formater(salle.minutes, "kcal")} min · ${kcalSalle === null ? "— kcal" : `+${C.formater(kcalSalle, "kcal")} kcal`}`
+      : "Aucun exercice coché aujourd'hui."
+  }</p>`;
   $("#vue-activite").innerHTML = `
     <section class="carte"><h2>Pas et distance</h2>
       <button class="btn btn-large btn-principal" data-act="importer">Importer depuis le Raccourci</button>
@@ -613,8 +624,11 @@ function rendreActivite({ dep, poids }) {
         </ol></details>
     </section>
     <section class="carte"><h2>Salle</h2>
-      <p class="aide">Un module par jour ; retouche-le pour l'annuler.</p>
-      <div class="seances">${seances}</div>
+      <p class="aide">Touche les exercices faits aujourd'hui ; retouche pour décocher.</p>
+      ${totalSalle}
+      ${nbEx ? '<button class="lien tout-decocher" data-act="tout-decocher">Tout décocher</button>' : ""}
+      ${groupes}
+      <p class="aide">Séries menées à l'échec : ${C.formaterNombre(activite.salle.minutes_effort_par_serie)} min d'effort par série, comptées à ${C.formaterNombre(activite.salle.met)} MET (Compendium 2024, code ${activite.salle.code}) ; les ${C.formaterNombre(activite.salle.minutes_repos_par_serie)} min de repos ne dépensent rien de plus qu'assis. Durée affichée = séries × ${C.formaterNombre(activite.salle.minutes_effort_par_serie + activite.salle.minutes_repos_par_serie)} min. Ces durées sont des hypothèses.</p>
     </section>
     <section class="carte"><h2>Créatine</h2>
       <button class="btn btn-large case${a.creatine ? " cochee" : ""}" data-act="creatine" aria-pressed="${a.creatine}"><span class="case-boite" aria-hidden="true"></span>Créatine prise</button>
@@ -779,8 +793,16 @@ const ACTIONS = {
     b.nextElementSibling.hidden = !ui.manquantsOuverts.has(c);
   },
   importer: () => importer(),
-  seance: (b) => {
-    etat.activite.seance = etat.activite.seance === b.dataset.id ? null : b.dataset.id;
+  exercice: (b) => {
+    const ex = new Set(etat.activite.exercices || []);
+    ex.has(b.dataset.id) ? ex.delete(b.dataset.id) : ex.add(b.dataset.id);
+    // Garder l'ordre de la liste des exercices.
+    etat.activite.exercices = activite.exercices.map((e) => e.id).filter((id) => ex.has(id));
+    sauver();
+    rafraichir();
+  },
+  "tout-decocher": () => {
+    etat.activite.exercices = [];
     sauver();
     rafraichir();
   },

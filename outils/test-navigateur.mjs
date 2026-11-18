@@ -254,7 +254,8 @@ console.log("\n4. Persistance après rechargement");
   await onglet(page, "activite");
   await saisir(page, "a-km", "4");
   await saisir(page, "a-pas", "3000");
-  await toucher(page.locator('[data-act="seance"][data-id="jambes"]'));
+  await toucher(page.locator('[data-act="exercice"][data-id="leg_extension"]'));
+  await toucher(page.locator('[data-act="exercice"][data-id="leg_curl"]'));
   await toucher(page.locator('[data-act="creatine"]'));
   const avant = await totaux(page);
   await page.reload();
@@ -263,7 +264,7 @@ console.log("\n4. Persistance après rechargement");
   verif(JSON.stringify(avant) === JSON.stringify(apres), "totaux identiques après rechargement");
   verif((await page.locator("#vue-journal .j-ligne").count()) === 2, "journal : 2 lignes après rechargement");
   verif((await page.locator("#a-km").getAttribute("data-valeur")) === "4" && (await page.locator("#a-pas").getAttribute("data-valeur")) === "3000", "activité : 4 km et 3000 pas conservés");
-  verif((await page.locator('[data-act="seance"][data-id="jambes"]').getAttribute("aria-pressed")) === "true", "séance « Jambes » conservée");
+  verif((await page.locator('[data-act="exercice"][aria-pressed="true"]').evaluateAll((b) => b.map((x) => x.dataset.id).join())) === "leg_extension,leg_curl" && (await page.locator("#salle-total").getAttribute("data-series")) === "7", "exercices cochés conservés (leg extension, leg curl : 7 séries)");
   verif((await page.locator('[data-act="creatine"]').getAttribute("aria-pressed")) === "true", "créatine conservée");
   verif((await page.locator(".pesees tbody tr").count()) === 1 && (await page.locator("#p-brouillon").getAttribute("data-valeur")) === "81.3", "pesée 81,3 kg conservée et préremplie");
   // Nouvelle page dans le même navigateur (appli fermée puis rouverte).
@@ -284,7 +285,7 @@ console.log("\n5. Remise à zéro manuelle puis annulation");
   await peser(page, 75);
   await onglet(page, "activite");
   await saisir(page, "a-km", "0,3");
-  await toucher(page.locator('[data-act="seance"][data-id="dos_epaules"]'));
+  await toucher(page.locator('[data-act="exercice"][data-id="tirage_vertical"]'));
   const avant = { t: await totaux(page), etat: await etatStocke(page), histo: await histoStocke(page) };
   await onglet(page, "journal");
   await toucher(page.locator('[data-act="raz"]'));
@@ -292,7 +293,8 @@ console.log("\n5. Remise à zéro manuelle puis annulation");
   await toucher(page.locator('#feuille [data-act="raz-ok"]'));
   verif((await page.locator(".j-ligne").count()) === 0 && (await page.locator("#e-kcal").getAttribute("data-total")) === "0", "journal vidé, total à 0");
   const e1 = await etatStocke(page);
-  verif(e1.activite.km === 0 && e1.activite.seance === null && e1.pesees.length === 1, "activité vidée, pesée gardée");
+  verif(e1.activite.km === 0 && e1.activite.exercices.length === 0 && e1.pesees.length === 1, "activité vidée (exercices compris), pesée gardée");
+  verif((await histoStocke(page)).at(-1).activite.exercices.join() === "tirage_vertical", "exercices gardés dans l'archive de la remise à zéro");
   const h1 = await histoStocke(page);
   verif(h1.length === avant.histo.length + 1 && h1.at(-1).motif === "manuel" && h1.at(-1).journal.length === 2, "journée archivée avant la remise à zéro");
   verif((await page.locator("#toast.visible").textContent()).includes("Annuler"), "toast « Annuler » affiché");
@@ -318,6 +320,7 @@ console.log("\n6. Passage de minuit (fausse horloge)");
   await peser(page, 78.4);
   await onglet(page, "activite");
   await saisir(page, "a-km", "2");
+  await toucher(page.locator('[data-act="exercice"][data-id="pec_fly"]'));
   await onglet(page, "journal");
   verif((await page.locator(".j-ligne").count()) === 2 && (await etatStocke(page)).jour === "2026-11-04", "23:59 : 2 ajouts le 4 novembre");
   await page.clock.runFor(2 * 60 * 1000); // l'appli reste ouverte ; la minuterie de 30 s voit minuit passer
@@ -327,7 +330,7 @@ console.log("\n6. Passage de minuit (fausse horloge)");
   const e = await etatStocke(page);
   verif(e.jour === "2026-11-05" && e.journal.length === 0 && e.activite.km === 0, "stockage : nouvelle journée vide");
   const h = await histoStocke(page);
-  verif(h.length === 1 && h[0].jour === "2026-11-04" && h[0].motif === "minuit" && h[0].journal.length === 2 && h[0].activite.km === 2, "historique : la veille (journal + activité)");
+  verif(h.length === 1 && h[0].jour === "2026-11-04" && h[0].motif === "minuit" && h[0].journal.length === 2 && h[0].activite.km === 2 && h[0].activite.exercices.join() === "pec_fly", "historique : la veille (journal + activité, exercices compris)");
   verif(e.pesees.length === 1 && e.pesees[0].kg === 78.4, "pesée conservée");
   const etatStockage = await ctx.storageState();
   await ctx.close();
@@ -366,15 +369,21 @@ console.log("\n7a. Calcul de la dépense");
   // Marche 6,2 km : 6,2 × (3,8 − 1,5) × 80 / 5 = 228,16
   await saisir(page, "a-km", "6,2");
   verif(proche(await dep(), 2681.5833333333333 + 228.16), "+ 6,2 km de marche : + 228,16 kcal");
-  // Séances (80 kg) : séries × 3,5 min / 60 × (3,5 − 1,5) × 80
-  const seances = { pecs_epaules: 112, dos_epaules: 112, jambes: 93.33333333333333, jambes_epaules: 149.33333333333334 };
-  for (const [id, kcal] of Object.entries(seances)) {
-    await toucher(page.locator(`[data-act="seance"][data-id="${id}"]`));
-    verif(proche(await dep(), 2681.5833333333333 + 228.16 + kcal), `séance ${id} : + ${kcal.toFixed(2)} kcal`);
-    verif((await page.locator('[data-act="seance"][aria-pressed="true"]').count()) === 1, `séance ${id} : une seule séance choisie`);
-  }
-  await toucher(page.locator('[data-act="seance"][data-id="jambes_epaules"]'));
-  verif(proche(await dep(), 2681.5833333333333 + 228.16), "retoucher la séance l'annule");
+  // Salle (80 kg) : séries × 1 min d'effort / 60 × (6,0 − 1,5) × 80 = 6 kcal par série ; durée affichée 5 min par série.
+  // Développé couché 2 + pec fly 3 + élévations latérales aux haltères 3 = 8 séries → 48 kcal, ~40 min.
+  const total = page.locator("#salle-total");
+  verif((await total.textContent()).includes("Aucun exercice") && (await page.locator('[data-act="tout-decocher"]').count()) === 0, "aucun exercice coché : pas de bouton « Tout décocher »");
+  for (const id of ["developpe_couche", "pec_fly", "elevation_halteres"]) await toucher(page.locator(`[data-act="exercice"][data-id="${id}"]`));
+  verif(proche(await dep(), 2681.5833333333333 + 228.16 + 48), "3 exercices, 8 séries : + 48 kcal");
+  verif((await total.getAttribute("data-series")) === "8" && proche(Number(await total.getAttribute("data-kcal")), 48) && (await total.textContent()).includes("3 exercices · 8 séries · ~40 min · +48 kcal"), "total affiché : 3 exercices · 8 séries · ~40 min · +48 kcal", await total.textContent());
+  verif((await page.locator('[data-act="exercice"][data-id="pec_fly"]').getAttribute("aria-pressed")) === "true" && (await page.locator(".exercice.coche").count()) === 3, "exercices cochés bien visibles (aria-pressed, 3 cochés)");
+  // Décocher le pec fly : 5 séries → 30 kcal.
+  await toucher(page.locator('[data-act="exercice"][data-id="pec_fly"]'));
+  verif(proche(await dep(), 2681.5833333333333 + 228.16 + 30) && (await total.getAttribute("data-series")) === "5", "retoucher décoche : 5 séries, + 30 kcal");
+  await toucher(page.locator('[data-act="tout-decocher"]'));
+  verif(proche(await dep(), 2681.5833333333333 + 228.16) && (await page.locator(".exercice.coche").count()) === 0 && (await etatStocke(page)).activite.exercices.length === 0, "« Tout décocher » : plus d'exercice, dépense de la salle à 0");
+  // Groupes dans l'ordre, avec leur titre.
+  verif((await page.locator(".groupe-exercices h3").allTextContents()).map((t) => t.trim()).join("|") === "💪 Pecs|🏋️ Dos|🎯 Épaules|🦵 Jambes" && (await page.locator(".exercice").count()) === 12, "4 groupes dans l'ordre, 12 exercices");
   // Masse grasse 14 % : repos = 370 + 21,6 × 80 × 0,86 = 1856,08 ; × 1,4583333333333333 = 2706,7833333
   await onglet(page, "poids");
   await regler(page, "mg", "-0.5", 2);
@@ -424,7 +433,7 @@ console.log("\n7c. Affichage à 375 px, cibles de 48 px, captures");
   await ajouter(page, "echine_porc", 250);
   await ajouter(page, "pain_graines", 3);
   await onglet(page, "activite");
-  await toucher(page.locator('[data-act="seance"][data-id="jambes"]'));
+  for (const id of ["developpe_couche", "developpe_incline_smith", "pec_fly", "elevation_poulie"]) await toucher(page.locator(`[data-act="exercice"][data-id="${id}"]`));
   await page.clock.runFor(10000); // horloge simulée : laisser le dernier toast disparaître avant les captures
   async function controle(nom) {
     const pb = await page.evaluate(() => {
@@ -525,7 +534,7 @@ console.log("\n7f. Unités d'affichage, teneurs brutes, textes visibles");
   const refEpa = await epa.locator(".nut-ref").textContent();
   verif(refEpa.includes("250 mg") && !refEpa.includes(" g"), "EPA : référence « 250 mg »", refEpa);
   verif((await page.locator('#vue-bilan .ligne-nut[data-cle="arachidonique"] .nut-val').textContent()).trim() === "100 mg", "arachidonique : 0,1 g affiché 100 mg");
-  verif((await page.locator("#vue-bilan .energie").textContent()).includes("marche 3,8 MET, salle 3,5 MET"), "sources de la dépense au format français (3,8 MET)");
+  verif((await page.locator("#vue-bilan .energie").textContent()).includes("marche 3,8 MET, salle 6 MET"), "sources de la dépense au format français (3,8 MET)");
   // Rapport linoléique / ALA, 2 œufs : 1,2 / 0,052 = 23,076923076923077 > 5 → « dépasse », barre en alerte.
   const la = page.locator('#vue-bilan .ligne-nut[data-cle="rapport_la_ala"]');
   verif(proche(Number(await la.getAttribute("data-total")), 23.076923076923077) && (await la.locator(".nut-val").textContent()) === "23,1", "linoléique / ALA (2 œufs) = 23,1");
@@ -668,7 +677,7 @@ for (const theme of ["clair", "sombre"]) {
   await onglet(page, "activite");
   await saisir(page, "a-pas", "8432");
   await saisir(page, "a-km", "6,2");
-  await toucher(page.locator('[data-act="seance"][data-id="jambes"]'));
+  for (const id of ["developpe_couche", "developpe_incline_smith", "pec_fly", "elevation_poulie"]) await toucher(page.locator(`[data-act="exercice"][data-id="${id}"]`));
   await page.clock.runFor(10000); // le dernier toast disparaît
   const capture = async (nom) => {
     // L'horloge simulée fige les animations : on retire le reflet d'ajout encore affiché.
@@ -682,6 +691,7 @@ for (const theme of ["clair", "sombre"]) {
   await capture("aliments");
   for (const o of ["journal", "bilan", "activite", "poids"]) {
     await onglet(page, o);
+    if (o === "activite") await page.locator("#salle-total").evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 200)); // carte Salle, exercices cochés
     await capture(o);
     if (o === "bilan") {
       // Deuxième vue du Bilan : les nutriments avec leurs barres.
@@ -719,6 +729,7 @@ async function construireSemaine(page) {
   await ajouter(page, "oeuf", 4);
   await onglet(page, "activite");
   await saisir(page, "a-km", "5");
+  for (const id of ["leg_extension", "leg_curl", "adducteurs"]) await toucher(page.locator(`[data-act="exercice"][data-id="${id}"]`)); // 10 séries
   await lendemain(5); // jeudi (aujourd'hui) : pesée 79,5 kg, 1 œuf
   await peser(page, 79.5);
   await onglet(page, "aliments");
@@ -734,16 +745,16 @@ async function construireSemaine(page) {
   await construireSemaine(page);
   const jours = await page.locator(".semaine .sj").evaluateAll((els) => els.map((e) => ({ date: e.dataset.date, etat: e.dataset.etat, solde: e.dataset.solde ? Number(e.dataset.solde) : null })));
   verif(jours.length === 7 && jours.map((j) => j.etat).join() === "rempli,non rempli,rempli,rempli,à venir,à venir,à venir", "7 lignes : lundi rempli, mardi non rempli, mercredi et jeudi remplis, 3 à venir", jours.map((j) => j.etat).join());
-  // Lundi : 134 − 2681,5833 = −2547,5833 ; mercredi : 268 − (2681,5833 + 5 × 2,3 × 80 / 5 = 184) = −2597,5833 ;
+  // Lundi : 134 − 2681,5833 = −2547,5833 ; mercredi : 268 − (2681,5833 + 5 × 2,3 × 80 / 5 = 184 + 10 séries × 6 = 60) = −2657,5833 ;
   // jeudi : 67 − 1829,62 × 35/24 (79,5 kg) = 67 − 2668,1958 = −2601,1958.
-  verif(proche(jours[0].solde, -2547.5833333333333) && proche(jours[2].solde, -2597.5833333333333) && proche(jours[3].solde, -2601.195833333333), "soldes du lundi, du mercredi et du jeudi");
+  verif(proche(jours[0].solde, -2547.5833333333333) && proche(jours[2].solde, -2657.5833333333333) && proche(jours[3].solde, -2601.195833333333), "soldes du lundi, du mercredi et du jeudi");
   verif((await page.locator('.sj[data-date="2026-11-02"] .sj-solde.deficit').textContent()) === "−2 548", "lundi : « −2 548 » en vert (déficit)");
-  // Total : 469 − (2681,5833 + 2865,5833 + 2668,1958 = 8215,3625) = −7746,3625 ; moyenne −2582,12 ; protéines 47,25 / 3 = 15,75 g.
+  // Total : 469 − (2681,5833 + 2925,5833 + 2668,1958 = 8275,3625) = −7806,3625 ; moyenne −2602,12 ; protéines 47,25 / 3 = 15,75 g.
   const verdict = page.locator(".verdict");
-  verif(proche(Number(await verdict.getAttribute("data-solde")), -7746.3625) && (await verdict.getAttribute("data-jours")) === "3", "solde de la semaine −7746,36 sur 3 jours");
-  verif((await verdict.locator(".verdict-texte").textContent()) === "Déficit de 7 746 kcal sur la semaine (3 jours remplis)", "verdict « Déficit de 7 746 kcal sur la semaine (3 jours remplis) »");
+  verif(proche(Number(await verdict.getAttribute("data-solde")), -7806.3625) && (await verdict.getAttribute("data-jours")) === "3", "solde de la semaine −7806,36 sur 3 jours");
+  verif((await verdict.locator(".verdict-texte").textContent()) === "Déficit de 7 806 kcal sur la semaine (3 jours remplis)", "verdict « Déficit de 7 806 kcal sur la semaine (3 jours remplis) »");
   const suite = await verdict.textContent();
-  verif(suite.includes("−2 582 kcal par jour") && suite.includes("15,8 g par jour") && suite.includes("Poids de début : 80,0 kg (lun. 02/11). Résultat à la pesée de lundi prochain (09/11)."), "moyenne par jour, protéines et poids (résultat attendu lundi prochain)", suite);
+  verif(suite.includes("−2 602 kcal par jour") && suite.includes("15,8 g par jour") && suite.includes("Poids de début : 80,0 kg (lun. 02/11). Résultat à la pesée de lundi prochain (09/11)."), "moyenne par jour, protéines et poids (résultat attendu lundi prochain)", suite);
   verif((await page.locator("#vue-bilan .aide").textContent()).includes("estimation") && (await page.locator(".dimanche").count()) === 0, "phrase sur l'estimation ; pas de rappel du dimanche un jeudi");
   verif(await page.locator('[data-act="semaine"][data-d="7"]').isDisabled(), "pas de semaine après la semaine en cours");
   await page.locator(".verdict").evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().bottom + window.scrollY - window.innerHeight + 80)); // verdict visible
@@ -767,9 +778,9 @@ async function construireSemaine(page) {
   const lignes = octets.toString("utf8").slice(1).split("\r\n");
   verif(lignes.length === 20 && lignes[6].split(";").length === 14, "19 lignes, 14 colonnes séparées par « ; »");
   verif(lignes[7] === "2026-11-02;lundi;rempli;134;2682;-2548;13,5;0,5;8,6;0;0,00;;non;80,0", "ligne du lundi", lignes[7]);
-  verif(lignes[9].startsWith("2026-11-04;mercredi;rempli;268;2866;-2598;27,0;") && lignes[9].includes(";5,00;"), "ligne du mercredi (5 km)", lignes[9]);
-  verif(lignes[15] === "Total (jours comptés);;3 jours;469;8215;-7746", "ligne de total", lignes[15]);
-  verif(lignes[18] === "Verdict;Déficit de 7 746 kcal sur la semaine (3 jours remplis)", "verdict dans le fichier", lignes[18]);
+  verif(lignes[9].startsWith("2026-11-04;mercredi;rempli;268;2926;-2658;27,0;") && lignes[9].includes(";5,00;Leg extension, Leg curl, Adducteurs (10 séries);"), "ligne du mercredi (5 km, exercices cochés)", lignes[9]);
+  verif(lignes[15] === "Total (jours comptés);;3 jours;469;8275;-7806", "ligne de total", lignes[15]);
+  verif(lignes[18] === "Verdict;Déficit de 7 806 kcal sur la semaine (3 jours remplis)", "verdict dans le fichier", lignes[18]);
 
   // iPhone : menu de partage quand il accepte le fichier ; annulation sans erreur ni téléchargement.
   await page.evaluate(() => {
@@ -817,7 +828,7 @@ async function construireSemaine(page) {
   await toucher(page.locator('[data-act="semaine"][data-d="-7"]'));
   verif((await page.locator(".evolution-poids").textContent()) === "Poids : 80,0 kg (lun. 02/11) → 79,4 kg (lun. 09/11), soit −0,6 kg", "semaine du 02/11 : 80,0 → 79,4 kg, soit −0,6 kg");
   // Mercredi 04/11 (pas de pesée ce jour-là) : dépense avec la pesée du lundi 02/11 = 80 kg → 2681,5833 + 184 (5 km).
-  verif(proche(Number(await page.locator('.sj[data-date="2026-11-04"]').getAttribute("data-solde")), 268 - 2865.5833333333333), "mercredi : dépense calculée avec la pesée du lundi");
+  verif(proche(Number(await page.locator('.sj[data-date="2026-11-04"]').getAttribute("data-solde")), 268 - 2925.5833333333333), "mercredi : dépense calculée avec la pesée du lundi");
   await ctx.close();
 }
 {
