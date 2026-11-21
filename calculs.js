@@ -3,18 +3,29 @@
 
 // ---------- Apports ----------
 
-// Grammes réellement mangés pour une quantité choisie (unité "g" : grammes pesés ; sinon nombre de pièces).
-export function grammesManges(aliment, quantite) {
-  const pese = aliment.unite === "g" ? quantite : quantite * aliment.poids_unite_g;
+// Grammes réellement mangés pour une quantité choisie.
+// unite : "g" = grammes de l'aliment tel que la fiche le décrit (pesé avec l'os pour une viande, avec la peau
+// pour le kiwi vert) ; sinon nombre de pièces. Par défaut l'unité de l'aliment : une entrée de journal sans
+// champ « unite » (ancien format) garde donc son sens d'origine.
+export function grammesManges(aliment, quantite, unite = aliment.unite) {
+  const pese = unite === "g" ? quantite : quantite * aliment.poids_unite_g;
   return pese * aliment.part_comestible;
 }
 
 // Apport d'un nutriment pour une quantité : grammes mangés × teneur / 100. null si la teneur manque.
-export function apport(aliment, quantite, cle) {
+export function apport(aliment, quantite, cle, unite) {
   const v = aliment.valeurs[cle]?.v;
   if (v === null || v === undefined) return null;
-  return (grammesManges(aliment, quantite) * v) / 100;
+  return (grammesManges(aliment, quantite, unite) * v) / 100;
 }
+
+// Boutons de grammes d'un aliment en pièces (commodité, pas une donnée nutritionnelle) : quantites_g de
+// foods.json, sinon cette liste par défaut.
+export const QUANTITES_G_DEFAUT = [50, 100, 150, 200, 250, 300];
+export const quantitesG = (aliment) => aliment.quantites_g ?? QUANTITES_G_DEFAUT;
+
+// Bornes du champ « grammes » de l'écran Aliments.
+export const SAISIE_GRAMMES = { min: 1, max: 5000 };
 
 // Nutriment absent des 74 constituants de la table (ex. biotine, « ciqual »: []) : aucun total possible.
 export const absentDeLaTable = (n) => Array.isArray(n.ciqual) && n.ciqual.length === 0;
@@ -30,7 +41,7 @@ export function totaux(journal, foods) {
     if (!al) continue;
     for (const n of foods.nutriments) {
       if (absentDeLaTable(n)) continue;
-      const a = apport(al, e.quantite, n.cle);
+      const a = apport(al, e.quantite, n.cle, e.unite);
       const t = res[n.cle];
       if (a === null) {
         t.incomplet = true;
@@ -181,8 +192,8 @@ export function teneurTable(val, n) {
 export const formaterNombre = (v) => fmt({ maximumFractionDigits: 4 }).format(v);
 
 // Libellé d'un bouton de quantité : « ½ », « 1 œuf », « 2 œufs », « 150 g ».
-export function libelleQuantite(aliment, q) {
-  if (aliment.unite === "g") return `${F0.format(q)} g`;
+export function libelleQuantite(aliment, q, unite = aliment.unite) {
+  if (unite === "g") return `${fmt({ maximumFractionDigits: 1 }).format(q)} g`;
   const nombre = q === 0.5 ? "½" : fmt({ maximumFractionDigits: 2 }).format(q);
   if (q === 0.5) return `${nombre} ${aliment.unite}`;
   return `${nombre} ${q > 1 ? aliment.unite_pluriel : aliment.unite}`;

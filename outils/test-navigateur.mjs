@@ -67,7 +67,8 @@ async function ouvrir(page) {
 async function ajouter(page, id, q) {
   const al = page.locator(`.aliment[data-id="${id}"]`);
   if (await al.locator(".quantites").isHidden()) await toucher(al.locator(".al-nom"));
-  await toucher(al.locator(`.q[data-q="${q}"]`));
+  // Boutons de l'unité de l'aliment (pas les boutons de grammes d'un aliment en pièces).
+  await toucher(al.locator(`.q[data-q="${q}"]:not([data-unite])`));
 }
 const annulerToast = (page) => toucher(page.locator('#toast.visible [data-act="annuler"]'));
 // Totaux du Bilan à pleine précision : { cle: { total, incomplet } }.
@@ -166,12 +167,11 @@ console.log("\n2. Toute la grille (chaque aliment, chaque quantité, chaque nutr
   const { ctx, page } = await nouveauContexte();
   await ouvrir(page);
   let essais = 0;
+  let essaisG = 0;
   const erreurs = [];
-  for (const al of FOODS.aliments) {
-    const qs = [...al.quantites, ...(al.ajustement_g ? [al.ajustement_g] : [])];
-    const poids = al.unite === "g" ? 1 : al.poids_unite_g;
-    for (const q of qs) {
-      await ajouter(page, al.id, q);
+  // Vérifie l'ajout de q (pièces ou grammes) : quantité × poids × part comestible × v / 100 pour chaque nutriment.
+  async function controler(al, q, poids) {
+    {
       const t = await totaux(page);
       for (const n of FOODS.nutriments) {
         if (n.ciqual.length === 0) {
@@ -184,13 +184,31 @@ console.log("\n2. Toute la grille (chaque aliment, chaque quantité, chaque nutr
         const att = v === null ? 0 : (q * poids * al.part_comestible * v) / 100;
         if (t[n.cle].total !== att || t[n.cle].incomplet !== (v === null)) erreurs.push(`${al.id} × ${q} ${n.cle} : ${t[n.cle].total} au lieu de ${att}`);
       }
-      essais++;
       await annulerToast(page);
       if ((await page.locator("#e-kcal").getAttribute("data-total")) !== "0") erreurs.push(`${al.id} × ${q} : pas revenu à 0`);
     }
   }
+  for (const al of FOODS.aliments) {
+    const qs = [...al.quantites, ...(al.ajustement_g ? [al.ajustement_g] : [])];
+    for (const q of qs) {
+      await ajouter(page, al.id, q);
+      await controler(al, q, al.unite === "g" ? 1 : al.poids_unite_g);
+      essais++;
+    }
+    if (al.unite === "g") continue;
+    // Aliment en pièces, onglet « Grammes » : grammes × 1 × part comestible × v / 100 (jamais × poids d'une pièce).
+    const bloc = page.locator(`.aliment[data-id="${al.id}"]`);
+    await toucher(bloc.locator('[data-act="mode-q"][data-mode="grammes"]'));
+    for (const g of al.quantites_g ?? [50, 100, 150, 200, 250, 300]) {
+      await toucher(bloc.locator(`.q[data-unite="g"][data-q="${g}"]`));
+      await controler(al, g, 1);
+      essaisG++;
+    }
+  }
   verif(erreurs.length === 0, `${essais} boutons × ${FOODS.nutriments.length} nutriments : valeur exacte (égalité stricte)`, erreurs.slice(0, 5).join(" ; "));
   verif(essais === FOODS.aliments.reduce((n, a) => n + a.quantites.length + (a.ajustement_g ? 1 : 0), 0), "tous les boutons testés, « +25 g » compris");
+  const attendusG = FOODS.aliments.filter((a) => a.unite !== "g").reduce((n, a) => n + (a.quantites_g ?? [50, 100, 150, 200, 250, 300]).length, 0);
+  verif(essaisG === attendusG && essaisG > 0, `${essaisG} boutons de grammes des aliments en pièces, tous testés avec la grille`);
   await ctx.close();
 }
 
@@ -645,7 +663,7 @@ console.log("\n7h. Saisie au clavier (pas, distance, poids), zoom au double touc
   verif((await page.locator("#p-brouillon-err").textContent()).includes("entre 30 et 300") && (await etatStocke(page)).pesees[0].kg === 81.6, "poids 25 kg refusé : message, pesée inchangée");
   // Police des champs ≥ 16 px (sinon iOS zoome) et pas de zoom au double toucher.
   const polices = await page.locator("input").evaluateAll((els) => els.map((e) => parseFloat(getComputedStyle(e).fontSize)));
-  verif(polices.length === 3 && polices.every((t) => t >= 16), `police des 3 champs ≥ 16 px (${polices.join(", ")} px)`);
+  verif(polices.length === 3 + FOODS.aliments.length && polices.every((t) => t >= 16), `police des ${polices.length} champs (pas, km, poids et grammes de chaque aliment) ≥ 16 px`);
   const touch = await page.evaluate(() => ({
     html: getComputedStyle(document.documentElement).touchAction,
     boutons: [...document.querySelectorAll("button, input, summary")].filter((e) => getComputedStyle(e).touchAction !== "manipulation").length,
@@ -913,6 +931,110 @@ console.log("\n10. Explications des nutriments (Bilan, vue Jour)");
   await onglet(page, "bilan");
   await toucher(page.locator('#vue-bilan .nut-zone[data-cle="potassium"]'));
   await page.screenshot({ path: join(captures, "sombre-explication.png") });
+  await ctx.close();
+}
+
+console.log("\n11. Ajout en grammes (boutons et clavier)");
+{
+  const al = (id) => FOODS.aliments.find((a) => a.id === id);
+  const kcal = (id, g) => (g * al(id).part_comestible * al(id).valeurs.energie.v) / 100;
+  const { ctx, page } = await nouveauContexte();
+  // Lundi 16/11, 23:40 : l'entrée en grammes partira dans l'archive de minuit.
+  await page.clock.install({ time: new Date(2026, 10, 16, 23, 40, 0) });
+  await ouvrir(page);
+  await peser(page, 80);
+  await onglet(page, "aliments");
+  const banane = page.locator('.aliment[data-id="banane"]');
+  await toucher(banane.locator(".al-nom"));
+  // Onglets « Pièces | Grammes » : Pièces par défaut.
+  verif((await banane.locator(".q-pieces").isVisible()) && (await banane.locator(".q-grammes").isHidden()) && (await banane.locator('[data-mode="pieces"]').getAttribute("aria-pressed")) === "true", "banane : onglet « Pièces » par défaut");
+  await toucher(banane.locator('[data-act="mode-q"][data-mode="grammes"]'));
+  verif((await banane.locator(".q-pieces").isHidden()) && (await banane.locator(".q-grammes .q").count()) === 6 && (await banane.locator('[data-mode="grammes"]').getAttribute("aria-pressed")) === "true", "onglet « Grammes » : 6 boutons (50 à 300 g) et le champ");
+  verif((await page.locator('.aliment[data-id="cote_porc"] [data-act="mode-q"]').count()) === 0 && (await page.locator('.aliment[data-id="cote_porc"] .q-ajust').count()) === 1 && (await page.locator("#g-cote_porc").count()) === 1, "côte de porc (en grammes) : pas d'onglets, « +25 g » gardé, champ ajouté");
+  const champ = page.locator("#g-banane");
+  verif(parseFloat(await champ.evaluate((e) => getComputedStyle(e).fontSize)) >= 16 && (await champ.getAttribute("inputmode")) === "decimal", "champ : inputmode decimal, police ≥ 16 px");
+  // Saisie valide avec virgule + bouton « Ajouter ».
+  await toucher(champ);
+  await champ.fill("150,5");
+  await toucher(banane.locator('[data-act="ajouter-g"]'));
+  verif((await page.locator("#toast.visible").textContent()).includes("Ajouté : 150,5 g de Banane"), "toast « Ajouté : 150,5 g de Banane »");
+  verif(Number(await page.locator("#e-kcal").getAttribute("data-total")) === kcal("banane", 150.5), "150,5 g × part × kcal / 100 dans l'en-tête");
+  verif((await champ.inputValue()) === "" && (await banane.locator(".q-grammes").isVisible()), "champ vidé, panneau resté ouvert sur « Grammes »");
+  await annulerToast(page);
+  verif((await page.locator("#e-kcal").getAttribute("data-total")) === "0", "« Annuler » retire l'ajout en grammes");
+  // Saisie valide avec point + touche Entrée.
+  await toucher(champ);
+  await champ.fill("150.0");
+  await champ.press("Enter");
+  const entree = (await etatStocke(page)).journal.at(-1);
+  verif(entree.alimentId === "banane" && entree.quantite === 150 && entree.unite === "g", "Entrée : 150 g de banane enregistrés avec unite « g »");
+  // Saisies invalides : message, texte gardé, rien d'ajouté.
+  for (const t of ["0", "abc", "6000", "-20"]) {
+    await toucher(champ);
+    await champ.fill(t);
+    await champ.press("Enter");
+    verif((await page.locator("#g-banane-err").isVisible()) && (await champ.inputValue()) === t && (await etatStocke(page)).journal.length === 1, `« ${t} » refusé : message « ${await page.locator("#g-banane-err").textContent()} », rien d'ajouté`);
+  }
+  // Pas d'ajout à la perte du focus.
+  await toucher(champ);
+  await champ.fill("80");
+  await toucher(page.locator(".cat-tete").first());
+  verif((await etatStocke(page)).journal.length === 1, "perte du focus : aucun ajout");
+  // Bouton de grammes d'un aliment en pièces : œuf, onglet Grammes, 100 g (pas 100 œufs).
+  const oeuf = page.locator('.aliment[data-id="oeuf"]');
+  await toucher(oeuf.locator(".al-nom"));
+  await toucher(oeuf.locator('[data-act="mode-q"][data-mode="grammes"]'));
+  await toucher(oeuf.locator('.q[data-unite="g"][data-q="100"]'));
+  // Viande en grammes : 180 g de côte de porc pesée avec l'os → 180 × 0,66 × 164 / 100 = 194,832 kcal.
+  const porc = page.locator('.aliment[data-id="cote_porc"]');
+  await toucher(porc.locator(".al-nom"));
+  await toucher(page.locator("#g-cote_porc"));
+  await page.locator("#g-cote_porc").fill("180");
+  await page.locator("#g-cote_porc").press("Enter");
+  const j = (await etatStocke(page)).journal;
+  verif(j.length === 3 && j[1].unite === "g" && j[1].quantite === 100 && j[2].alimentId === "cote_porc" && j[2].quantite === 180 && !("unite" in j[2]), "journal : 100 g d'œuf (unite g) et 180 g de côte (aliment déjà en grammes)");
+  // Total : banane 150 g + œuf 100 g (134) + côte 180 g (194,832).
+  const attendu = kcal("banane", 150) + 134 + 194.832;
+  verif(proche(Number(await page.locator("#e-kcal").getAttribute("data-total")), attendu), "total : banane 150 g + œuf 100 g + côte 180 g");
+  await onglet(page, "journal");
+  verif((await page.locator(".j-ligne .j-q").allTextContents()).join("|") === "180 g|100 g|150 g", "journal : quantités « 180 g », « 100 g », « 150 g »");
+  // Suppression puis annulation d'une entrée en grammes.
+  await toucher(page.locator(".j-ligne", { hasText: "Œuf dur" }).locator('[data-act="supprimer"]'));
+  verif((await page.locator("#toast.visible").textContent()).includes("Supprimé : 100 g de Œuf dur"), "suppression : « 100 g de Œuf dur »");
+  await annulerToast(page);
+  verif((await etatStocke(page)).journal.length === 3, "suppression annulée");
+  // Persistance.
+  await page.reload();
+  await page.locator(".aliment").first().waitFor({ state: "attached" });
+  verif(proche(Number(await page.locator("#e-kcal").getAttribute("data-total")), attendu) && (await etatStocke(page)).journal[1].unite === "g", "après rechargement : entrées en grammes conservées, même total");
+  // Minuit : l'archive garde l'unité.
+  await page.clock.runFor(25 * 60 * 1000);
+  const h = await histoStocke(page);
+  verif(h.length === 1 && h[0].jour === "2026-11-16" && h[0].journal.filter((e) => e.unite === "g").length === 2, "minuit : l'archive garde les entrées en grammes");
+  // Vue Semaine et CSV : lundi 16/11 = banane 150 g + œuf 100 g + côte 180 g.
+  await onglet(page, "bilan");
+  await toucher(page.locator('[data-act="bilan-vue"][data-vue="semaine"]'));
+  verif(proche(Number(await page.locator('.sj[data-date="2026-11-16"]').getAttribute("data-solde")), attendu - 2681.5833333333333), "semaine : solde du lundi avec les entrées en grammes");
+  await page.evaluate(() => Object.defineProperty(Navigator.prototype, "canShare", { value: undefined, configurable: true }));
+  const [dl] = await Promise.all([page.waitForEvent("download"), toucher(page.locator('[data-act="exporter"]'))]);
+  const ligne = readFileSync(await dl.path(), "utf8").split("\r\n").find((l) => l.startsWith("2026-11-16;"));
+  verif(ligne.startsWith(`2026-11-16;lundi;rempli;${Math.round(attendu)};`), "CSV : kcal du lundi avec les entrées en grammes", ligne);
+  await ctx.close();
+}
+
+for (const theme of ["clair", "sombre"]) {
+  const { ctx, page } = await nouveauContexte({ colorScheme: theme === "clair" ? "light" : "dark" });
+  await ouvrir(page);
+  const cadrer = (id) => page.locator(`.aliment[data-id="${id}"]`).evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 130));
+  const banane = page.locator('.aliment[data-id="banane"]');
+  await toucher(banane.locator(".al-nom"));
+  await toucher(banane.locator('[data-act="mode-q"][data-mode="grammes"]'));
+  await page.locator("#g-banane").fill("135");
+  await cadrer("banane");
+  await page.screenshot({ path: join(captures, `${theme}-grammes.png`) });
+  await toucher(page.locator('.aliment[data-id="cote_porc"] .al-nom'));
+  await cadrer("cote_porc");
+  await page.screenshot({ path: join(captures, `${theme}-grammes-viande.png`) });
   await ctx.close();
 }
 

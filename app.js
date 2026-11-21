@@ -50,6 +50,14 @@ async function demarrer() {
   // Champs : enregistrement au « change » (perte du focus ou Entrée) ; Entrée ferme le clavier.
   document.addEventListener("change", (e) => e.target.dataset?.champ && surSaisie(e.target));
   document.addEventListener("keydown", (e) => e.key === "Enter" && e.target.dataset?.champ && e.target.blur());
+  // Champ « grammes » d'un aliment : Entrée ajoute (le clavier reste ouvert pour un autre ajout).
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && e.target.dataset?.grammes) {
+      e.preventDefault();
+      verifierJour();
+      ajouterGrammes(e.target.dataset.grammes);
+    }
+  });
   // Éléments role="button" (lignes du Bilan) : Entrée et Espace comme un toucher.
   document.addEventListener("keydown", (e) => {
     if ((e.key === "Enter" || e.key === " ") && e.target.getAttribute?.("role") === "button" && e.target.dataset.act) {
@@ -199,9 +207,30 @@ function rendreAliments() {
 // Rappel du lundi : une pesée par semaine, le lundi matin. Un toucher mène à l'onglet Poids.
 const RAPPEL = '<button class="rappel" id="RAPPEL_ID" data-act="onglet" data-onglet="poids" hidden>Lundi : pense à te peser ce matin.</button>';
 
+// Champ clavier « grammes » : ajout à la touche Entrée ou au bouton « Ajouter » (jamais à la perte du focus).
+function champGrammes(a) {
+  return `<div class="ajout-g">
+      <label class="champ" for="g-${a.id}"><span class="visuellement-cache">Grammes de ${esc(a.nom)}</span>
+        <span class="champ-boite"><input id="g-${a.id}" data-grammes="${a.id}" type="text" inputmode="decimal" enterkeyhint="done" autocomplete="off" spellcheck="false" placeholder="Autre quantité" aria-describedby="g-${a.id}-err"><span class="champ-unite">g</span></span></label>
+      <button class="btn btn-principal" data-act="ajouter-g" data-id="${a.id}">Ajouter</button>
+    </div>
+    <span class="champ-erreur" id="g-${a.id}-err" role="alert" hidden></span>`;
+}
+
 function htmlAliment(a) {
   const boutons = a.quantites.map((q) => `<button class="q" data-act="ajouter" data-id="${a.id}" data-q="${q}">${esc(C.libelleQuantite(a, q))}</button>`);
   if (a.ajustement_g) boutons.push(`<button class="q q-ajust" data-act="ajouter" data-id="${a.id}" data-q="${a.ajustement_g}">+${a.ajustement_g} g</button>`);
+  // Aliment en pièces : onglets « Pièces | Grammes » ; aliment en grammes : ses boutons puis le champ.
+  const panneau =
+    a.unite === "g"
+      ? `<div class="grille-q">${boutons.join("")}</div>${champGrammes(a)}`
+      : `<div class="segment segment-q" role="group" aria-label="Unité">
+          <button data-act="mode-q" data-id="${a.id}" data-mode="pieces" aria-pressed="true">Pièces</button>
+          <button data-act="mode-q" data-id="${a.id}" data-mode="grammes" aria-pressed="false">Grammes</button></div>
+        <div class="q-pieces grille-q">${boutons.join("")}</div>
+        <div class="q-grammes" hidden><div class="grille-q">${C.quantitesG(a)
+          .map((g) => `<button class="q" data-act="ajouter" data-id="${a.id}" data-q="${g}" data-unite="g">${esc(C.libelleQuantite(a, g, "g"))}</button>`)
+          .join("")}</div>${champGrammes(a)}</div>`;
   return `<div class="aliment" data-id="${a.id}">
     <div class="al-ligne">
       <button class="al-nom" data-act="aliment" data-id="${a.id}" aria-expanded="false">
@@ -209,7 +238,7 @@ function htmlAliment(a) {
       </button>
       <button class="al-info" data-act="fiche" data-id="${a.id}" aria-label="Fiche : ${esc(a.nom)}">i</button>
     </div>
-    <div class="quantites" hidden>${boutons.join("")}</div>
+    <div class="quantites" hidden>${panneau}</div>
   </div>`;
 }
 
@@ -228,23 +257,42 @@ function basculerAliment(id) {
   }
 }
 
-function ajouter(id, q, bouton) {
+// Ajout au journal. unite "g" pour des grammes sur un aliment en pièces (champ « unite » de l'entrée).
+function ajouter(id, q, bouton, unite) {
   const al = parId[id];
   const entree = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7), alimentId: id, quantite: q, heure: new Date().toISOString() };
+  if (unite === "g" && al.unite !== "g") entree.unite = "g";
   etat.journal.push(entree);
   sauver();
   rafraichir();
   bouton?.classList.remove("flash");
   void bouton?.offsetWidth;
   bouton?.classList.add("flash");
-  toast(`Ajouté : ${libelleEntree(al, q)}`, () => {
+  toast(`Ajouté : ${libelleEntree(al, q, entree.unite)}`, () => {
     etat.journal = etat.journal.filter((e) => e.id !== entree.id);
     sauver();
     rafraichir();
   });
 }
 
-const libelleEntree = (al, q) => (al.unite === "g" ? `${C.libelleQuantite(al, q)} de ${al.nom}` : `${C.libelleQuantite(al, q)} · ${al.nom}`);
+const libelleEntree = (al, q, unite = al.unite) => (unite === "g" ? `${C.libelleQuantite(al, q, "g")} de ${al.nom}` : `${C.libelleQuantite(al, q)} · ${al.nom}`);
+
+// Ajout depuis le champ « grammes » : validé (1 à 5 000 g), sinon message sous le champ et rien d'ajouté.
+function ajouterGrammes(id) {
+  const champ = $(`#g-${id}`);
+  const err = $(`#g-${id}-err`);
+  const r = C.lireSaisie(champ.value, C.SAISIE_GRAMMES);
+  if (r.erreur) {
+    err.textContent = r.erreur;
+    err.hidden = false;
+    champ.setAttribute("aria-invalid", "true");
+    return;
+  }
+  err.hidden = true;
+  champ.setAttribute("aria-invalid", "false");
+  champ.value = "";
+  ajouter(id, r.valeur, null, "g");
+}
 
 // ---------- Fiche d'un aliment ----------
 
@@ -285,6 +333,7 @@ function ouvrirFiche(id) {
       <dt>Entrée Ciqual</dt><dd>${a.ciqual.code} « ${esc(a.ciqual.nom)} » (table du ${esc(foods.table_ciqual.date)})</dd>
       ${a.notes ? `<dt>Notes</dt><dd>${esc(a.notes)}</dd>` : ""}
     </dl>
+    <p class="aide fiche-grammes">Tu peux aussi ajouter en grammes${a.part_comestible !== 1 ? ` (poids pesé tel que décrit ici, part comestible de ${Math.round(a.part_comestible * 100)} % appliquée)` : ""}.</p>
     ${lignes}
     <button class="btn btn-large" data-act="fermer">Fermer</button>`);
 }
@@ -298,11 +347,11 @@ function rendreJournal() {
     .map(({ e }) => {
       const al = parId[e.alimentId];
       if (!al) return "";
-      const v = (c) => C.apport(al, e.quantite, c);
+      const v = (c) => C.apport(al, e.quantite, c, e.unite);
       const h = new Date(e.heure).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
       return `<li class="j-ligne" data-id="${e.id}">
         <div class="j-tete"><span class="j-heure">${h}</span><span class="j-nom"><span aria-hidden="true">${al.icone}</span> ${esc(al.nom)}${al.a_confirmer ? ' <span class="badge">à confirmer</span>' : ""}</span></div>
-        <div class="j-detail"><span class="j-q">${esc(C.libelleQuantite(al, e.quantite))}</span>
+        <div class="j-detail"><span class="j-q">${esc(C.libelleQuantite(al, e.quantite, e.unite))}</span>
           <span><b>${C.formater(v("energie"), "kcal")}</b> kcal</span>
           <span class="c-prot">P ${C.formater(v("proteines"), "g")}</span>
           <span class="c-gluc">G ${C.formater(v("glucides"), "g")}</span>
@@ -324,7 +373,7 @@ function supprimer(id) {
   const [e] = etat.journal.splice(i, 1);
   sauver();
   rafraichir();
-  toast(`Supprimé : ${libelleEntree(parId[e.alimentId], e.quantite)}`, () => {
+  toast(`Supprimé : ${libelleEntree(parId[e.alimentId], e.quantite, e.unite)}`, () => {
     etat.journal.splice(Math.min(i, etat.journal.length), 0, e);
     sauver();
     rafraichir();
@@ -775,7 +824,15 @@ const ACTIONS = {
     b.nextElementSibling.hidden = ouvert;
   },
   aliment: (b) => basculerAliment(b.dataset.id),
-  ajouter: (b) => ajouter(b.dataset.id, Number(b.dataset.q), b),
+  ajouter: (b) => ajouter(b.dataset.id, Number(b.dataset.q), b, b.dataset.unite),
+  "ajouter-g": (b) => ajouterGrammes(b.dataset.id),
+  "mode-q": (b) => {
+    const el = $(`.aliment[data-id="${b.dataset.id}"]`);
+    const grammes = b.dataset.mode === "grammes";
+    el.querySelector(".q-pieces").hidden = grammes;
+    el.querySelector(".q-grammes").hidden = !grammes;
+    el.querySelectorAll('[data-act="mode-q"]').forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+  },
   fiche: (b) => ouvrirFiche(b.dataset.id),
   fermer: () => fermerFeuille(),
   supprimer: (b) => supprimer(b.dataset.id),
@@ -844,7 +901,7 @@ function surClic(ev) {
   const b = ev.target.closest("[data-act]");
   if (!b || !ACTIONS[b.dataset.act]) return;
   // Chaque geste commence par vérifier la date : un ajout après minuit va dans la bonne journée.
-  if (!["annuler", "fermer", "onglet", "categorie", "aliment", "fiche", "manquants", "explication"].includes(b.dataset.act)) verifierJour();
+  if (!["annuler", "fermer", "onglet", "categorie", "aliment", "fiche", "manquants", "explication", "mode-q"].includes(b.dataset.act)) verifierJour();
   ACTIONS[b.dataset.act](b);
 }
 

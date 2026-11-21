@@ -47,6 +47,14 @@ Lance `verifier` (chaque valeur de foods.json comparée au XML Ciqual), les test
 
 Une fois le site en ligne (GitHub Pages par exemple) : ouvrir l'adresse dans **Safari**, toucher **Partager**, puis **« Sur l'écran d'accueil »**. L'appli s'ouvre alors en plein écran d'un geste et marche sans réseau.
 
+## Ajouter en grammes
+
+Tout aliment peut s'ajouter en grammes. Un aliment en pièces (œuf, tranche, fruit, portion, cuillère, brique) a deux onglets « Pièces | Grammes » ; un aliment déjà en grammes (riz, viandes, légumes) garde ses boutons. Dans les deux cas, un champ « g » accepte n'importe quelle quantité de 1 à 5 000 g (virgule ou point) : « Ajouter » ou la touche Entrée ajoute, jamais la simple sortie du champ.
+
+- Les grammes sont ceux de l'aliment tel que la fiche le décrit : poids pesé avec l'os pour une viande (la part comestible s'applique), poids du fruit mangé (kiwi vert avec la peau). Ils ne sont jamais multipliés par le poids d'une pièce.
+- Les boutons de grammes d'un aliment en pièces viennent de `quantites_g` dans `donnees/foods.json` (sinon 50 à 300 g). Ce sont des raccourcis, pas des valeurs nutritionnelles.
+- Une entrée en grammes sur un aliment en pièces porte `"unite": "g"` dans le journal ; les entrées sans ce champ gardent leur sens d'origine.
+
 ## Ajouter un aliment
 
 1. Chercher l'entrée Ciqual : `python3 -I outils/ciqual.py chercher "pois chiche"` (code, nom officiel, kcal, protéines, glucides, lipides). Prendre l'état tel que pesé (cru, surgelé cru…), jamais « cuit » pour un aliment pesé cru.

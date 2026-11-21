@@ -276,5 +276,30 @@ console.log("\nExplications des nutriments");
   verif(typeof ex.avertissement === "string" && ex.avertissement.trim().length > 0, "avertissement présent");
 }
 
+console.log("\nAjout en grammes");
+{
+  // Œuf dur (pièce de 50 g, part 1) : 150 g → 150 g mangés ; 134 kcal, 13,5 g P, 1,72 mg Fe pour 100 g
+  // → 201 kcal, 20,25 g P, 2,58 mg Fe. Les grammes ne sont PAS multipliés par le poids d'une pièce (50 g).
+  verif(C.grammesManges(parId.oeuf, 150, "g") === 150 && C.apport(parId.oeuf, 150, "energie", "g") === 201, "œuf, 150 g : 150 g mangés, 201 kcal");
+  verif(proche(C.apport(parId.oeuf, 150, "proteines", "g"), 20.25) && proche(C.apport(parId.oeuf, 150, "fer", "g"), 2.58), "œuf, 150 g : 20,25 g de protéines, 2,58 mg de fer");
+  // Ancien format (sans unité) : 3 œufs = 3 × 50 = 150 g, même résultat ; 2 œufs = 100 g = 134 kcal.
+  verif(C.grammesManges(parId.oeuf, 3) === 150 && C.apport(parId.oeuf, 2, "energie") === 134 && C.apport(parId.oeuf, 2, "energie", undefined) === 134, "entrée sans unité : nombre de pièces, comme avant");
+  // Pain de mie complet (tranche de 35,7 g) : 75 g → 268 × 0,75 = 201 kcal ; 8,1 × 0,75 = 6,075 g P ; 1,5 × 0,75 = 1,125 mg Fe.
+  verif(proche(C.apport(parId.pain_complet, 75, "energie", "g"), 201) && proche(C.apport(parId.pain_complet, 75, "proteines", "g"), 6.075) && proche(C.apport(parId.pain_complet, 75, "fer", "g"), 1.125), "pain, 75 g : 201 kcal, 6,075 g P, 1,125 mg Fe");
+  // Kiwi vert, mangé avec la peau : 120 g → 60,9 × 1,2 = 73,08 kcal ; vitamine C 81,9 × 1,2 = 98,28 mg.
+  verif(proche(C.apport(parId.kiwi_vert, 120, "energie", "g"), 73.08) && proche(C.apport(parId.kiwi_vert, 120, "vitC", "g"), 98.28), "kiwi vert avec peau, 120 g : 73,08 kcal, 98,28 mg de vitamine C");
+  // Côte de porc (aliment en grammes, pesée avec l'os, part 0,66) : 200 g → 132 g mangés → 164 × 1,32 = 216,48 kcal ; 19,8 × 1,32 = 26,136 g P.
+  verif(proche(C.grammesManges(parId.cote_porc, 200, "g"), 132) && proche(C.apport(parId.cote_porc, 200, "energie", "g"), 216.48) && proche(C.apport(parId.cote_porc, 200, "proteines"), 26.136), "côte de porc, 200 g pesés : part comestible 0,66 appliquée, 216,48 kcal");
+  // Journal mêlant les formats : 2 œufs (ancien) + 150 g d'œuf + 75 g de pain → 134 + 201 + 201 = 536 kcal.
+  const tg = C.totaux([{ alimentId: "oeuf", quantite: 2 }, { alimentId: "oeuf", quantite: 150, unite: "g" }, { alimentId: "pain_complet", quantite: 75, unite: "g" }], foods);
+  verif(proche(tg.energie.total, 536), "totaux : ancien format et grammes mélangés = 536 kcal");
+  verif(C.libelleQuantite(parId.oeuf, 150, "g") === "150 g" && C.libelleQuantite(parId.oeuf, 152.5, "g") === "152,5 g" && C.libelleQuantite(parId.oeuf, 2) === "2 œufs", "libellés : « 150 g », « 152,5 g », « 2 œufs »");
+  verif(C.quantitesG(parId.banane).join() === "50,100,150,200,250,300" && C.quantitesG(parId.pain_complet).join() === "25,50,75,100,150" && C.quantitesG(parId.jus_orange).join() === "100,200,300,400", "boutons de grammes : défaut et surcharges de foods.json");
+  // Validation du champ (1 à 5 000 g).
+  const s = (t) => C.lireSaisie(t, C.SAISIE_GRAMMES);
+  verif(s("150,5").valeur === 150.5 && s("150.5").valeur === 150.5 && s("1").valeur === 1 && s("5000").valeur === 5000, "valide : « 150,5 », « 150.5 », 1, 5000");
+  verif(["0", "-5", "5001", "abc", "", "1,2,3"].every((t) => s(t).erreur), "refusé : 0, négatif, 5001, texte, vide, « 1,2,3 »");
+}
+
 console.log(echecs ? `\nÉCHEC : ${echecs} sur ${total} vérifications` : `\nOK : ${total} vérifications des calculs`);
 process.exit(echecs ? 1 : 0);

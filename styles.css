@@ -216,7 +216,8 @@ main { max-width: 640px; margin: 0 auto; padding: 20px 20px 8px; }
   background: var(--avert-pale); color: var(--avert); text-transform: uppercase; letter-spacing: 0.06em;
   white-space: nowrap; vertical-align: 2px;
 }
-.quantites { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; padding: 2px 0 16px 54px; }
+.quantites { padding: 2px 0 16px 54px; }
+.grille-q { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
 .q {
   min-height: 52px; border-radius: var(--rayon-petit); border: 1px solid var(--trait-fort); background: var(--surface);
   font-weight: 600; font-size: 16px; padding: 4px 6px; font-variant-numeric: tabular-nums;
@@ -489,3 +490,11 @@ details[open] summary::after { content: "−"; }
   content: ""; position: absolute; left: 7px; top: 3px; width: 5px; height: 10px;
   border: solid var(--sur-encre); border-width: 0 2px 2px 0; transform: rotate(45deg);
 }
+
+/* ---------- Ajout en grammes ---------- */
+.segment-q { margin: 0 0 10px; }
+.segment-q button { min-height: 48px; font-size: 14px; }
+.ajout-g { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; margin-top: 10px; }
+.ajout-g .btn { min-height: 56px; }
+.ajout-g .champ input::placeholder { color: var(--texte3); font-weight: 500; font-size: 17px; }
+.quantites > .champ-erreur, .q-grammes > .champ-erreur { display: block; margin-top: 6px; }

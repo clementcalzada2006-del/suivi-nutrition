@@ -344,6 +344,13 @@
         4,
         5
       ],
+      "quantites_g": [
+        50,
+        100,
+        150,
+        200,
+        250
+      ],
       "poids_unite_g": 50,
       "poids_source": "USDA SR28 n° 01129 « Egg, whole, cooked, hard-boiled » : 1 large = 50 g (identique à l'œuf cru 01123), poids comestible sans coquille",
       "part_comestible": 1,
@@ -1079,6 +1086,13 @@
         4,
         5
       ],
+      "quantites_g": [
+        25,
+        50,
+        75,
+        100,
+        150
+      ],
       "poids_unite_g": 35.714285714285715,
       "poids_source": "Paquet de 500 g en 14 tranches (nombre de tranches confirmé par Clément le 2026-11-05) : 500 / 14 = 35,7 g, comme le tableau nutritionnel de la fiche produit Système U (« environ 35,7 g » par tranche). Le titre de la fiche annonce 12 tranches, ce qui est faux pour ce paquet.",
       "part_comestible": 1,
@@ -1448,6 +1462,13 @@
         4,
         5
       ],
+      "quantites_g": [
+        25,
+        50,
+        75,
+        100,
+        150
+      ],
       "poids_unite_g": 35.714285714285715,
       "poids_source": "Paquet de 500 g en 14 tranches (nombre de tranches confirmé par Clément le 2026-11-05) : 500 / 14 = 35,7 g, comme le tableau nutritionnel de la fiche produit Système U (« environ 35,7 g » par tranche). Le titre de la fiche annonce 12 tranches, ce qui est faux pour ce paquet.",
       "part_comestible": 1,
@@ -1816,6 +1837,13 @@
         3,
         4,
         5
+      ],
+      "quantites_g": [
+        25,
+        50,
+        75,
+        100,
+        150
       ],
       "poids_unite_g": 37.5,
       "poids_source": "Étiquette du paquet (photo du 2026-11-16) : « Ce sachet contient 12 tranches de 37,5 g environ »",
@@ -9211,6 +9239,13 @@
         2,
         3
       ],
+      "quantites_g": [
+        15,
+        30,
+        45,
+        60,
+        90
+      ],
       "poids_unite_g": 30,
       "poids_source": "Portion de 30 g : quantité par jour que le PNNS conseille de ne pas dépasser (sante.fr, Service public d'information en santé, « Les fromages font-ils grossir ? », 17/07/2023)",
       "part_comestible": 1,
@@ -9578,6 +9613,13 @@
         1,
         2,
         3
+      ],
+      "quantites_g": [
+        15,
+        30,
+        45,
+        60,
+        90
       ],
       "poids_unite_g": 30,
       "poids_source": "Portion de 30 g : quantité par jour que le PNNS conseille de ne pas dépasser (sante.fr, Service public d'information en santé, « Les fromages font-ils grossir ? », 17/07/2023)",
@@ -9947,6 +9989,13 @@
         2,
         3
       ],
+      "quantites_g": [
+        15,
+        30,
+        45,
+        60,
+        90
+      ],
       "poids_unite_g": 30,
       "poids_source": "Portion de 30 g : quantité par jour que le PNNS conseille de ne pas dépasser (sante.fr, Service public d'information en santé, « Les fromages font-ils grossir ? », 17/07/2023)",
       "part_comestible": 1,
@@ -10314,6 +10363,13 @@
         2,
         3
       ],
+      "quantites_g": [
+        5,
+        10,
+        15,
+        20,
+        30
+      ],
       "poids_unite_g": 13.5,
       "poids_source": "USDA SR28 n° 04053 « Oil, olive, salad or cooking » : 1 tablespoon = 13,5 g",
       "part_comestible": 1,
@@ -10680,6 +10736,13 @@
         1,
         2,
         3
+      ],
+      "quantites_g": [
+        5,
+        10,
+        15,
+        20,
+        30
       ],
       "poids_unite_g": 13.6,
       "poids_source": "USDA SR28 n° 04506 « Oil, sunflower, linoleic, (approx. 65%) » : 1 tbsp = 13,6 g",
@@ -13635,6 +13698,12 @@
         1,
         2,
         3
+      ],
+      "quantites_g": [
+        100,
+        200,
+        300,
+        400
       ],
       "poids_unite_g": 210.32322120546345,
       "poids_source": "Brique de 20 cl = 200 ml × 1,0516 g/ml = 210,3 g, Masse volumique : USDA SR28 n° 09207 « Orange juice, canned, unsweetened », 1 fl oz (29,57 ml) = 31,1 g",
