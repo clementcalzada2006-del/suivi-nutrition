@@ -6281,6 +6281,374 @@
       }
     },
     {
+      "id": "poivrons",
+      "nom": "Trio de poivrons U BIO (surgelé)",
+      "categorie": "Légumes surgelés Super U",
+      "icone": "🫑",
+      "unite": "g",
+      "unite_pluriel": "g",
+      "quantites": [
+        150,
+        300,
+        450,
+        600
+      ],
+      "poids_unite_g": null,
+      "poids_source": null,
+      "part_comestible": 1,
+      "part_comestible_source": null,
+      "etat": "surgelé, cru (pesé congelé)",
+      "a_confirmer": false,
+      "source_valeurs": "estime",
+      "ciqual": {
+        "code": 20041,
+        "nom": "Poivron, vert, jaune ou rouge, cru"
+      },
+      "valeurs": {
+        "energie": {
+          "v": 28.0,
+          "brut": "28",
+          "unite": "kcal",
+          "source": "etiquette",
+          "origine": "fiche produit Système U (coursesu.com)",
+          "url": "https://www.coursesu.com/p/trio-de-poivrons---600g/4359817.html",
+          "date": "2026-11-21",
+          "trace": false
+        },
+        "proteines": {
+          "v": 0.8,
+          "brut": "0,8",
+          "unite": "g",
+          "source": "etiquette",
+          "origine": "fiche produit Système U (coursesu.com)",
+          "url": "https://www.coursesu.com/p/trio-de-poivrons---600g/4359817.html",
+          "date": "2026-11-21",
+          "trace": false
+        },
+        "glucides": {
+          "v": 6.1,
+          "brut": "6,1",
+          "unite": "g",
+          "source": "etiquette",
+          "origine": "fiche produit Système U (coursesu.com)",
+          "url": "https://www.coursesu.com/p/trio-de-poivrons---600g/4359817.html",
+          "date": "2026-11-21",
+          "trace": false
+        },
+        "lipides": {
+          "v": 0.5,
+          "brut": "0,5",
+          "unite": "g",
+          "source": "etiquette",
+          "origine": "fiche produit Système U (coursesu.com)",
+          "url": "https://www.coursesu.com/p/trio-de-poivrons---600g/4359817.html",
+          "date": "2026-11-21",
+          "trace": false
+        },
+        "oleique": {
+          "v": 0.011,
+          "brut": "0,011",
+          "unite": "g",
+          "source": "estime",
+          "code": 20041,
+          "const": 41819,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "linoleique": {
+          "v": 0.091,
+          "brut": "0,091",
+          "unite": "g",
+          "source": "estime",
+          "code": 20041,
+          "const": 41826,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "arachidonique": {
+          "v": null,
+          "brut": "-",
+          "unite": "g",
+          "source": "estime",
+          "code": 20041,
+          "const": 42046,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "ala": {
+          "v": 0.026,
+          "brut": "0,026",
+          "unite": "g",
+          "source": "estime",
+          "code": 20041,
+          "const": 41833,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "epa": {
+          "v": 0,
+          "brut": "0",
+          "unite": "g",
+          "source": "estime",
+          "code": 20041,
+          "const": 42053,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "dha": {
+          "v": 0,
+          "brut": "0",
+          "unite": "g",
+          "source": "estime",
+          "code": 20041,
+          "const": 42263,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitA": {
+          "v": 70.5,
+          "brut": "70,5",
+          "unite": "µg",
+          "source": "estime",
+          "code": 20041,
+          "const": 51104,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB1": {
+          "v": 0.041,
+          "brut": "0,041",
+          "unite": "mg",
+          "source": "estime",
+          "code": 20041,
+          "const": 56100,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB2": {
+          "v": 0.041,
+          "brut": "0,041",
+          "unite": "mg",
+          "source": "estime",
+          "code": 20041,
+          "const": 56200,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB3": {
+          "v": 0.74,
+          "brut": "0,74",
+          "unite": "mg",
+          "source": "estime",
+          "code": 20041,
+          "const": 56310,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB5": {
+          "v": 0.12,
+          "brut": "0,12",
+          "unite": "mg",
+          "source": "estime",
+          "code": 20041,
+          "const": 56400,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB6": {
+          "v": 0.38,
+          "brut": "0,38",
+          "unite": "mg",
+          "source": "estime",
+          "code": 20041,
+          "const": 56500,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
+          "source": "estime",
+          "code": 20041,
+          "const": null,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB9": {
+          "v": 40.7,
+          "brut": "40,7",
+          "unite": "µg",
+          "source": "estime",
+          "code": 20041,
+          "const": 56702,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB12": {
+          "v": null,
+          "brut": "-",
+          "unite": "µg",
+          "source": "estime",
+          "code": 20041,
+          "const": 56600,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitC": {
+          "v": 121,
+          "brut": "121",
+          "unite": "mg",
+          "source": "estime",
+          "code": 20041,
+          "const": 55100,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitD": {
+          "v": 0,
+          "brut": "< 0,5",
+          "unite": "µg",
+          "source": "estime",
+          "code": 20041,
+          "const": 52100,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "vitE": {
+          "v": null,
+          "brut": "-",
+          "unite": "mg",
+          "source": "estime",
+          "code": 20041,
+          "const": 71010,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitK1": {
+          "v": null,
+          "brut": "-",
+          "unite": "µg",
+          "source": "estime",
+          "code": 20041,
+          "const": 54101,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitK2": {
+          "v": null,
+          "brut": "-",
+          "unite": "µg",
+          "source": "estime",
+          "code": 20041,
+          "const": 54104,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "fer": {
+          "v": 0.4,
+          "brut": "0,4",
+          "unite": "mg",
+          "source": "estime",
+          "code": 20041,
+          "const": 10260,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "calcium": {
+          "v": 7.7,
+          "brut": "7,7",
+          "unite": "mg",
+          "source": "estime",
+          "code": 20041,
+          "const": 10200,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "magnesium": {
+          "v": 11.9,
+          "brut": "11,9",
+          "unite": "mg",
+          "source": "estime",
+          "code": 20041,
+          "const": 10120,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "potassium": {
+          "v": 155,
+          "brut": "155",
+          "unite": "mg",
+          "source": "estime",
+          "code": 20041,
+          "const": 10190,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "sodium": {
+          "v": 8.4,
+          "brut": "8,4",
+          "unite": "mg",
+          "source": "estime",
+          "code": 20041,
+          "const": 10110,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "zinc": {
+          "v": 0.13,
+          "brut": "0,13",
+          "unite": "mg",
+          "source": "estime",
+          "code": 20041,
+          "const": 10300,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "phosphore": {
+          "v": 22.5,
+          "brut": "22,5",
+          "unite": "mg",
+          "source": "estime",
+          "code": 20041,
+          "const": 10150,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "manganese": {
+          "v": 0.1,
+          "brut": "0,1",
+          "unite": "mg",
+          "source": "estime",
+          "code": 20041,
+          "const": 10251,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "selenium": {
+          "v": 0.1,
+          "brut": "0,1",
+          "unite": "µg",
+          "source": "estime",
+          "code": 20041,
+          "const": 10340,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "cuivre": {
+          "v": 0,
+          "brut": "< 0,1",
+          "unite": "mg",
+          "source": "estime",
+          "code": 20041,
+          "const": 10290,
+          "date": "2025-11-03",
+          "trace": true
+        }
+      },
+      "notes": "Produit U BIO (sachet de 600 g) : « Mélange de poivrons lanières rouge, vert et jaune, surgelés, issus de l'agriculture biologique ». Ingrédients : poivrons rouges (minimum 27 %), poivrons verts (minimum 27 %), poivrons jaunes (minimum 27 %), tous bio. Énergie et macros : fiche produit Système U du 2026-11-21 (https://www.coursesu.com/p/trio-de-poivrons---600g/4359817.html) ; vitamines, minéraux et oméga : Ciqual 20041 « Poivron, vert, jaune ou rouge, cru », moyenne de la table, marquée « estimé » (Ciqual n'a pas de poivron surgelé et ne connaît pas la part exacte de chaque couleur de ce mélange). Écarts de plus de 15 % avec Ciqual 20041 : énergie 28 contre 22,6 (+24 %) ; glucides 6,1 contre 3,5 (+74 %) ; lipides 0,5 contre 0,27 (+85 %)."
+    },
+    {
       "id": "kiwi_vert",
       "nom": "Kiwi vert (avec la peau)",
       "categorie": "Fruits",
