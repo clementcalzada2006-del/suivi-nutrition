@@ -103,22 +103,35 @@ verif(activite.exercices.length === 12 && activite.exercices[1].id === "developp
 verif(JSON.stringify(C.activiteVide()) === '{"pas":0,"km":0,"exercices":[],"creatine":false}', "activité vide : exercices []");
 
 console.log("\nRéférences");
-const ctx = { poids: 80, depense: 3000 };
+// Poids 80 kg, dépense estimée 3000 kcal, énergie MANGÉE 2000 kcal : les % de l'énergie et les « par MJ »
+// portent sur l'énergie mangée (ANSES : part de l'apport énergétique) ; seule la ligne Énergie prend la dépense.
+const ctx = { poids: 80, depense: 3000, energie: 2000 };
 const r = (c) => C.referenceConcrete(refs.nutriments[c], ctx);
-verif(r("energie").bas === 3000, "énergie = dépense");
-verif(r("proteines").type === "fourchette" && proche(r("proteines").bas, 104) && proche(r("proteines").haut, 200), "protéines sportif de force : 1,3 à 2,5 g/kg × 80 = 104 à 200 g");
-verif(proche(r("glucides").bas, 300) && proche(r("glucides").haut, 412.5), "glucides 40-55 % de 3000 kcal / 4 = 300 à 412,5 g");
-verif(proche(r("lipides").bas, 116.66666666666667) && proche(r("lipides").haut, 133.33333333333334), "lipides 35-40 % de 3000 kcal / 9 = 116,7 à 133,3 g");
+verif(r("energie").bas === 3000, "énergie : repère = dépense (3000)");
+// Protéines en sèche : 1,6 à 2,5 g/kg × 80 = 128 à 200 g.
+verif(r("proteines").type === "fourchette" && proche(r("proteines").bas, 128) && proche(r("proteines").haut, 200), "protéines en sèche : 1,6 à 2,5 g/kg × 80 = 128 à 200 g");
+verif(refs.date === "2026-11-23" && refs.nutriments.proteines.par_kg.join() === "1.6,2.5", "references.json : date 2026-11-23, protéines [1,6 ; 2,5]");
+// Glucides 40-55 % de 2000 kcal / 4 = 200 à 275 g ; lipides 35-40 % / 9 = 77,8 à 88,9 g.
+verif(proche(r("glucides").bas, 200) && proche(r("glucides").haut, 275), "glucides 40-55 % de 2000 kcal mangées / 4 = 200 à 275 g");
+verif(proche(r("lipides").bas, 77.77777777777777) && proche(r("lipides").haut, 88.88888888888889), "lipides 35-40 % de 2000 kcal mangées / 9 = 77,8 à 88,9 g");
+// ALA ≥ 1 % : 2000 × 1 / 100 / 9 = 2,2222 g.
+verif(proche(r("ala").bas, 2.2222222222222223), "ALA ≥ 1 % de l'énergie mangée = 2,22 g");
 verif(r("vitB8").bas === 40, "biotine : référence 40 µg pour mémoire");
-verif(proche(r("vitB1").bas, 0.1 * 3000 * 0.004184), "B1 = 0,1 mg/MJ × 12,552 MJ");
+// B1 : 0,1 mg/MJ × 2000 kcal × 0,004184 = 0,8368 mg ; B3 : 1,6 × 8,368 = 13,3888 mg.
+verif(proche(r("vitB1").bas, 0.8368) && proche(r("vitB3").bas, 13.3888), "B1 = 0,1 mg/MJ × 8,368 MJ mangés ; B3 = 1,6 mg/MJ");
 verif(r("vitC").bas === 110, "vitamine C = 110 mg");
 verif(r("manganese").bas === 2.8 && r("manganese").type === "min", "manganèse : à atteindre 2,8 mg");
 verif(r("agmi") === null, "AG monoinsaturés : pas de référence");
-verif(C.referenceConcrete(refs.nutriments.proteines, { poids: null, depense: null }).inconnue, "sans poids : référence inconnue");
-verif(C.referenceConcrete(refs.nutriments.vitC, { poids: null, depense: null }).bas === 110, "sans poids : référence fixe connue");
+const sansRien = { poids: 80, depense: 3000, energie: 0 };
+verif(C.referenceConcrete(refs.nutriments.glucides, sansRien).raison === "energie" && C.referenceConcrete(refs.nutriments.vitB1, sansRien).raison === "energie", "rien mangé : références en % ou par MJ inconnues (raison « energie »)");
+verif(C.referenceConcrete(refs.nutriments.energie, sansRien).bas === 3000, "rien mangé : l'énergie garde la dépense comme repère");
+verif(C.referenceConcrete(refs.nutriments.proteines, { poids: null, depense: null, energie: 500 }).raison === "poids", "sans poids : protéines inconnues (raison « poids »)");
+verif(C.referenceConcrete(refs.nutriments.vitC, { poids: null, depense: null, energie: 0 }).bas === 110, "sans poids : référence fixe connue");
 verif(C.etatReference(2400, r("sodium")).etat === "depasse", "sodium 2400 mg > 2300 : dépassé");
 verif(C.etatReference(2000, r("sodium")).etat === "ok", "sodium 2000 mg : ok");
-verif(C.etatReference(250, r("glucides")).etat === "sous", "glucides sous la fourchette");
+// Fourchette : % par rapport à la borne basse. Glucides 150 g → 75 %, sous ; 250 g → 125 %, ok ; 300 g → 150 %, dépassé.
+const g = (x) => C.etatReference(x, r("glucides"));
+verif(proche(g(150).pct, 75) && g(150).etat === "sous" && proche(g(250).pct, 125) && g(250).etat === "ok" && g(300).etat === "depasse", "fourchette : % de la borne basse (75 %, 125 %), états sous, ok, dépassé");
 verif(proche(C.etatReference(55, r("vitC")).pct, 50), "vitamine C 55 mg = 50 %");
 
 console.log("\nAffichage");
@@ -223,38 +236,45 @@ console.log("\nBilan de la semaine");
   // Ancien format (« seance »: "jambes", 10 séries → 60 kcal). Dépense : 2681,5833 + marche 5 × 2,3 × 80 / 5 = 184 + 60 = 2925,5833 ; solde −2657,5833.
   verif(me.totaux.energie === 268 && me.activite.km === 5 && me.salle === "Jambes (10 séries)" && proche(me.depense, 2925.5833333333333) && proche(me.solde, -2657.5833333333333), "mercredi (ancien module) : 2 archives « minuit » concaténées (268 kcal), solde −2657,58");
   // Jeudi (aujourd'hui) : état en cours, 1 œuf = 67 kcal ; pesée 79,5 kg : 370 + 21,6 × 79,5 × 0,85 = 1829,62 × 35/24 = 2668,1958 ; solde −2601,1958.
-  verif(je.etat === "rempli" && je.totaux.energie === 67 && je.poids === 79.5 && proche(je.depense, 2668.195833333333) && proche(je.solde, -2601.195833333333) && je.activite.creatine, "jeudi (aujourd'hui) : état en cours, 67 kcal, solde −2601,20");
+  verif(je.etat === "en cours" && je.totaux.energie === 67 && je.poids === 79.5 && proche(je.depense, 2668.195833333333) && proche(je.solde, -2601.195833333333) && je.activite.creatine, "jeudi (aujourd'hui) : « en cours », 67 kcal, solde −2601,20");
   verif([ve, sa, di].every((j) => j.etat === "à venir" && j.depense === null), "vendredi à dimanche : à venir");
-  // Totaux : 134 + 268 + 67 = 469 kcal ; dépense 2711,5833 + 2925,5833 + 2668,1958 = 8305,3625 ; solde −7836,3625 ;
-  // moyenne −2612,1208 ; protéines 47,25 / 3 = 15,75.
+  // Jours TERMINÉS remplis (lundi, mercredi) : 134 + 268 = 402 kcal ; dépense 2711,5833 + 2925,5833 = 5637,1667 ;
+  // solde −5235,1667 ; moyenne −2617,5833 ; protéines (13,5 + 27) / 2 = 20,25.
+  // Avec aujourd'hui (en cours) : 469 kcal ; dépense 8305,3625 ; solde −7836,3625 (3 jours).
   const t = b.totaux;
-  verif(t.jours === 3 && t.mange === 469 && proche(t.depense, 8305.3625) && proche(t.solde, -7836.3625) && proche(t.soldeMoyen, -2612.1208333333333) && proche(t.proteinesMoyennes, 15.75), "totaux (jours aux deux formats) : 3 jours, 469 kcal, solde −7836,36, moyenne −2612,12, 15,75 g de protéines");
+  verif(t.jours === 2 && t.mange === 402 && proche(t.depense, 5637.166666666667) && proche(t.solde, -5235.166666666667) && proche(t.soldeMoyen, -2617.5833333333335) && proche(t.proteinesMoyennes, 20.25), "jours terminés : 2 jours, 402 kcal, solde −5235,17, moyenne −2617,58, 20,25 g de protéines");
+  const ta = b.totauxAvecAujourdhui;
+  verif(ta.jours === 3 && ta.mange === 469 && proche(ta.depense, 8305.3625) && proche(ta.solde, -7836.3625), "avec aujourd'hui : 3 jours, 469 kcal, solde −7836,36");
   // Début = dernière pesée au lundi 02/11 ou avant (80) ; fin = première pesée au 09/11 ou après : aucune.
   verif(b.poids.debut.kg === 80 && b.poids.fin === null && b.poids.difference === null, "poids : début 80 kg, fin attendue lundi prochain");
-  verif(C.verdictSemaine(b) === "Déficit de 7 836 kcal sur la semaine (3 jours remplis)", "verdict : déficit de 7 836 kcal", C.verdictSemaine(b));
+  verif(C.verdictSemaine(b) === "Déficit de 5 235 kcal sur la semaine (2 jours remplis)", "verdict (jours terminés) : déficit de 5 235 kcal", C.verdictSemaine(b));
+  verif(C.verdictAvecAujourdhui(b) === "Avec aujourd'hui (en cours) : déficit de 7 836 kcal (3 jours)", "verdict avec aujourd'hui : déficit de 7 836 kcal", C.verdictAvecAujourdhui(b));
   // Semaine précédente : le samedi 31 a un journal mais aucune pesée à cette date ou avant → dépense inconnue, non compté.
   const b0 = C.bilanSemaine({ lundi: "2026-10-26", aujourdhui: "2026-11-05", etat, historique, foods, activite });
   verif(b0.jours[5].etat === "dépense inconnue" && b0.totaux.jours === 0 && b0.totaux.solde === 0, "jour sans pesée : « dépense inconnue », non compté");
-  verif(C.verdictSemaine(b0).startsWith("Aucun jour rempli"), "semaine sans jour compté : verdict explicite");
+  verif(C.verdictSemaine(b0).startsWith("Aucun jour terminé") && b0.totauxAvecAujourdhui === null && C.verdictAvecAujourdhui(b0) === null, "semaine sans jour compté ni journée en cours : verdict explicite");
   // Surplus : 40 œufs aujourd'hui = 2680 kcal… on prend 60 œufs (4020 kcal) : 4020 − 2681,5833 = +1338,42.
   const bs = C.bilanSemaine({ lundi: "2026-11-02", aujourdhui: "2026-11-02", etat: { ...etat, jour: "2026-11-02", journal: oeufs(60) }, historique: [], foods, activite });
-  verif(proche(bs.totaux.solde, 1338.4166666666667) && C.verdictSemaine(bs) === "Surplus de 1 338 kcal sur la semaine (1 jour rempli)", "surplus : signe +, verdict « Surplus » au singulier", C.verdictSemaine(bs));
+  // Aujourd'hui seul : pas de jour terminé ; la ligne « avec aujourd'hui » donne le surplus.
+  verif(bs.totaux.jours === 0 && proche(bs.totauxAvecAujourdhui.solde, 1338.4166666666667) && C.verdictAvecAujourdhui(bs) === "Avec aujourd'hui (en cours) : surplus de 1 338 kcal (1 jour)", "surplus : signe +, journée en cours au singulier", C.verdictAvecAujourdhui(bs));
 
   // CSV
   const csv = C.csvSemaine(b, { genereLe: "2026-11-05 20:15", profil: "Homme adulte.", masseGrasse: 15 });
   const lignes = csv.slice(1).split("\r\n");
   verif(csv.charCodeAt(0) === 0xfeff, "CSV : commence par le BOM UTF-8");
-  verif(lignes.length === 20 && lignes.at(-1) === "", "CSV : 19 lignes (5 d'en-tête, vide, titres, 7 jours, vide, total, moyenne, poids, verdict)", String(lignes.length));
+  verif(lignes.length === 22 && lignes.at(-1) === "", "CSV : 21 lignes (5 d'en-tête, vide, titres, 7 jours, vide, total, total avec aujourd'hui, moyenne, poids, verdict, verdict avec aujourd'hui)", String(lignes.length));
+  verif(lignes[10].startsWith("2026-11-05;jeudi;en cours;67;2668;-2601;"), "CSV : aujourd'hui « en cours »", lignes[10]);
   verif(lignes[6].split(";").length === 14 && lignes[6].startsWith("Date;Jour;État;kcal mangées;Dépense (kcal);Solde (kcal);Protéines (g)"), "CSV : 14 colonnes séparées par « ; »");
   // Lundi : 134 ; 2712 ; −2578 ; P 13,5 ; G 0,52 → 0,5 ; L 8,62 → 8,6 ; 4000 pas ; 0,00 km ; exercices ; créatine oui ; 80,0 kg.
   verif(lignes[7] === "2026-11-02;lundi;rempli;134;2712;-2578;13,5;0,5;8,6;4000;0,00;Développé couché, Pec fly (5 séries);oui;80,0", "CSV : ligne du lundi (exercices cochés), virgule décimale", lignes[7]);
   verif(lignes[8] === "2026-11-03;mardi;non rempli;;2682;;;;;0;0,00;;non;", "CSV : mardi non rempli (dépense affichée, pas de solde)", lignes[8]);
   verif(lignes[9].includes(";Jambes (10 séries);") && lignes[13].startsWith("2026-11-08;dimanche;à venir;"), "CSV : ancien module du mercredi, dimanche à venir");
-  // Moyennes : 469 / 3 = 156 ; 8305,3625 / 3 = 2768,45 → 2768 ; −2612.
-  verif(lignes[15] === "Total (jours comptés);;3 jours;469;8305;-7836", "CSV : total", lignes[15]);
-  verif(lignes[16] === "Moyenne par jour;;;156;2768;-2612;15,8;0,6;10,1", "CSV : moyenne", lignes[16]);
-  verif(lignes[17] === "Poids;80,0 kg (lun. 02/11);;;Résultat à la pesée de lundi prochain (09/11).", "CSV : poids de début, fin en attente (cellule vide)", lignes[17]);
-  verif(lignes[18] === "Verdict;Déficit de 7 836 kcal sur la semaine (3 jours remplis)", "CSV : verdict", lignes[18]);
+  // Moyennes (jours terminés) : 402 / 2 = 201 ; 5637,1667 / 2 = 2818,58 → 2819 ; −2617,58 → −2618 ; P 20,25 → 20,3 ; G 0,78 → 0,8 ; L 12,93 → 12,9.
+  verif(lignes[15] === "Total (jours terminés comptés);;2 jours;402;5637;-5235", "CSV : total des jours terminés", lignes[15]);
+  verif(lignes[16] === "Total avec aujourd'hui (en cours);;3 jours;469;8305;-7836", "CSV : total avec aujourd'hui", lignes[16]);
+  verif(lignes[17] === "Moyenne par jour;;;201;2819;-2618;20,3;0,8;12,9", "CSV : moyenne", lignes[17]);
+  verif(lignes[18] === "Poids;80,0 kg (lun. 02/11);;;Résultat à la pesée de lundi prochain (09/11).", "CSV : poids de début, fin en attente (cellule vide)", lignes[18]);
+  verif(lignes[19] === "Verdict;Déficit de 5 235 kcal sur la semaine (2 jours remplis)" && lignes[20] === "Verdict avec aujourd'hui;Avec aujourd'hui (en cours) : déficit de 7 836 kcal (3 jours)", "CSV : les deux verdicts", lignes[19] + " | " + lignes[20]);
   verif(!/\d\.\d/.test(csv.replace(/\d{4}-\d{2}-\d{2}/g, "")), "CSV : aucun point décimal");
 }
 
@@ -299,6 +319,91 @@ console.log("\nAjout en grammes");
   const s = (t) => C.lireSaisie(t, C.SAISIE_GRAMMES);
   verif(s("150,5").valeur === 150.5 && s("150.5").valeur === 150.5 && s("1").valeur === 1 && s("5000").valeur === 5000, "valide : « 150,5 », « 150.5 », 1, 5000");
   verif(["0", "-5", "5001", "abc", "", "1,2,3"].every((t) => s(t).erreur), "refusé : 0, négatif, 5001, texte, vide, « 1,2,3 »");
+}
+
+console.log("\nAudit : tailles, cuisson, facteur des acides gras, mélange, aliment supprimé, étiquettes");
+{
+  // Tomates cerises (Ciqual 20172, pour 100 g : 31,8 kcal, vit. C 21,8 mg, potassium 330 mg).
+  // 8 moyennes = 8 × 17 = 136 g → 43,248 kcal, 29,648 mg de vit. C, 448,8 mg de K ; 5 petites = 5 × 8 = 40 g → 12,72 kcal.
+  const to = parId.tomates_cerises;
+  verif(C.grammesManges(to, 8, undefined, "moyenne") === 136 && proche(C.apport(to, 8, "energie", undefined, "moyenne"), 43.248) && proche(C.apport(to, 8, "vitC", undefined, "moyenne"), 29.648) && proche(C.apport(to, 8, "potassium", undefined, "moyenne"), 448.8), "8 tomates cerises moyennes = 136 g : 43,248 kcal, 29,648 mg vit. C, 448,8 mg K");
+  verif(C.grammesManges(to, 5, undefined, "petite") === 40 && proche(C.apport(to, 5, "energie", undefined, "petite"), 12.72), "5 petites = 40 g : 12,72 kcal");
+  // Onglet Grammes : 100 g → 31,8 kcal (la taille ne joue pas).
+  verif(proche(C.apport(to, 100, "energie", "g", "moyenne"), 31.8), "tomates en grammes : 100 g = 31,8 kcal");
+  verif(C.libelleQuantite(to, 8, undefined, "moyenne") === "8 tomates cerises (moyennes)" && C.libelleQuantite(to, 1, undefined, "petite") === "1 tomate cerise (petite)", "libellés « 8 tomates cerises (moyennes) », « 1 tomate cerise (petite) »");
+  verif(to.tailles.map((t) => `${t.id}:${t.poids_g}`).join() === "petite:8,moyenne:17" && to.taille_defaut === "moyenne", "tailles : petite 8 g, moyenne 17 g, moyenne par défaut, pas de grande");
+  const tt = C.totaux([{ alimentId: "tomates_cerises", quantite: 8, taille: "moyenne" }, { alimentId: "oeuf", quantite: 1 }], foods);
+  verif(proche(tt.energie.total, 43.248 + 67), "journal : tomates avec taille + œuf à l'ancien format = 110,248 kcal");
+
+  // Cuisse de poulet (Ciqual 36002 : 192 kcal, 13,5 g de lipides, ALA 0,22, linoléique 2,56, protéines 17,3 pour 100 g),
+  // rétention du gras 0,6287. 200 g pesés × 0,73 = 146 g mangés.
+  // Lipides : 13,5 × 0,6287 = 8,48745 g/100 g → 12,391677 g. Énergie : 192 − 9 × 13,5 × 0,3713 = 146,88705 kcal/100 g → 214,455093 kcal.
+  // ALA : 0,22 × 0,6287 × 1,46 = 0,20193844 g ; linoléique 2,56 × 0,6287 × 1,46 = 2,34982912 g ; protéines inchangées 25,258 g.
+  const cu = parId.cuisse_poulet;
+  verif(cu.cuisson.retention_lipides === 0.6287 && cu.valeurs.lipides.v === 13.5 && cu.valeurs.energie.v === 192, "cuisse : rétention 0,6287, valeurs Ciqual intactes (13,5 g, 192 kcal)");
+  verif(proche(C.apport(cu, 200, "lipides"), 12.391677) && proche(C.apport(cu, 200, "energie"), 214.455093), "cuisse 200 g : 12,39 g de lipides, 214,46 kcal");
+  verif(proche(C.apport(cu, 200, "ala"), 0.20193844) && proche(C.apport(cu, 200, "linoleique"), 2.34982912) && proche(C.apport(cu, 200, "proteines"), 25.258), "cuisse 200 g : oméga × rétention, protéines inchangées");
+  // Pas de cuisson pour les autres viandes : côte de porc 200 g → 132 g × 164 / 100 = 216,48 kcal (inchangé).
+  verif(proche(C.apport(parId.cote_porc, 200, "energie"), 216.48) && C.teneur(parId.cote_porc, "lipides") === parId.cote_porc.valeurs.lipides.v, "côte de porc : aucune correction");
+
+  // Facteur des acides gras. Tartines : 6,5 g (étiquette) / 1,3 g (Ciqual 7100) = 5. 2 tranches = 75 g :
+  // ALA 0,04 × 5 × 0,75 = 0,15 g ; linoléique 0,49 × 5 × 0,75 = 1,8375 g ; lipides 6,5 × 0,75 = 4,875 g (étiquette, non multipliés).
+  const ta = parId.tartines_campagne;
+  verif(ta.lipides_ciqual === 1.3 && ta.facteur_acides_gras === 5, "tartines : lipides Ciqual 1,3 g, facteur 5");
+  verif(proche(C.apport(ta, 2, "ala"), 0.15) && proche(C.apport(ta, 2, "linoleique"), 1.8375) && proche(C.apport(ta, 2, "lipides"), 4.875), "tartines 2 tranches : ALA 0,15 g, linoléique 1,8375 g, lipides 4,875 g");
+
+  // Poivrons : moyenne au tiers de 20087, 20085, 20168. Vit. C : (121 + 26,9 + 121) / 3 = 89,6333 mg ;
+  // Lipides Ciqual du mélange : « < 0,5 » (rouge) et « < 0,5 » (vert) sont des valeurs non mesurées → pas de facteur.
+  // 150 g : vit. C 134,45 mg ; ALA (0 + 0 + 0,02) / 3 × 1,5 = 0,01 g ; linoléique (0 + 0 + 0,05) / 3 × 1,5 = 0,025 g.
+  const po = parId.poivrons;
+  verif(proche(po.valeurs.vitC.v, 89.63333333333333) && po.valeurs.vitC.codes.join() === "20087,20085,20168" && !("ciqual" in po), "poivrons : vit. C = moyenne au tiers (89,63 mg), trois codes");
+  verif(po.facteur_acides_gras === undefined && po.lipides_ciqual === undefined, "poivrons : pas de facteur (lipides Ciqual « < 0,5 »)");
+  verif(proche(C.apport(po, 150, "vitC"), 134.45) && proche(C.apport(po, 150, "ala"), 0.01) && proche(C.apport(po, 150, "linoleique"), 0.025), "poivrons 150 g : vit. C 134,45 mg, ALA 0,01 g, linoléique 0,025 g");
+  // Étiquette « < 0,5 » ou « ≈ 0 » : valeur non mesurée, pas de facteur (sinon les oméga tomberaient à 0).
+  verif(["brocolis", "oignons", "haricots_verts", "jus_orange"].every((id) => parId[id].facteur_acides_gras === undefined), "étiquette « < 0,5 » ou « ≈ 0 » : pas de facteur des acides gras");
+  verif(C.apport(parId.brocolis, 150, "ala") > 0, "brocolis : oméga 3 de Ciqual gardés");
+
+  // Aliment supprimé : tous les nutriments suivis « incomplets », avec « aliment supprimé (id) » ; la biotine reste à part.
+  const ts = C.totaux([{ alimentId: "ancien_pain", quantite: 2 }, { alimentId: "oeuf", quantite: 2 }], foods);
+  const suivis = foods.nutriments.filter((n) => n.ciqual.length);
+  verif(suivis.every((n) => ts[n.cle].incomplet && ts[n.cle].manquants.includes("aliment supprimé (ancien_pain)")) && ts.energie.total === 134 && !ts.vitB8.incomplet, "aliment supprimé : tout « incomplet », nommé « aliment supprimé (ancien_pain) », l'œuf compté");
+
+  // E3 : étiquette dont le texte n'est pas un simple nombre.
+  const nut = (c) => foods.nutriments.find((n) => n.cle === c);
+  verif(C.teneurTable(parId.huile_tournesol.valeurs.energie, nut("energie")) === "900 kcal (étiquette : 828 kcal pour 100 ml (100 ml = 92 g d'huile))", "huile de tournesol : 900 kcal (étiquette : …)", C.teneurTable(parId.huile_tournesol.valeurs.energie, nut("energie")));
+  verif(C.teneurTable(parId.jus_orange.valeurs.energie, nut("energie")) === "38 kcal (étiquette : 40 kcal pour 100 ml)" && C.teneurTable(parId.jus_orange.valeurs.lipides, nut("lipides")) === "0,0 g (étiquette : ≈ 0 g pour 100 ml)", "jus d'orange : valeur pour 100 g puis le texte de l'étiquette, sans unité en double");
+  verif(C.teneurTable(parId.oeuf.valeurs.fer, nut("fer")) === "1,72 mg", "valeur Ciqual simple : inchangée");
+  verif(parId.jus_orange.notes.includes("−16 %") && parId.jus_orange.poids_source.includes("g ; masse volumique"), "jus d'orange : notes et poids_source corrigés");
+}
+
+console.log("\nverifier détecte les erreurs du mélange et du facteur");
+{
+  const { execFileSync } = await import("node:child_process");
+  const { writeFileSync, mkdtempSync } = await import("node:fs");
+  const { tmpdir } = await import("node:os");
+  const dossier = mkdtempSync(join(tmpdir(), "suivi-nutrition-"));
+  const essai = (modif) => {
+    const f = structuredClone(foods);
+    modif(Object.fromEntries(f.aliments.map((a) => [a.id, a])));
+    const chemin = join(dossier, "foods.json");
+    writeFileSync(chemin, JSON.stringify(f));
+    try {
+      execFileSync("python3", ["-I", join(racine, "outils", "ciqual.py"), "verifier", chemin], { encoding: "utf8" });
+      return { code: 0, sortie: "" };
+    } catch (e) {
+      return { code: e.status, sortie: e.stdout };
+    }
+  };
+  verif(essai(() => {}).code === 0, "copie intacte : 0 écart");
+  const e1 = essai((p) => (p.poivrons.valeurs.vitC.v = 90));
+  verif(e1.code === 1 && e1.sortie.includes("poivrons (mélange) vitC : v = 90"), "teneur du mélange fausse : détectée");
+  const e2 = essai((p) => (p.poivrons.ciqual_melange[0].part = 0.5));
+  verif(e2.code === 1 && e2.sortie.includes("somme des parts"), "somme des parts ≠ 1 : détectée");
+  const e3 = essai((p) => (p.poivrons.ciqual_melange[1].nom = "Poivron vert"));
+  verif(e3.code === 1 && e3.sortie.includes("nom officiel"), "nom d'une composante faux : détecté");
+  const e4 = essai((p) => (p.tartines_campagne.facteur_acides_gras = 4));
+  verif(e4.code === 1 && e4.sortie.includes("facteur des acides gras"), "facteur des acides gras faux : détecté");
+  (await import("node:fs")).rmSync(dossier, { recursive: true, force: true }); // dossier temporaire créé par ce test
 }
 
 console.log(echecs ? `\nÉCHEC : ${echecs} sur ${total} vérifications` : `\nOK : ${total} vérifications des calculs`);

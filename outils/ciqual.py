@@ -3,14 +3,22 @@
 Toutes les valeurs viennent des fichiers XML officiels (sources/ciqual-2025/), jamais d'une saisie.
 Bibliothèque standard seulement. Lancer avec : python3 -I outils/ciqual.py <commande>
 
+Aliments à plusieurs entrées : « ciqual_melange »: [{code, nom, part}] (parts dont la somme vaut 1) remplace
+« ciqual ». Chaque teneur vaut Σ part × teneur ; « traces » et « < x » comptent 0 ; une composante absente (« - »)
+donne null.
+Produits étiquetés : si les lipides viennent de l'étiquette et que l'entrée Ciqual a des lipides > 0, l'aliment
+reçoit « lipides_ciqual » et « facteur_acides_gras » = lipides de l'étiquette / lipides Ciqual (l'appli multiplie
+les acides gras suivis par ce facteur).
+
 Commandes :
   remplir          lit les teneurs dans compo_*.xml et remplit aliments[].valeurs
-  verifier         contrôle exhaustif (code de sortie 1 au moindre écart) + rapport
+  verifier [FICHIER] contrôle exhaustif (code de sortie 1 au moindre écart) + rapport
   manquants        nutriments sans valeur (null) ou en traces, par aliment
   chercher MOTIF   recherche dans les noms Ciqual (sans accents ni casse)
 """
 
 import json
+from fractions import Fraction
 import re
 import sys
 import unicodedata
@@ -102,6 +110,65 @@ def constituant_utilise(nutriment, code_alim, compo):
     return nutriment["ciqual"][-1]
 
 
+# ---------- Entrées simples et mélanges ----------
+
+ACIDES_GRAS = ("oleique", "linoleique", "arachidonique", "ala", "epa", "dha")
+
+
+def codes_aliment(al):
+    """Codes Ciqual utilisés par un aliment (une entrée ou un mélange)."""
+    return [c["code"] for c in al["ciqual_melange"]] if "ciqual_melange" in al else [al["ciqual"]["code"]]
+
+
+def texte_part(part):
+    f = Fraction(part).limit_denominator(100)
+    return f"{f.numerator}/{f.denominator}" if f.denominator > 1 else str(f.numerator)
+
+
+def valeur_melange(al, nut, compo):
+    """Teneur d'un mélange : Σ part × teneur des composantes (traces = 0 ; une composante absente → null)."""
+    v, traces, consts, morceaux, nul = 0.0, False, [], [], False
+    for c in al["ciqual_melange"]:
+        const = constituant_utilise(nut, c["code"], compo)
+        brut = compo.get((c["code"], const))
+        vc, tr = interpreter(brut)
+        consts.append(const)
+        morceaux.append(f"{texte_part(c['part'])} × {brut if brut is not None else 'absent'} ({c['code']})")
+        if vc is None:
+            nul = True
+        else:
+            v += c["part"] * vc
+            traces = traces or tr
+    return {
+        "v": None if nul else v,
+        "brut": "moyenne : " + " + ".join(morceaux),
+        "codes": [c["code"] for c in al["ciqual_melange"]],
+        "consts": consts,
+        "trace": traces and not nul,
+    }
+
+
+def lipides_table(al, compo):
+    """(lipides g/100 g, trace) de l'entrée Ciqual ou du mélange ; trace = une valeur « traces » ou « < x » entre en jeu."""
+    nut = {"cle": "lipides", "ciqual": [40000]}
+    if "ciqual_melange" in al:
+        m = valeur_melange(al, nut, compo)
+        return m["v"], m["trace"]
+    return interpreter(compo.get((al["ciqual"]["code"], 40000)))
+
+
+def facteur_attendu(al, compo):
+    """(lipides_ciqual, facteur_acides_gras) attendus, ou None : lipides hors étiquette, ou valeur non mesurée
+    (« < x », « traces », « ≈ 0 », 0) d'un côté ou de l'autre, où un rapport n'a pas de sens."""
+    lip = al.get("valeurs", {}).get("lipides", {})
+    if lip.get("source") != "etiquette" or not lip.get("v") or lip.get("trace"):
+        return None
+    lc, trace = lipides_table(al, compo)
+    if not lc or lc <= 0 or trace:
+        return None
+    return lc, lip["v"] / lc
+
+
 # ---------- Fichiers JSON ----------
 
 def charger(chemin):
@@ -120,11 +187,11 @@ def sans_accents(s):
 
 def remplir():
     foods = charger(FOODS)
-    codes = {a["ciqual"]["code"] for a in foods["aliments"]}
+    codes = {c for a in foods["aliments"] for c in codes_aliment(a)}
     compo = lire_compo(codes)
     n = 0
     for al in foods["aliments"]:
-        code = al["ciqual"]["code"]
+        code = al["ciqual"]["code"] if "ciqual" in al else None
         cles = {n["cle"] for n in foods["nutriments"]}
         # Les nutriments qui ne sont plus suivis disparaissent de valeurs.
         valeurs = al["valeurs"] = {k: x for k, x in al.get("valeurs", {}).items() if k in cles}
@@ -132,6 +199,12 @@ def remplir():
             cle = nut["cle"]
             if valeurs.get(cle, {}).get("source") == "etiquette":
                 continue  # saisie depuis une étiquette : jamais écrasée
+            if "ciqual_melange" in al and nut["ciqual"]:
+                m = valeur_melange(al, nut, compo)
+                valeurs[cle] = {"v": m["v"], "brut": m["brut"], "unite": nut["unite"], "source": al["source_valeurs"],
+                                "codes": m["codes"], "consts": m["consts"], "date": DATE_TABLE, "trace": m["trace"]}
+                n += 1
+                continue
             const = constituant_utilise(nut, code, compo)
             brut = compo.get((code, const)) if const is not None else None
             v, trace = interpreter(brut)
@@ -146,6 +219,13 @@ def remplir():
                 "trace": trace,
             }
             n += 1
+        # Acides gras d'un produit étiqueté : facteur lipides de l'étiquette / lipides Ciqual.
+        f = facteur_attendu(al, compo)
+        if f:
+            al["lipides_ciqual"], al["facteur_acides_gras"] = f
+        else:
+            al.pop("lipides_ciqual", None)
+            al.pop("facteur_acides_gras", None)
     ecrire_foods(foods)
     print(f"{n} valeurs écrites pour {len(foods['aliments'])} aliments.")
 
@@ -178,12 +258,13 @@ def controles_coherence(valeurs):
     return res
 
 
-def verifier():
-    foods = charger(FOODS)
+def verifier(chemin=None):
+    """chemin : autre fichier foods.json à contrôler (tests) ; le rapport n'est alors pas écrit."""
+    foods = charger(Path(chemin) if chemin else FOODS)
     refs = charger(REFERENCES)
     alims = lire_aliments()
     consts = lire_constituants()
-    codes = {a["ciqual"]["code"] for a in foods["aliments"]}
+    codes = {c for a in foods["aliments"] for c in codes_aliment(a)}
     compo = lire_compo(codes)
     ecarts, avert, lignes = [], [], []
     n_verif = 0
@@ -205,6 +286,22 @@ def verifier():
         ecarts.append(f"foods.json : nutriment {c} sans clé dans references.json")
 
     for al in foods["aliments"]:
+        # Facteur des acides gras (produits étiquetés).
+        f = facteur_attendu(al, compo)
+        if f is None and ("lipides_ciqual" in al or "facteur_acides_gras" in al):
+            ecarts.append(f"{al['id']} : lipides_ciqual / facteur_acides_gras présents sans lipides d'étiquette ni lipides Ciqual > 0")
+        elif f is not None and (al.get("lipides_ciqual") != f[0] or al.get("facteur_acides_gras") != f[1]):
+            ecarts.append(f"{al['id']} : facteur des acides gras {al.get('facteur_acides_gras')!r} (lipides Ciqual {al.get('lipides_ciqual')!r}) au lieu de {f[1]!r} ({f[0]!r})")
+        if "ciqual_melange" in al:
+            n_verif += verifier_melange(al, nuts, alims, consts, compo, ecarts)
+            # Cohérence du mélange calculé (mêmes règles, teneurs moyennes).
+            xml = {k: {"v": valeur_melange(al, {"cle": k, "ciqual": [c]}, compo)["v"]} for k, c in CONST_COHERENCE.items()}
+            for nom_c, ok, detail in controles_coherence(xml):
+                if ok is None:
+                    avert.append(f"{al['id']} : contrôle {nom_c} {detail}")
+                elif not ok:
+                    avert.append(f"{al['id']} : contrôle {nom_c} en écart : {detail}")
+            continue
         code = al["ciqual"]["code"]
         nom = f"{al['id']} ({code})"
         if code not in alims:
@@ -265,10 +362,51 @@ def verifier():
     lignes.append(f"Avertissements de cohérence : {len(avert)}")
     lignes += ["  " + a for a in avert]
     sortie = "\n".join(lignes)
-    RAPPORT.write_text(sortie + "\n", encoding="utf-8")
     print(sortie)
-    print(f"Rapport écrit dans {RAPPORT.relative_to(RACINE)}")
+    if not chemin:
+        RAPPORT.write_text(sortie + "\n", encoding="utf-8")
+        print(f"Rapport écrit dans {RAPPORT.relative_to(RACINE)}")
     sys.exit(1 if ecarts else 0)
+
+
+def verifier_melange(al, nuts, alims, consts, compo, ecarts):
+    """Contrôle d'un aliment en mélange : noms, somme des parts, chaque teneur recalculée depuis le XML."""
+    nom = f"{al['id']} (mélange)"
+    parts = al["ciqual_melange"]
+    if abs(sum(c["part"] for c in parts) - 1) > 1e-9:
+        ecarts.append(f"{nom} : somme des parts = {sum(c['part'] for c in parts)!r} au lieu de 1")
+    for c in parts:
+        if c["code"] not in alims:
+            ecarts.append(f"{nom} : code Ciqual {c['code']} introuvable")
+        elif c["nom"] != alims[c["code"]]:
+            ecarts.append(f"{nom} : nom « {c['nom']} » ≠ nom officiel « {alims[c['code']]} »")
+    n = 0
+    for cle in sorted(set(al.get("valeurs", {})) - set(nuts)):
+        ecarts.append(f"{nom} : valeurs contient {cle}, qui n'est pas un nutriment suivi")
+    for cle, nut in nuts.items():
+        val = al.get("valeurs", {}).get(cle)
+        if val is None:
+            ecarts.append(f"{nom} : nutriment {cle} absent de valeurs")
+            continue
+        if val.get("unite") != nut["unite"]:
+            ecarts.append(f"{nom} {cle} : unité {val.get('unite')} ≠ {nut['unite']}")
+        if val.get("source") == "etiquette":
+            continue
+        n += 1
+        if not nut["ciqual"]:
+            if val.get("v") is not None or val.get("brut") != ABSENT_TABLE:
+                ecarts.append(f"{nom} {cle} : nutriment absent de la table, attendu v = null")
+            continue
+        m = valeur_melange(al, nut, compo)
+        for k in ("v", "brut", "codes", "consts", "trace"):
+            if val.get(k) != m[k] or type(val.get(k)) is bool and k == "v":
+                ecarts.append(f"{nom} {cle} : {k} = {val.get(k)!r}, recalculé {m[k]!r}")
+        if m["v"] is None and val.get("v") == 0:
+            ecarts.append(f"{nom} {cle} : 0 là où une composante dit « - »")
+        for c in m["consts"]:
+            if c not in nut["ciqual"] or not consts[c].endswith(SUFFIXES[nut["unite"]]):
+                ecarts.append(f"{nom} {cle} : constituant {c} ou unité incorrects")
+    return n
 
 
 def manquants():
@@ -278,7 +416,7 @@ def manquants():
     for al in foods["aliments"]:
         nuls = [n["cle"] for n in foods["nutriments"] if n["ciqual"] and al["valeurs"].get(n["cle"], {}).get("v") is None]
         traces = [n["cle"] for n in foods["nutriments"] if al["valeurs"].get(n["cle"], {}).get("trace")]
-        print(f"{al['nom']} (Ciqual {al['ciqual']['code']})")
+        print(f"{al['nom']} (Ciqual {'+'.join(map(str, codes_aliment(al)))})")
         print(f"  sans valeur ({len(nuls)}) : {', '.join(nuls) or 'aucun'}")
         print(f"  traces ({len(traces)}) : {', '.join(traces) or 'aucun'}")
 
@@ -299,7 +437,7 @@ if __name__ == "__main__":
     if cmd == "remplir":
         remplir()
     elif cmd == "verifier":
-        verifier()
+        verifier(sys.argv[2] if len(sys.argv) > 2 else None)
     elif cmd == "manquants":
         manquants()
     elif cmd == "chercher" and len(sys.argv) > 2:

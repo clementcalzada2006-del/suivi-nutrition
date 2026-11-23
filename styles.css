@@ -498,3 +498,11 @@ details[open] summary::after { content: "−"; }
 .ajout-g .btn { min-height: 56px; }
 .ajout-g .champ input::placeholder { color: var(--texte3); font-weight: 500; font-size: 17px; }
 .quantites > .champ-erreur, .q-grammes > .champ-erreur { display: block; margin-top: 6px; }
+
+/* Fourchette : bout de la barre = borne haute */
+.repere-haut { left: auto; right: 0; }
+.solde.deficit { color: var(--min); font-weight: 650; }
+.solde.surplus { color: var(--max); font-weight: 650; }
+.verdict-avec { font-weight: 600; color: var(--texte) !important; }
+.sj-en-cours .sj-etat { margin-left: auto; margin-right: 10px; }
+.segment-taille { margin-bottom: 8px; }

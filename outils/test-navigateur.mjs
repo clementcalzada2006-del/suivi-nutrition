@@ -161,6 +161,20 @@ console.log("\n1. Ajout, suppression et annulation (calculs à la main)");
   await ctx.close();
 }
 
+// Teneur pour 100 g attendue (règles de l'audit, réécrites ici sans calculs.js) :
+// cuisson → lipides et acides gras × rétention, énergie − 9 × lipides × (1 − rétention) ;
+// produit étiqueté → acides gras × facteur_acides_gras.
+const ACIDES_GRAS = ["oleique", "linoleique", "arachidonique", "ala", "epa", "dha"];
+function teneurAttendue(al, cle) {
+  const v = al.valeurs[cle].v;
+  if (v === null) return null;
+  const ret = al.cuisson ? al.cuisson.retention_lipides : 1;
+  if (ACIDES_GRAS.includes(cle)) return v * (al.facteur_acides_gras ?? 1) * ret;
+  if (cle === "lipides") return v * ret;
+  if (cle === "energie" && al.cuisson) return v - 9 * al.valeurs.lipides.v * (1 - ret);
+  return v;
+}
+
 // =================== 2. TOUTE LA GRILLE ===================
 console.log("\n2. Toute la grille (chaque aliment, chaque quantité, chaque nutriment)");
 {
@@ -168,6 +182,7 @@ console.log("\n2. Toute la grille (chaque aliment, chaque quantité, chaque nutr
   await ouvrir(page);
   let essais = 0;
   let essaisG = 0;
+  let essaisTailles = 0;
   const erreurs = [];
   // Vérifie l'ajout de q (pièces ou grammes) : quantité × poids × part comestible × v / 100 pour chaque nutriment.
   async function controler(al, q, poids) {
@@ -179,7 +194,7 @@ console.log("\n2. Toute la grille (chaque aliment, chaque quantité, chaque nutr
           if (t[n.cle].total !== null || t[n.cle].incomplet) erreurs.push(`${al.id} × ${q} ${n.cle} : absent de la table mais total ${t[n.cle].total}`);
           continue;
         }
-        const v = al.valeurs[n.cle].v;
+        const v = teneurAttendue(al, n.cle);
         // Attendu : quantité × poids × part comestible × v / 100 ; null → rien ajouté (0) et total marqué incomplet.
         const att = v === null ? 0 : (q * poids * al.part_comestible * v) / 100;
         if (t[n.cle].total !== att || t[n.cle].incomplet !== (v === null)) erreurs.push(`${al.id} × ${q} ${n.cle} : ${t[n.cle].total} au lieu de ${att}`);
@@ -195,6 +210,16 @@ console.log("\n2. Toute la grille (chaque aliment, chaque quantité, chaque nutr
       await controler(al, q, al.unite === "g" ? 1 : al.poids_unite_g);
       essais++;
     }
+    // Tailles (tomates cerises) : chaque nombre pour chaque taille, poids de la taille.
+    for (const t of al.tailles ?? []) {
+      const bloc = page.locator(`.aliment[data-id="${al.id}"]`);
+      await toucher(bloc.locator(`[data-act="taille"][data-taille="${t.id}"]`));
+      for (const q of al.quantites) {
+        await toucher(bloc.locator(`.q[data-q="${q}"]:not([data-unite])`));
+        await controler(al, q, t.poids_g);
+        essaisTailles++;
+      }
+    }
     if (al.unite === "g") continue;
     // Aliment en pièces, onglet « Grammes » : grammes × 1 × part comestible × v / 100 (jamais × poids d'une pièce).
     const bloc = page.locator(`.aliment[data-id="${al.id}"]`);
@@ -209,6 +234,8 @@ console.log("\n2. Toute la grille (chaque aliment, chaque quantité, chaque nutr
   verif(essais === FOODS.aliments.reduce((n, a) => n + a.quantites.length + (a.ajustement_g ? 1 : 0), 0), "tous les boutons testés, « +25 g » compris");
   const attendusG = FOODS.aliments.filter((a) => a.unite !== "g").reduce((n, a) => n + (a.quantites_g ?? [50, 100, 150, 200, 250, 300]).length, 0);
   verif(essaisG === attendusG && essaisG > 0, `${essaisG} boutons de grammes des aliments en pièces, tous testés avec la grille`);
+  verif(essaisTailles === 20, `tomates cerises : ${essaisTailles} boutons (10 nombres × 2 tailles), poids de chaque taille`);
+  verif(FOODS.aliments.some((a) => a.cuisson) && FOODS.aliments.filter((a) => a.facteur_acides_gras !== undefined).length > 5, "la grille couvre la cuisson et le facteur des acides gras");
   await ctx.close();
 }
 
@@ -408,8 +435,8 @@ console.log("\n7a. Calcul de la dépense");
   await onglet(page, "activite");
   verif(proche(await dep(), 1856.08 * 1.4583333333333333 + 228.16), "masse grasse 14 % : dépense recalculée");
   await onglet(page, "bilan");
-  // Protéines (sportif de force, Afssa 2007) : 1,3 × 80 = 104 g à 2,5 × 80 = 200 g
-  verif(/104,0 à 200,0/.test(await page.locator('#vue-bilan .ligne-nut[data-cle="proteines"] .nut-ref').textContent()), "référence des protéines : 104,0 à 200,0 g");
+  // Protéines en sèche (Afssa 2007) : 1,6 × 80 = 128 g à 2,5 × 80 = 200 g
+  verif(/128,0 à 200,0/.test(await page.locator('#vue-bilan .ligne-nut[data-cle="proteines"] .nut-ref').textContent()), "référence des protéines : 128,0 à 200,0 g");
 
   console.log("\n7b. Presse-papiers (Raccourci)");
   await onglet(page, "activite");
@@ -762,17 +789,19 @@ async function construireSemaine(page) {
   await ctx.addInitScript(() => Object.defineProperty(Navigator.prototype, "canShare", { value: undefined, configurable: true }));
   await construireSemaine(page);
   const jours = await page.locator(".semaine .sj").evaluateAll((els) => els.map((e) => ({ date: e.dataset.date, etat: e.dataset.etat, solde: e.dataset.solde ? Number(e.dataset.solde) : null })));
-  verif(jours.length === 7 && jours.map((j) => j.etat).join() === "rempli,non rempli,rempli,rempli,à venir,à venir,à venir", "7 lignes : lundi rempli, mardi non rempli, mercredi et jeudi remplis, 3 à venir", jours.map((j) => j.etat).join());
+  verif(jours.length === 7 && jours.map((j) => j.etat).join() === "rempli,non rempli,rempli,en cours,à venir,à venir,à venir", "7 lignes : lundi rempli, mardi non rempli, mercredi rempli, jeudi en cours, 3 à venir", jours.map((j) => j.etat).join());
   // Lundi : 134 − 2681,5833 = −2547,5833 ; mercredi : 268 − (2681,5833 + 5 × 2,3 × 80 / 5 = 184 + 10 séries × 6 = 60) = −2657,5833 ;
   // jeudi : 67 − 1829,62 × 35/24 (79,5 kg) = 67 − 2668,1958 = −2601,1958.
   verif(proche(jours[0].solde, -2547.5833333333333) && proche(jours[2].solde, -2657.5833333333333) && proche(jours[3].solde, -2601.195833333333), "soldes du lundi, du mercredi et du jeudi");
   verif((await page.locator('.sj[data-date="2026-11-02"] .sj-solde.deficit').textContent()) === "−2 548", "lundi : « −2 548 » en vert (déficit)");
-  // Total : 469 − (2681,5833 + 2925,5833 + 2668,1958 = 8275,3625) = −7806,3625 ; moyenne −2602,12 ; protéines 47,25 / 3 = 15,75 g.
+  // Jours terminés (lundi, mercredi) : 402 − (2681,5833 + 2925,5833 = 5607,1667) = −5205,1667 ; moyenne −2602,58 ; protéines 40,5 / 2 = 20,25 g.
+  // Avec aujourd'hui (jeudi, en cours) : 469 − 8275,3625 = −7806,3625.
   const verdict = page.locator(".verdict");
-  verif(proche(Number(await verdict.getAttribute("data-solde")), -7806.3625) && (await verdict.getAttribute("data-jours")) === "3", "solde de la semaine −7806,36 sur 3 jours");
-  verif((await verdict.locator(".verdict-texte").textContent()) === "Déficit de 7 806 kcal sur la semaine (3 jours remplis)", "verdict « Déficit de 7 806 kcal sur la semaine (3 jours remplis) »");
+  verif(proche(Number(await verdict.getAttribute("data-solde")), -5205.166666666667) && (await verdict.getAttribute("data-jours")) === "2", "solde des jours terminés −5205,17 sur 2 jours");
+  verif(proche(Number(await page.locator(".verdict-avec").getAttribute("data-solde")), -7806.3625) && (await page.locator(".verdict-avec").textContent()) === "Avec aujourd'hui (en cours) : déficit de 7 806 kcal (3 jours)", "seconde ligne avec aujourd'hui : −7806,36 sur 3 jours");
+  verif((await verdict.locator(".verdict-texte").textContent()) === "Déficit de 5 205 kcal sur la semaine (2 jours remplis)", "verdict des jours terminés « Déficit de 5 205 kcal sur la semaine (2 jours remplis) »");
   const suite = await verdict.textContent();
-  verif(suite.includes("−2 602 kcal par jour") && suite.includes("15,8 g par jour") && suite.includes("Poids de début : 80,0 kg (lun. 02/11). Résultat à la pesée de lundi prochain (09/11)."), "moyenne par jour, protéines et poids (résultat attendu lundi prochain)", suite);
+  verif(suite.includes("−2 603 kcal par jour") && suite.includes("20,3 g par jour") && suite.includes("Poids de début : 80,0 kg (lun. 02/11). Résultat à la pesée de lundi prochain (09/11)."), "moyenne par jour, protéines et poids (résultat attendu lundi prochain)", suite);
   verif((await page.locator("#vue-bilan .aide").textContent()).includes("estimation") && (await page.locator(".dimanche").count()) === 0, "phrase sur l'estimation ; pas de rappel du dimanche un jeudi");
   verif(await page.locator('[data-act="semaine"][data-d="7"]').isDisabled(), "pas de semaine après la semaine en cours");
   await page.locator(".verdict").evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().bottom + window.scrollY - window.innerHeight + 80)); // verdict visible
@@ -780,7 +809,7 @@ async function construireSemaine(page) {
   // Navigation entre semaines.
   await toucher(page.locator('[data-act="semaine"][data-d="-7"]'));
   verif((await page.locator(".semaine-titre").textContent()) === "Du 26 octobre au 1 novembre" && (await page.locator('.sj[data-etat="non rempli"]').count()) === 7, "semaine précédente : 7 jours non remplis");
-  verif((await page.locator(".verdict-texte").textContent()).startsWith("Aucun jour rempli"), "semaine précédente : pas de verdict chiffré");
+  verif((await page.locator(".verdict-texte").textContent()).startsWith("Aucun jour terminé"), "semaine précédente : pas de verdict chiffré");
   await toucher(page.locator('[data-act="semaine"][data-d="7"]'));
   verif((await page.locator(".semaine-titre").textContent()) === "Du 2 au 8 novembre", "retour à la semaine en cours");
   // Le jour reste accessible.
@@ -794,11 +823,12 @@ async function construireSemaine(page) {
   const octets = readFileSync(await dl.path());
   verif(octets[0] === 0xef && octets[1] === 0xbb && octets[2] === 0xbf, "UTF-8 avec BOM");
   const lignes = octets.toString("utf8").slice(1).split("\r\n");
-  verif(lignes.length === 20 && lignes[6].split(";").length === 14, "19 lignes, 14 colonnes séparées par « ; »");
+  verif(lignes.length === 22 && lignes[6].split(";").length === 14, "21 lignes, 14 colonnes séparées par « ; »");
+  verif(lignes[10].startsWith("2026-11-05;jeudi;en cours;67;"), "aujourd'hui « en cours » dans le fichier", lignes[10]);
   verif(lignes[7] === "2026-11-02;lundi;rempli;134;2682;-2548;13,5;0,5;8,6;0;0,00;;non;80,0", "ligne du lundi", lignes[7]);
   verif(lignes[9].startsWith("2026-11-04;mercredi;rempli;268;2926;-2658;27,0;") && lignes[9].includes(";5,00;Leg extension, Leg curl, Adducteurs (10 séries);"), "ligne du mercredi (5 km, exercices cochés)", lignes[9]);
-  verif(lignes[15] === "Total (jours comptés);;3 jours;469;8275;-7806", "ligne de total", lignes[15]);
-  verif(lignes[18] === "Verdict;Déficit de 7 806 kcal sur la semaine (3 jours remplis)", "verdict dans le fichier", lignes[18]);
+  verif(lignes[15] === "Total (jours terminés comptés);;2 jours;402;5607;-5205" && lignes[16] === "Total avec aujourd'hui (en cours);;3 jours;469;8275;-7806", "les deux totaux", lignes[15] + " | " + lignes[16]);
+  verif(lignes[19] === "Verdict;Déficit de 5 205 kcal sur la semaine (2 jours remplis)" && lignes[20] === "Verdict avec aujourd'hui;Avec aujourd'hui (en cours) : déficit de 7 806 kcal (3 jours)", "les deux verdicts dans le fichier", lignes[19] + " | " + lignes[20]);
 
   // iPhone : menu de partage quand il accepte le fichier ; annulation sans erreur ni téléchargement.
   await page.evaluate(() => {
@@ -1035,6 +1065,87 @@ for (const theme of ["clair", "sombre"]) {
   await toucher(page.locator('.aliment[data-id="cote_porc"] .al-nom'));
   await cadrer("cote_porc");
   await page.screenshot({ path: join(captures, `${theme}-grammes-viande.png`) });
+  await ctx.close();
+}
+
+console.log("\n12. Audit : tomates, références sur l'énergie mangée, cuisson, facteur, étiquettes, aliment supprimé");
+{
+  const { ctx, page } = await nouveauContexte();
+  await ouvrir(page);
+  await peser(page, 80);
+  await onglet(page, "bilan");
+  // Rien mangé : références en % de l'énergie « — (rien mangé pour l'instant) » ; l'énergie garde la dépense comme repère.
+  verif((await page.locator('#vue-bilan .ligne-nut[data-cle="glucides"] .nut-ref').textContent()).includes("rien mangé pour l'instant") && (await page.locator('#vue-bilan .ligne-nut[data-cle="vitB1"] .nut-ref').textContent()).includes("rien mangé"), "rien mangé : glucides et B1 « — (rien mangé pour l'instant) »");
+  await onglet(page, "aliments");
+  await ajouter(page, "oeuf", 2);
+  await onglet(page, "bilan");
+  // 2 œufs = 134 kcal mangées. Glucides 40-55 % : 134 × 0,40 / 4 = 13,4 g à 134 × 0,55 / 4 = 18,425 g ;
+  // glucides mangés 0,52 g (100 g × 0,52 / 100) → 0,52 / 13,4 = 3,88 % du minimum, « sous ».
+  const gl = page.locator('#vue-bilan .ligne-nut[data-cle="glucides"]');
+  verif((await gl.locator(".nut-ref").textContent()).includes("Fourchette : 13,4 à 18,4 g") && proche(Number(await gl.getAttribute("data-pct")), (0.52 / 13.4) * 100) && (await gl.getAttribute("data-etat")) === "sous", "glucides : fourchette sur 134 kcal mangées (13,4 à 18,4 g), % du minimum");
+  verif((await gl.locator(".repere").count()) === 2, "fourchette : repère du minimum et repère de la borne haute");
+  // B1 : 0,1 mg/MJ × 134 × 0,004184 = 0,05607 mg.
+  verif((await page.locator('#vue-bilan .ligne-nut[data-cle="vitB1"] .nut-ref').textContent()).includes("0,0561 mg"), "B1 : 0,1 mg par MJ des 134 kcal mangées = 0,0561 mg");
+  // Énergie : « Dépense estimée : 2 682 kcal · solde −2 548 kcal », en vert (déficit), sans état.
+  const en = page.locator('#vue-bilan .ligne-nut[data-cle="energie"]');
+  verif((await en.locator(".nut-ref").textContent()).includes("Dépense estimée : 2 682 kcal · solde −2 548 kcal") && (await en.locator(".solde.deficit").count()) === 1 && (await en.getAttribute("data-etat")) === null, "énergie : dépense estimée et solde −2 548 kcal en vert");
+  verif((await page.locator("#vue-bilan .sources").textContent()).includes("(Afssa 2007). Références du") && !(await page.locator("#vue-bilan .sources").textContent()).includes(".."), "profil sans point en double");
+
+  // Tomates cerises : taille puis nombre.
+  await onglet(page, "aliments");
+  const to = page.locator('.aliment[data-id="tomates_cerises"]');
+  await toucher(to.locator(".al-nom"));
+  verif((await to.locator('[data-act="taille"]').allTextContents()).join("|") === "Petite|Moyenne" && (await to.locator('[data-taille="moyenne"][data-act="taille"]').getAttribute("aria-pressed")) === "true", "tomates : « Petite | Moyenne », moyenne par défaut");
+  const avant = Number(await page.locator("#e-kcal").getAttribute("data-total"));
+  await toucher(to.locator('.q[data-q="8"]:not([data-unite])'));
+  // 8 moyennes = 136 g × 31,8 / 100 = 43,248 kcal.
+  verif((await page.locator("#toast.visible").textContent()).includes("Ajouté : 8 tomates cerises (moyennes)") && proche(Number(await page.locator("#e-kcal").getAttribute("data-total")) - avant, 43.248), "8 tomates cerises moyennes : toast et + 43,248 kcal");
+  await toucher(to.locator('[data-act="taille"][data-taille="petite"]'));
+  await toucher(to.locator('.q[data-q="5"]:not([data-unite])'));
+  // 5 petites = 40 g × 31,8 / 100 = 12,72 kcal.
+  verif(proche(Number(await page.locator("#e-kcal").getAttribute("data-total")) - avant, 43.248 + 12.72) && (await etatStocke(page)).journal.at(-1).taille === "petite", "5 petites : + 12,72 kcal, taille « petite » dans le journal");
+  await toucher(to.locator('[data-act="mode-q"][data-mode="grammes"]'));
+  await toucher(to.locator('.q[data-unite="g"][data-q="100"]'));
+  verif(proche(Number(await page.locator("#e-kcal").getAttribute("data-total")) - avant, 43.248 + 12.72 + 31.8) && (await etatStocke(page)).journal.at(-1).unite === "g", "onglet Grammes : 100 g = + 31,8 kcal");
+  await toucher(to.locator('[data-act="mode-q"][data-mode="pieces"]'));
+  await page.waitForTimeout(5500); // le toast disparaît avant la capture
+  await to.evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 130));
+  await page.screenshot({ path: join(captures, "clair-tomates.png") });
+  await onglet(page, "journal");
+  verif((await page.locator(".j-q").allTextContents()).slice(0, 3).join("|") === "100 g|5 tomates cerises (petites)|8 tomates cerises (moyennes)", "journal : « 8 tomates cerises (moyennes) », « 5 tomates cerises (petites) », « 100 g »");
+
+  // Fiches : cuisson, facteur des acides gras, étiquette non numérique, mélange.
+  await onglet(page, "aliments");
+  const fiche = async (id) => {
+    await toucher(page.locator(`.al-info[data-id="${id}"]`));
+    const t = await page.locator("#feuille").textContent();
+    const vals = Object.fromEntries(await page.locator("#feuille .fiche-ligne").evaluateAll((l) => l.map((x) => [x.dataset.cle, x.querySelector(".fiche-100").firstChild.textContent])));
+    await toucher(page.locator('#feuille [data-act="fermer"]'));
+    return { t, vals };
+  };
+  const cu = await fiche("cuisse_poulet");
+  verif(cu.t.includes("63 % du gras gardé") && cu.t.includes("05094"), "fiche cuisse : « Cuisson : 63 % du gras gardé… », source USDA");
+  const ta = await fiche("tartines_campagne");
+  verif(ta.t.includes("Acides gras de l'entrée Ciqual × 5,0, car l'étiquette donne 6,5 g de lipides contre 1,3 g") && ta.t.includes("même profil"), "fiche tartines : facteur × 5,0 expliqué, estimation signalée");
+  const hu = await fiche("huile_tournesol");
+  verif(hu.vals.energie === "900 kcal (étiquette : 828 kcal pour 100 ml (100 ml = 92 g d'huile))" && hu.vals.lipides === "100,0 g (étiquette : 92 g pour 100 ml (100 ml = 92 g d'huile))", "fiche huile de tournesol : valeur pour 100 g puis « (étiquette : …) »", JSON.stringify([hu.vals.energie, hu.vals.lipides]));
+  const ju = await fiche("jus_orange");
+  verif(ju.vals.energie === "38 kcal (étiquette : 40 kcal pour 100 ml)", "fiche jus d'orange : « 38 kcal (étiquette : 40 kcal pour 100 ml) »", ju.vals.energie);
+  const po = await fiche("poivrons");
+  verif(po.t.includes("Entrées Ciqual") && po.t.includes("33,3 % de 20087 « Poivron rouge, cru »") && po.vals.vitC.startsWith("89,6 mg (moyenne : 1/3 × 121 (20087)"), "fiche poivrons : moyenne au tiers des trois entrées", po.vals.vitC);
+
+  // Aliment supprimé de foods.json : tous les totaux « incomplet », nommé dans la liste.
+  await page.evaluate(() => {
+    const e = JSON.parse(localStorage.getItem("suivi-nutrition-v1"));
+    e.journal.push({ id: "x1", alimentId: "ancien_pain", quantite: 2, heure: new Date().toISOString() });
+    localStorage.setItem("suivi-nutrition-v1", JSON.stringify(e));
+  });
+  await page.reload();
+  await page.locator(".aliment").first().waitFor({ state: "attached" });
+  await onglet(page, "bilan");
+  const vc = page.locator('#vue-bilan .ligne-nut[data-cle="vitC"]');
+  await toucher(vc.locator('[data-act="manquants"]'));
+  verif((await vc.locator(".manquants").textContent()).includes("aliment supprimé (ancien_pain)") && (await page.locator('#vue-bilan .ligne-nut[data-cle="energie"]').getAttribute("data-incomplet")) === "1", "aliment supprimé : totaux « incomplet », « aliment supprimé (ancien_pain) » nommé");
   await ctx.close();
 }
 

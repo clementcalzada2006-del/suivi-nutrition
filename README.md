@@ -17,7 +17,7 @@ Onglets : **Aliments** (ajout en un toucher, fiche « i » avec la provenance de
 - `index.html`, `styles.css`, `app.js` : l'interface.
 - `calculs.js` : **tous** les calculs, sans DOM (apports, totaux, références, dépense, dates, presse-papiers, pesées).
 - `stockage.js` : enregistrement sur l'appareil (localStorage), avec bandeau d'avertissement si le stockage est indisponible.
-- `donnees/foods.json` : nutriments suivis et aliments. Les `valeurs` sont remplies par `outils/ciqual.py`, jamais à la main.
+- `donnees/foods.json` : nutriments suivis et aliments. Les `valeurs` Ciqual sont remplies par `outils/ciqual.py`, jamais à la main ; seules les valeurs d'étiquette (énergie et macros des produits de marque) sont saisies à la main, depuis la photo ou la fiche du produit. Champs particuliers : `ciqual_melange` (moyenne de plusieurs entrées, ex. poivrons), `tailles` (ex. tomates cerises), `cuisson` (gras laissé dans le plat, cuisse de poulet), `facteur_acides_gras` (écrit par `remplir` pour un produit dont les lipides viennent de l'étiquette).
 - `donnees/references.json` : références ANSES (homme adulte), avec sources et date.
 - `donnees/activite.json` : méthode de calcul de la dépense, liste des exercices de salle (et anciens modules, pour les journées déjà enregistrées).
 - `donnees/explications.json` : pour chaque nutriment et chaque rapport, à quoi il sert, son intérêt, les apports conseillés, ce qui se passe en dessous et au-dessus, avec les sources (ANSES, EFSA). Dans le Bilan (vue Jour), toucher une ligne ouvre cette explication avec le total du jour.

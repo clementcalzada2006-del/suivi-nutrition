@@ -38,9 +38,9 @@ URL d'origine : voir `sources` dans `donnees/references.json`. MD5 calculés loc
 | references-vitamines-mineraux.html | cc7e6eecd7d2396f81b9e2d408e37b3d |
 | tables.txt (extraction des tableaux de la page précédente, faite le 2026-11-04 pour lecture) | c5fb3112c2b793e2163f2b4a0aff07ff |
 
-## `etiquettes/` (à venir)
+## `etiquettes/`
 
-Photos des étiquettes des produits de marque (pains, légumes surgelés Super U), nommées `<id de l'aliment>-<AAAA-MM-JJ>.jpg`.
+Preuves des valeurs d'étiquette : copies texte des fiches produit Système U (`<id>-fiche-systeme-u-<AAAA-MM-JJ>.txt`) et photos d'étiquettes prises par Clément (`.webp`).
 
 ## Sources ajoutées les 5 et 16/11/2026 (explications des nutriments, protéines des sportifs, os du lapin)
 
@@ -64,3 +64,11 @@ MD5 calculés localement :
 | lapin/ah102.pdf | https://www.ars.usda.gov/ARSUserFiles/80400525/Data/Classics/ah102.pdf | 9e742fa7995e7ec920d2dc688893d333 |
 
 `etiquettes/` contient aussi les photos et copies texte des étiquettes et des fiches Système U (pains, légumes U BIO, chocolats, tartines, huiles).
+
+## Sources ajoutées le 23/11/2026 (tomates cerises, cuisson)
+
+| Fichier | URL d'origine | MD5 |
+|---|---|---|
+| usda-fndds/fndds.zip | https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_survey_food_csv_2024-10-31.zip | c87a2a7e12b1300eeaf0b91b4dfc1b2c |
+| usda-cuisson/rendements.pdf | https://www.ars.usda.gov/ARSUserFiles/80400525/Data/retn/USDA_CookingYields_MeatPoultry.pdf | 4815a89eabd4f383ae1b35a27c64cb17 |
+| etiquettes/huile_olive-fiche-systeme-u-2026-11-16.txt | https://www.coursesu.com/p/huile-dolive-vierge-extra--bouteille-de-75cl/930350.html | 8f8eb88b85de8c1c166e9dea094e7088 |

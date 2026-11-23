@@ -7,16 +7,39 @@
 // unite : "g" = grammes de l'aliment tel que la fiche le décrit (pesé avec l'os pour une viande, avec la peau
 // pour le kiwi vert) ; sinon nombre de pièces. Par défaut l'unité de l'aliment : une entrée de journal sans
 // champ « unite » (ancien format) garde donc son sens d'origine.
-export function grammesManges(aliment, quantite, unite = aliment.unite) {
-  const pese = unite === "g" ? quantite : quantite * aliment.poids_unite_g;
+// taille : id d'une taille de l'aliment (« tailles » de foods.json, ex. tomates cerises) ; la pièce pèse alors
+// le poids de cette taille au lieu de poids_unite_g.
+export function grammesManges(aliment, quantite, unite = aliment.unite, taille) {
+  const t = taille ? aliment.tailles?.find((x) => x.id === taille) : null;
+  const pese = unite === "g" ? quantite : quantite * (t ? t.poids_g : aliment.poids_unite_g);
   return pese * aliment.part_comestible;
 }
 
-// Apport d'un nutriment pour une quantité : grammes mangés × teneur / 100. null si la teneur manque.
-export function apport(aliment, quantite, cle, unite) {
+const ACIDES_GRAS = ["oleique", "linoleique", "arachidonique", "ala", "epa", "dha"];
+
+// Teneur pour 100 g utilisée dans les calculs : celle de foods.json, corrigée pour
+// - la cuisson (champ « cuisson ») : lipides et acides gras × rétention ; énergie − 9 × lipides × (1 − rétention),
+//   9 kcal/g étant le coefficient des lipides (documentation Ciqual 2025, § 3.3.6) ;
+// - un produit étiqueté (champ « facteur_acides_gras » = lipides de l'étiquette / lipides Ciqual) : acides gras × facteur.
+//   Estimation : on suppose que ses graisses ont le profil de l'entrée Ciqual.
+export function teneur(aliment, cle) {
   const v = aliment.valeurs[cle]?.v;
   if (v === null || v === undefined) return null;
-  return (grammesManges(aliment, quantite, unite) * v) / 100;
+  const ret = aliment.cuisson?.retention_lipides ?? 1;
+  if (ACIDES_GRAS.includes(cle)) return v * (aliment.facteur_acides_gras ?? 1) * ret;
+  if (cle === "lipides") return v * ret;
+  if (cle === "energie" && ret !== 1) {
+    const l = aliment.valeurs.lipides?.v;
+    return l === null || l === undefined ? v : v - 9 * l * (1 - ret);
+  }
+  return v;
+}
+
+// Apport d'un nutriment pour une quantité : grammes mangés × teneur / 100. null si la teneur manque.
+export function apport(aliment, quantite, cle, unite, taille) {
+  const v = teneur(aliment, cle);
+  if (v === null) return null;
+  return (grammesManges(aliment, quantite, unite, taille) * v) / 100;
 }
 
 // Boutons de grammes d'un aliment en pièces (commodité, pas une donnée nutritionnelle) : quantites_g de
@@ -38,10 +61,19 @@ export function totaux(journal, foods) {
   for (const n of foods.nutriments) res[n.cle] = { total: absentDeLaTable(n) ? null : 0, incomplet: false, manquants: [], absent: absentDeLaTable(n) };
   for (const e of journal) {
     const al = parId[e.alimentId];
-    if (!al) continue;
+    if (!al) {
+      // Aliment retiré de foods.json : on ne sait plus rien de cette entrée, tous les totaux sont incomplets.
+      const nom = `aliment supprimé (${e.alimentId})`;
+      for (const n of foods.nutriments) {
+        if (absentDeLaTable(n)) continue;
+        res[n.cle].incomplet = true;
+        if (!res[n.cle].manquants.includes(nom)) res[n.cle].manquants.push(nom);
+      }
+      continue;
+    }
     for (const n of foods.nutriments) {
       if (absentDeLaTable(n)) continue;
-      const a = apport(al, e.quantite, n.cle, e.unite);
+      const a = apport(al, e.quantite, n.cle, e.unite, e.taille);
       const t = res[n.cle];
       if (a === null) {
         t.incomplet = true;
@@ -126,19 +158,23 @@ export function libelleSalle(activite, jour) {
 
 // Référence concrète d'un nutriment : { type, bas, haut } (bornes en unité du nutriment ; null si sans objet),
 // { type, inconnue: true } si elle dépend du poids ou de la dépense encore inconnus, ou null sans référence.
-export function referenceConcrete(ref, { poids, depense: dep }) {
+// Les références en % de l'énergie (pct_ae) et par MJ (par_mj) portent sur l'ÉNERGIE MANGÉE (energie, kcal) :
+// l'ANSES les définit en part de l'apport énergétique et par MJ d'énergie consommée. Seule la ligne Énergie
+// (base « depense ») prend la dépense estimée comme repère. raison : « poids » ou « energie » (rien mangé).
+export function referenceConcrete(ref, { poids, depense: dep, energie }) {
   if (!ref) return null;
+  let raison = null;
   const conv = (x) => {
-    if (ref.base === "depense") return dep ?? NaN;
+    if (ref.base === "depense") return dep ?? ((raison = "poids"), NaN);
     if (ref.valeur !== undefined) return x;
-    if (ref.par_kg !== undefined) return poids > 0 ? x * poids : NaN;
-    if (ref.par_mj !== undefined) return dep != null ? x * dep * 0.004184 : NaN;
-    if (ref.pct_ae !== undefined) return dep != null ? (dep * x) / 100 / ref.kcal_par_g : NaN;
+    if (ref.par_kg !== undefined) return poids > 0 ? x * poids : ((raison = "poids"), NaN);
+    if (ref.par_mj !== undefined) return energie > 0 ? x * energie * 0.004184 : ((raison = "energie"), NaN);
+    if (ref.pct_ae !== undefined) return energie > 0 ? (energie * x) / 100 / ref.kcal_par_g : ((raison = "energie"), NaN);
     return NaN;
   };
   const brut = ref.valeur ?? ref.par_kg ?? ref.par_mj ?? ref.pct_ae ?? null;
   const [b, h] = Array.isArray(brut) ? brut.map(conv) : [conv(brut), conv(brut)];
-  if (Number.isNaN(b) || Number.isNaN(h)) return { type: ref.type, inconnue: true };
+  if (Number.isNaN(b) || Number.isNaN(h)) return { type: ref.type, inconnue: true, raison };
   if (ref.type === "fourchette") return { type: "fourchette", bas: b, haut: h };
   return { type: ref.type, bas: b, haut: b };
 }
@@ -146,7 +182,8 @@ export function referenceConcrete(ref, { poids, depense: dep }) {
 // Pourcentage et état d'un total face à sa référence.
 export function etatReference(total, r) {
   if (!r || r.inconnue) return null;
-  const cible = r.type === "fourchette" ? r.haut : r.bas;
+  // Fourchette : le pourcentage se lit par rapport à la borne basse (le minimum à atteindre).
+  const cible = r.bas;
   const pct = cible > 0 ? (total / cible) * 100 : 0;
   let etat;
   if (r.type === "max") etat = total > r.bas ? "depasse" : "ok";
@@ -183,6 +220,9 @@ export function teneurTable(val, n) {
   if (!val || val.v === null || val.v === undefined) return "non disponible";
   if (val.brut === undefined || val.brut === "absent") return formaterNutriment(val.v, n);
   if (/^traces$/i.test(val.brut)) return "traces (compté 0)";
+  // Texte qui n'est pas un simple nombre (étiquette pour 100 ml, moyenne de plusieurs entrées) : valeur calculée
+  // pour 100 g, puis le texte d'origine entre parenthèses.
+  if (!/^(<\s*)?\d+(,\d+)?$/.test(val.brut)) return `${formaterNutriment(val.v, n)} (${val.source === "etiquette" ? "étiquette : " : ""}${val.brut})`;
   const texte = `${val.brut} ${n.unite}`;
   if (val.trace) return `${texte} (compté 0)`;
   return n.affichage === "mg" && n.unite === "g" && val.v !== 0 ? `${texte} (${formaterNutriment(val.v, n)})` : texte;
@@ -192,8 +232,10 @@ export function teneurTable(val, n) {
 export const formaterNombre = (v) => fmt({ maximumFractionDigits: 4 }).format(v);
 
 // Libellé d'un bouton de quantité : « ½ », « 1 œuf », « 2 œufs », « 150 g ».
-export function libelleQuantite(aliment, q, unite = aliment.unite) {
+export function libelleQuantite(aliment, q, unite = aliment.unite, taille) {
   if (unite === "g") return `${fmt({ maximumFractionDigits: 1 }).format(q)} g`;
+  const t = taille ? aliment.tailles?.find((x) => x.id === taille) : null;
+  if (t) return `${fmt({ maximumFractionDigits: 2 }).format(q)} ${q > 1 ? aliment.unite_pluriel : aliment.unite} (${q > 1 ? t.nom_pluriel : t.nom.toLowerCase()})`;
   const nombre = q === 0.5 ? "½" : fmt({ maximumFractionDigits: 2 }).format(q);
   if (q === 0.5) return `${nombre} ${aliment.unite}`;
   return `${nombre} ${q > 1 ? aliment.unite_pluriel : aliment.unite}`;
@@ -333,7 +375,7 @@ export function bilanSemaine({ lundi, aujourdhui, etat, historique, foods, activ
     const tot = Object.fromEntries(["energie", "proteines", "glucides", "lipides"].map((c) => [c, t[c].total]));
     const pesee = etat.pesees.find((p) => p.date === date);
     const dep = date > aujourdhui ? null : depense(activite, poidsDuJour(etat.pesees, date), mg, act);
-    const etatJour = date > aujourdhui ? "à venir" : !journal.length ? "non rempli" : !dep ? "dépense inconnue" : "rempli";
+    const etatJour = date > aujourdhui ? "à venir" : !journal.length ? "non rempli" : !dep ? "dépense inconnue" : date === aujourdhui ? "en cours" : "rempli";
     jours.push({
       date,
       nomJour: nomJour(date),
@@ -343,22 +385,15 @@ export function bilanSemaine({ lundi, aujourdhui, etat, historique, foods, activ
       salle: libelleSalle(activite, act),
       poids: pesee ? pesee.kg : null,
       depense: dep ? dep.total : null,
-      solde: etatJour === "rempli" ? tot.energie - dep.total : null,
+      solde: etatJour === "rempli" || etatJour === "en cours" ? tot.energie - dep.total : null,
       etat: etatJour,
     });
   }
-  const comptes = jours.filter((j) => j.etat === "rempli");
-  const n = comptes.length;
-  const somme = (f) => comptes.reduce((s, j) => s + f(j), 0);
-  const tri = [...etat.pesees].sort((a, b) => a.date.localeCompare(b.date));
-  const lundiSuivant = decalerJour(lundi, 7);
-  const debut = tri.filter((p) => p.date <= lundi).at(-1) ?? null;
-  const fin = tri.find((p) => p.date >= lundiSuivant) ?? null;
-  return {
-    lundi,
-    dimanche: decalerJour(lundi, 6),
-    jours,
-    totaux: {
+  // Totaux : jours TERMINÉS remplis ; puis les mêmes avec la journée en cours (le dimanche soir, la semaine complète).
+  const totauxDe = (comptes) => {
+    const n = comptes.length;
+    const somme = (f) => comptes.reduce((s, j) => s + f(j), 0);
+    return {
       jours: n,
       mange: somme((j) => j.totaux.energie),
       depense: somme((j) => j.depense),
@@ -367,7 +402,19 @@ export function bilanSemaine({ lundi, aujourdhui, etat, historique, foods, activ
       proteinesMoyennes: n ? somme((j) => j.totaux.proteines) / n : null,
       glucidesMoyens: n ? somme((j) => j.totaux.glucides) / n : null,
       lipidesMoyens: n ? somme((j) => j.totaux.lipides) / n : null,
-    },
+    };
+  };
+  const enCours = jours.some((j) => j.etat === "en cours");
+  const tri = [...etat.pesees].sort((a, b) => a.date.localeCompare(b.date));
+  const lundiSuivant = decalerJour(lundi, 7);
+  const debut = tri.filter((p) => p.date <= lundi).at(-1) ?? null;
+  const fin = tri.find((p) => p.date >= lundiSuivant) ?? null;
+  return {
+    lundi,
+    dimanche: decalerJour(lundi, 6),
+    jours,
+    totaux: totauxDe(jours.filter((j) => j.etat === "rempli")),
+    totauxAvecAujourdhui: enCours ? totauxDe(jours.filter((j) => j.etat === "rempli" || j.etat === "en cours")) : null,
     poids: { debut, fin, lundiSuivant, difference: debut && fin ? fin.kg - debut.kg : null },
   };
 }
@@ -393,13 +440,23 @@ export function texteEvolutionPoids(poids) {
 }
 
 // Verdict de la semaine : « Déficit de 2 350 kcal sur la semaine (6 jours remplis) ».
+// Porte sur les jours terminés ; verdictAvecAujourdhui ajoute la journée en cours.
 export function verdictSemaine(b) {
   const { jours: n, solde } = b.totaux;
-  if (!n) return "Aucun jour rempli avec une dépense connue : pas de bilan pour cette semaine.";
+  if (!n) return "Aucun jour terminé et rempli avec une dépense connue : pas encore de bilan pour cette semaine.";
   const jours = `${n} jour${n > 1 ? "s" : ""} rempli${n > 1 ? "s" : ""}`;
   const kcal = F0.format(Math.abs(solde));
   if (Math.round(solde) === 0) return `Équilibre sur la semaine (${jours})`;
   return `${solde < 0 ? "Déficit" : "Surplus"} de ${kcal} kcal sur la semaine (${jours})`;
+}
+
+// « Avec aujourd'hui (en cours) : déficit de 7 836 kcal (3 jours) », ou null sans journée en cours.
+export function verdictAvecAujourdhui(b) {
+  const t = b.totauxAvecAujourdhui;
+  if (!t) return null;
+  const jours = `${t.jours} jour${t.jours > 1 ? "s" : ""}`;
+  if (Math.round(t.solde) === 0) return `Avec aujourd'hui (en cours) : équilibre (${jours})`;
+  return `Avec aujourd'hui (en cours) : ${t.solde < 0 ? "déficit" : "surplus"} de ${F0.format(Math.abs(t.solde))} kcal (${jours})`;
 }
 
 // Fichier CSV pour Excel en français : UTF-8 avec BOM, séparateur « ; », virgule décimale, sans séparateur de milliers.
@@ -415,7 +472,7 @@ export function csvSemaine(b, { genereLe, profil, masseGrasse }) {
     ligne("Période", `du ${longue(b.lundi)} au ${longue(b.dimanche)}`),
     ligne("Généré le", genereLe),
     ligne("Profil", `${profil} Masse grasse (réglage actuel) : ${nb(masseGrasse, 1)} %.`),
-    ligne("Note", "Dépense estimée : Cunningham × facteur sédentaire FAO + marche + salle. Seuls les jours remplis avec une dépense connue sont comptés."),
+    ligne("Note", "Dépense estimée : Cunningham × facteur sédentaire FAO + marche + salle. Seuls les jours terminés et remplis, avec une dépense connue, sont comptés ; la journée en cours est ajoutée à part."),
     "",
     ligne("Date", "Jour", "État", "kcal mangées", "Dépense (kcal)", "Solde (kcal)", "Protéines (g)", "Glucides (g)", "Lipides (g)", "Pas", "km", "Séance", "Créatine", "Poids (kg)"),
     ...b.jours.map((j) => {
@@ -429,10 +486,14 @@ export function csvSemaine(b, { genereLe, profil, masseGrasse }) {
       );
     }),
     "",
-    ligne("Total (jours comptés)", "", `${t.jours} jour${t.jours > 1 ? "s" : ""}`, nb(t.mange, 0), nb(t.depense, 0), nb(t.solde, 0)),
+    ligne("Total (jours terminés comptés)", "", `${t.jours} jour${t.jours > 1 ? "s" : ""}`, nb(t.mange, 0), nb(t.depense, 0), nb(t.solde, 0)),
+    ...(b.totauxAvecAujourdhui
+      ? [ligne("Total avec aujourd'hui (en cours)", "", `${b.totauxAvecAujourdhui.jours} jour${b.totauxAvecAujourdhui.jours > 1 ? "s" : ""}`, nb(b.totauxAvecAujourdhui.mange, 0), nb(b.totauxAvecAujourdhui.depense, 0), nb(b.totauxAvecAujourdhui.solde, 0))]
+      : []),
     ligne("Moyenne par jour", "", "", t.jours ? nb(t.mange / t.jours, 0) : "", t.jours ? nb(t.depense / t.jours, 0) : "", nb(t.soldeMoyen, 0), nb(t.proteinesMoyennes, 1), nb(t.glucidesMoyens, 1), nb(t.lipidesMoyens, 1)),
     ligne("Poids", p.debut ? textePesee(p.debut) : "aucune pesée", p.fin ? textePesee(p.fin) : "", p.difference === null ? "" : `${p.difference > 0 ? "+" : ""}${nb(p.difference, 1)} kg`, p.fin ? "" : texteEvolutionPoids(p).replace(/^.*\. (Résultat)/, "$1")),
     ligne("Verdict", verdictSemaine(b)),
+    ...(b.totauxAvecAujourdhui ? [ligne("Verdict avec aujourd'hui", verdictAvecAujourdhui(b))] : []),
   ];
   return "\uFEFF" + lignes.join("\r\n") + "\r\n";
 }

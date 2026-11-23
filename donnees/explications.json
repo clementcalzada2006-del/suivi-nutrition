@@ -123,7 +123,7 @@
     "proteines": {
       "role": "Les protéines construisent et renouvellent tes tissus : muscles, peau, cheveux, ongles, os. Elles servent aussi d'enzymes, d'hormones, d'anticorps et d'hémoglobine. Elles sont faites d'acides aminés, dont 9 doivent obligatoirement venir de l'alimentation.",
       "sante": "Oui, elles sont indispensables. On en trouve dans la viande, le poisson, les œufs, le lait et les produits laitiers, et côté végétal dans les légumes secs, les oléagineux et les céréales ; les protéines animales sont en général plus riches en acides aminés indispensables.",
-      "fourchette": "Pour un sportif de force, l'Afssa conseille 1,3 à 1,5 g par kg et par jour pour entretenir le muscle, et 2 à 2,5 g/kg pour le développer, sans dépasser 2,5 g/kg ni 6 mois par an. L'appli retient donc de 1,3 à 2,5 g/kg, calculés avec ta dernière pesée. Pour un adulte non sportif, la référence de l'ANSES est 0,83 g/kg.",
+      "fourchette": "Pour un sportif de force, l'Afssa conseille 1,3 à 1,5 g par kg et par jour pour entretenir le muscle ; en sèche (régime restrictif), au moins 1,6 g/kg pour équilibrer le bilan azoté ; et 2 à 2,5 g/kg pour le développer, sans dépasser 2,5 g/kg ni 6 mois par an. L'appli retient donc de 1,6 à 2,5 g/kg, calculés avec ta dernière pesée. Pour un adulte non sportif, la référence de l'ANSES est 0,83 g/kg.",
       "trop_peu": "Un apport nettement trop bas expose à la dénutrition. En restriction calorique, l'Afssa explique qu'il faut plus de protéines pour équilibrer le bilan azoté : dans une étude qu'elle cite, des haltérophiles au régime avaient besoin d'au moins 1,6 g/kg/j, et le risque principal est la fonte musculaire.",
       "trop": "L'ANSES n'a pas pu fixer de limite supérieure de sécurité, faute de données. L'Afssa rappelle que les acides aminés en trop sont transformés en urée, que de très gros apports pourraient peser sur les reins (sans alerte chez d'anciens culturistes, mais les données manquent) et augmentent les pertes d'eau, donc pense à boire. Elle juge très difficile de justifier plus de 3 g/kg/j.",
       "sources": [
@@ -134,7 +134,7 @@
     "glucides": {
       "role": "Les glucides regroupent les sucres (glucose, fructose, saccharose, lactose…) et les amidons. Les amidons sont indispensables pour l'énergie qu'ils apportent : ils sont digérés et absorbés surtout sous forme de glucose.",
       "sante": "Oui, en soignant la qualité : l'ANSES conseille de limiter les sucres, de privilégier les glucides complexes à faible index glycémique et d'avoir assez de fibres. Les sucres viennent notamment des fruits, du miel, des produits laitiers (lactose) et du sucre de table.",
-      "fourchette": "L'ANSES conseille que les glucides fassent 40 à 55 % de ton énergie ; l'appli convertit cette fourchette en grammes avec ta dépense du jour. En sèche, l'Afssa conseille aux sportifs de force de privilégier les glucides plutôt que les lipides, ce qui aide à préserver la masse maigre.",
+      "fourchette": "L'ANSES conseille que les glucides fassent 40 à 55 % de ton énergie ; l'appli convertit cette fourchette en grammes avec l'énergie que tu as mangée dans la journée. En sèche, l'Afssa conseille aux sportifs de force de privilégier les glucides plutôt que les lipides, ce qui aide à préserver la masse maigre.",
       "trop_peu": "Sous 40 % de l'énergie, l'ANSES estime que le risque de désordres métaboliques peut augmenter. Pendant l'effort, les glucides limitent aussi l'utilisation des acides aminés comme carburant (Afssa).",
       "trop": "Au-delà de 55 %, l'ANSES voit un risque accru d'insulinorésistance, de diabète, de maladies cardiovasculaires et de certains cancers. Les sucres en excès favorisent aussi la prise de poids, la hausse des triglycérides du sang et les caries ; l'ANSES fixe pour eux une limite maximale (hors lactose et galactose), que l'appli ne suit pas à part.",
       "sources": [
@@ -146,7 +146,7 @@
     "lipides": {
       "role": "Les lipides (graisses) stockent l'énergie dans le tissu adipeux et construisent les membranes de tes cellules. Ils apportent les acides gras indispensables (oméga 6 et oméga 3) que ton corps ne sait pas fabriquer. Le cholestérol, un autre lipide, sert à fabriquer des hormones comme la testostérone.",
       "sante": "Oui, il en faut, mais tous les acides gras ne se valent pas. On en trouve dans les poissons, les œufs, les fromages, la charcuterie, la viande, les huiles et les graines oléagineuses, et de façon cachée dans des produits transformés comme les viennoiseries.",
-      "fourchette": "L'ANSES conseille 35 à 40 % de ton énergie en lipides : assez pour couvrir les acides gras indispensables tout en prévenant certaines maladies. L'appli convertit cette fourchette en grammes avec ta dépense du jour.",
+      "fourchette": "L'ANSES conseille 35 à 40 % de ton énergie en lipides : assez pour couvrir les acides gras indispensables tout en prévenant certaines maladies. L'appli convertit cette fourchette en grammes avec l'énergie que tu as mangée dans la journée.",
       "trop_peu": "Sous 35 %, l'ANSES estime que tu risques de ne pas couvrir tes besoins en acides gras indispensables, et tu t'éloignes de l'objectif de prévention des maladies chroniques visé par la fourchette.",
       "trop": "Au-delà de 40 %, le risque de déséquilibre énergétique augmente ; environ 43 % des adultes en France dépassent cette borne. Côté qualité, trois acides gras saturés (laurique, myristique, palmitique) favorisent en excès les dépôts de cholestérol dans les artères.",
       "sources": [
@@ -157,7 +157,7 @@
     "oleique": {
       "role": "L'acide oléique est un oméga 9, l'acide gras mono-insaturé le plus présent dans ton alimentation. Il fait partie des acides gras dits non essentiels : ton corps n'en dépend pas comme des oméga 3 et 6.",
       "sante": "Oui : l'ANSES lui fixe une fourchette, car en manger assez évite de le remplacer par des graisses saturées « athérogènes ». Les pages lues ne citent pas d'aliments précis pour l'acide oléique ; l'ANSES renvoie à la table Ciqual.",
-      "fourchette": "L'ANSES conseille 15 à 20 % de ton énergie en acide oléique ; l'appli convertit cette fourchette en grammes avec ta dépense du jour.",
+      "fourchette": "L'ANSES conseille 15 à 20 % de ton énergie en acide oléique ; l'appli convertit cette fourchette en grammes avec l'énergie que tu as mangée dans la journée.",
       "trop_peu": "Sous 15 %, le risque vient de ce qui le remplace : des acides gras saturés qui, en excès, favorisent les dépôts de cholestérol dans les artères.",
       "trop": "La borne haute de 20 % repose, selon l'ANSES, sur des données épidémiologiques et cliniques sur les facteurs de risque cardiovasculaire ; l'avis lu ne détaille pas ces effets.",
       "sources": [
@@ -168,7 +168,7 @@
     "linoleique": {
       "role": "L'acide linoléique est le chef de file des oméga 6. Il est indispensable : ton corps ne sait pas le fabriquer, alors qu'il en a besoin pour se développer et bien fonctionner. Il sert à fabriquer l'acide arachidonique.",
       "sante": "Oui, il en faut un minimum. Les pages lues ne listent pas ses aliments sources ; elles citent seulement les sources de lipides en général (huiles, graines oléagineuses, produits animaux).",
-      "fourchette": "L'ANSES conseille au moins 4 % de ton énergie, que l'appli convertit en grammes avec ta dépense du jour. Ce niveau vise un total d'acides gras polyinsaturés favorable au cœur, tout en restant assez bas pour garder le rapport acide linoléique / ALA sous 5.",
+      "fourchette": "L'ANSES conseille au moins 4 % de ton énergie, que l'appli convertit en grammes avec l'énergie que tu as mangée dans la journée. Ce niveau vise un total d'acides gras polyinsaturés favorable au cœur, tout en restant assez bas pour garder le rapport acide linoléique / ALA sous 5.",
       "trop_peu": "Comme il est indispensable, un manque prive ton corps d'un acide gras nécessaire. Les sources lues ne décrivent pas de signes précis de carence.",
       "trop": "Aucune limite chiffrée n'est donnée pour lui seul. Mais l'ANSES demande d'en limiter l'apport pour garder le rapport acide linoléique / ALA sous 5 : un excès d'acide linoléique, surtout avec peu d'ALA, déséquilibre les oméga 6 et les oméga 3.",
       "sources": [
@@ -190,7 +190,7 @@
     "ala": {
       "role": "L'ALA (acide alpha-linolénique) est le chef de file des oméga 3. Il est indispensable et ton corps s'en sert pour fabriquer l'EPA et le DHA. Les oméga 3 sont nécessaires au développement et au fonctionnement de la rétine, du cerveau et du système nerveux.",
       "sante": "Oui. On le trouve dans des végétaux : noix, huiles de colza, de soja, de lin. Ces huiles supportent mal la friture et les fortes chaleurs : garde-les pour l'assaisonnement.",
-      "fourchette": "L'ANSES conseille au moins 1 % de ton énergie en ALA, pour prévenir les maladies cardiovasculaires ; l'appli le convertit en grammes avec ta dépense du jour.",
+      "fourchette": "L'ANSES conseille au moins 1 % de ton énergie en ALA, pour prévenir les maladies cardiovasculaires ; l'appli le convertit en grammes avec l'énergie que tu as mangée dans la journée.",
       "trop_peu": "Un manque d'ALA déséquilibre le rapport entre oméga 6 et oméga 3 (rapport acide linoléique / ALA de l'onglet Bilan). Selon l'ANSES, ce déséquilibre pèse encore plus s'il manque aussi de l'EPA et du DHA.",
       "trop": "Les sources lues ne donnent ni limite supérieure ni effet d'un excès d'ALA.",
       "sources": [
@@ -240,7 +240,7 @@
     "vitB1": {
       "role": "La vitamine B1 (thiamine) sert surtout à utiliser les glucides. C'est pour ça que ton besoin dépend de ce que tu manges et dépenses en énergie.",
       "sante": "Oui. On la trouve surtout dans les céréales complètes, la viande (en particulier le porc) et les oléagineux.",
-      "fourchette": "L'ANSES conseille 0,1 mg par mégajoule (MJ) d'énergie : l'appli calcule ta cible avec ta dépense du jour, donc elle monte les jours où tu bouges plus.",
+      "fourchette": "L'ANSES conseille 0,1 mg par mégajoule (MJ) d'énergie : l'appli calcule ta cible avec l'énergie que tu as mangée dans la journée, donc elle monte les jours où tu manges plus.",
       "trop_peu": "Un manque peut abîmer les nerfs ou donner des signes d'insuffisance cardiaque, jusqu'au béribéri. Il ne vient pas toujours de l'alimentation : l'alcoolisme ou une mauvaise absorption intestinale peuvent aussi en être la cause.",
       "trop": "Il n'y a pas de limite supérieure de sécurité (LSS) : l'EFSA n'a pas pu en fixer, vu la faible toxicité observée même à forte dose.",
       "sources": [
@@ -262,7 +262,7 @@
     "vitB3": {
       "role": "La vitamine B3 (niacine) aide tes cellules à tirer de l'énergie du glucose, des acides aminés et des acides gras. Ton foie peut aussi en fabriquer à partir du tryptophane, un acide aminé.",
       "sante": "Oui. Ses principales sources sont le foie, les viandes, les poissons, les produits de la mer et les céréales complètes.",
-      "fourchette": "L'ANSES conseille 1,6 mg d'équivalents niacine par MJ d'énergie ; l'appli calcule ta cible avec ta dépense du jour. L'appli ne compte que la niacine des aliments, sans celle tirée du tryptophane : ton total est donc sous-estimé.",
+      "fourchette": "L'ANSES conseille 1,6 mg d'équivalents niacine par MJ d'énergie ; l'appli calcule ta cible avec l'énergie que tu as mangée dans la journée. L'appli ne compte que la niacine des aliments, sans celle tirée du tryptophane : ton total est donc sous-estimé.",
       "trop_peu": "Un manque prolongé peut mener à la pellagre : lésions de la peau sensibles au soleil, vomissements, diarrhées, dépression, voire démence.",
       "trop": "L'ANSES fixe deux limites supérieures de sécurité (LSS) : 10 mg par jour pour l'acide nicotinique et 900 mg pour le nicotinamide ; les tables d'aliments ne distinguent pas ces deux formes, donc l'appli ne peut pas comparer ton total à ces limites. Selon l'EFSA (2006), l'acide nicotinique pris en compléments donne d'abord des rougeurs et bouffées de chaleur, puis à très forte dose des troubles digestifs et une atteinte du foie.",
       "sources": [

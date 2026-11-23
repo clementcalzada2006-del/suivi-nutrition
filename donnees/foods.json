@@ -323,6 +323,7 @@
     "Féculents",
     "Viandes et poissons",
     "Fromages",
+    "Légumes frais",
     "Légumes surgelés Super U",
     "Fruits",
     "Boissons",
@@ -1446,7 +1447,9 @@
           "date": "2025-11-03",
           "trace": false
         }
-      }
+      },
+      "lipides_ciqual": 4.1,
+      "facteur_acides_gras": 1.024390243902439
     },
     {
       "id": "pain_graines",
@@ -1822,7 +1825,9 @@
           "date": "2025-11-03",
           "trace": false
         }
-      }
+      },
+      "lipides_ciqual": 6.6,
+      "facteur_acides_gras": 1.2575757575757578
     },
     {
       "id": "tartines_campagne",
@@ -2198,7 +2203,9 @@
           "trace": false
         }
       },
-      "notes": "Paquet de 12 tranches (non bio), avec huile de colza. Énergie et macros : étiquette du paquet, photo du 2026-11-16 (sources/etiquettes/tartines_campagne-etiquette-2026-11-16.webp) ; vitamines, minéraux et oméga : entrée Ciqual voisine 7100 « Pain de campagne », marqués « estimé » (l'entrée 7099 « préemballé » n'a presque aucun micronutriment). Écarts de plus de 15 % avec Ciqual 7100 : lipides 6,5 contre 1,3 (+400 %). Ce pain contient de l'huile de colza : ses oméga sont sous-estimés par l'entrée 7100, plus maigre."
+      "notes": "Paquet de 12 tranches (non bio), avec huile de colza. Énergie et macros : étiquette du paquet, photo du 2026-11-16 (sources/etiquettes/tartines_campagne-etiquette-2026-11-16.webp) ; vitamines, minéraux et oméga : entrée Ciqual voisine 7100 « Pain de campagne », marqués « estimé » (l'entrée 7099 « préemballé » n'a presque aucun micronutriment). Écarts de plus de 15 % avec Ciqual 7100 : lipides 6,5 contre 1,3 (+400 %). Ce pain contient de l'huile de colza : ses oméga sont sous-estimés par l'entrée 7100, plus maigre.",
+      "lipides_ciqual": 1.3,
+      "facteur_acides_gras": 5.0
     },
     {
       "id": "riz_complet",
@@ -3349,6 +3356,11 @@
         "nom": "Poulet, cuisse, viande et peau crue"
       },
       "notes": "Pesée crue avec l'os, mangée avec la peau.",
+      "cuisson": {
+        "retention_lipides": 0.6287,
+        "methode": "rôti ou poêlé, gras fondu laissé dans le plat",
+        "source": "USDA SR28, haut de cuisse, viande et peau : cru n° 05091, 1 thigh with skin = 193 g, lipides 16,61 g/100 g ; rôti n° 05094, 1 thigh with skin = 137 g, lipides 14,71 g/100 g. Gras gardé = (137 × 14,71) / (193 × 16,61) = 0,6287. Énergie retirée : 9 kcal par gramme de lipides perdu (coefficient des lipides, documentation Ciqual 2025, § 3.3.6)."
+      },
       "valeurs": {
         "energie": {
           "v": 192,
@@ -4441,6 +4453,397 @@
       }
     },
     {
+      "id": "tomates_cerises",
+      "nom": "Tomates cerises",
+      "categorie": "Légumes frais",
+      "icone": "🍅",
+      "unite": "tomate cerise",
+      "unite_pluriel": "tomates cerises",
+      "quantites": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10,
+        12,
+        15
+      ],
+      "tailles": [
+        {
+          "id": "petite",
+          "nom": "Petite",
+          "nom_pluriel": "petites",
+          "poids_g": 8,
+          "source": "USDA FoodData Central, FNDDS 2024-10-31, Tomatoes, raw (fdc 2709719) : 1 grape tomato = 8 g"
+        },
+        {
+          "id": "moyenne",
+          "nom": "Moyenne",
+          "nom_pluriel": "moyennes",
+          "poids_g": 17,
+          "source": "USDA SR28 n° 11529 Tomatoes, red, ripe, raw, et FNDDS 2024 : 1 cherry = 17 g"
+        }
+      ],
+      "taille_defaut": "moyenne",
+      "poids_unite_g": 17,
+      "poids_source": "Selon la taille choisie (voir « tailles ») ; 17 g pour une tomate cerise moyenne : USDA SR28 n° 11529 Tomatoes, red, ripe, raw, et FNDDS 2024 : 1 cherry = 17 g",
+      "part_comestible": 1,
+      "part_comestible_source": null,
+      "etat": "crue",
+      "a_confirmer": false,
+      "source_valeurs": "ciqual",
+      "ciqual": {
+        "code": 20172,
+        "nom": "Tomate cerise, crue"
+      },
+      "notes": "Deux tailles : petite (8 g) et moyenne (17 g). Pas de grande taille, faute de source.",
+      "valeurs": {
+        "energie": {
+          "v": 31.8,
+          "brut": "31,8",
+          "unite": "kcal",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 328,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "proteines": {
+          "v": 1.31,
+          "brut": "1,31",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 25003,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "glucides": {
+          "v": 5.62,
+          "brut": "5,62",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 31000,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "lipides": {
+          "v": 0,
+          "brut": "< 0,5",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 40000,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "oleique": {
+          "v": 0,
+          "brut": "< 0,01",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 41819,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "linoleique": {
+          "v": 0,
+          "brut": "< 0,01",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 41826,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "arachidonique": {
+          "v": 0,
+          "brut": "< 0,01",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 42046,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "ala": {
+          "v": 0,
+          "brut": "< 0,01",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 41833,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "epa": {
+          "v": 0,
+          "brut": "< 0,01",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 42053,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "dha": {
+          "v": 0,
+          "brut": "< 0,01",
+          "unite": "g",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 42263,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "vitA": {
+          "v": 113,
+          "brut": "113",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 51104,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB1": {
+          "v": 0.048,
+          "brut": "0,048",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 56100,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB2": {
+          "v": 0.018,
+          "brut": "0,018",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 56200,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB3": {
+          "v": 0.92,
+          "brut": "0,92",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 56310,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB5": {
+          "v": 0.079,
+          "brut": "0,079",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 56400,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB6": {
+          "v": 0.096,
+          "brut": "0,096",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 56500,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB8": {
+          "v": null,
+          "brut": "absent de la table",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": null,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB9": {
+          "v": 17.6,
+          "brut": "17,6",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 56702,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitB12": {
+          "v": 0,
+          "brut": "0",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 56600,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitC": {
+          "v": 21.8,
+          "brut": "21,8",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 55100,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitD": {
+          "v": 0,
+          "brut": "0",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 52100,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitE": {
+          "v": 0.4,
+          "brut": "0,4",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 71010,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitK1": {
+          "v": 2.83,
+          "brut": "2,83",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 54101,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "vitK2": {
+          "v": null,
+          "brut": "-",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 54104,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "fer": {
+          "v": 0.37,
+          "brut": "0,37",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 10260,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "calcium": {
+          "v": 6.6,
+          "brut": "6,6",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 10200,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "magnesium": {
+          "v": 11,
+          "brut": "11",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 10120,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "potassium": {
+          "v": 330,
+          "brut": "330",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 10190,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "sodium": {
+          "v": 0,
+          "brut": "< 5",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 10110,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "zinc": {
+          "v": 0.18,
+          "brut": "0,18",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 10300,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "phosphore": {
+          "v": 31,
+          "brut": "31",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 10150,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "manganese": {
+          "v": 0.16,
+          "brut": "0,16",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 10251,
+          "date": "2025-11-03",
+          "trace": false
+        },
+        "selenium": {
+          "v": 0,
+          "brut": "< 20",
+          "unite": "µg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 10340,
+          "date": "2025-11-03",
+          "trace": true
+        },
+        "cuivre": {
+          "v": 0.05,
+          "brut": "0,05",
+          "unite": "mg",
+          "source": "ciqual",
+          "code": 20172,
+          "const": 10290,
+          "date": "2025-11-03",
+          "trace": false
+        }
+      }
+    },
+    {
       "id": "epinards",
       "nom": "Épinards en branches U BIO (surgelés)",
       "categorie": "Légumes surgelés Super U",
@@ -4806,7 +5209,9 @@
           "date": "2025-11-03",
           "trace": false
         }
-      }
+      },
+      "lipides_ciqual": 0.54,
+      "facteur_acides_gras": 1.296296296296296
     },
     {
       "id": "ratatouille",
@@ -5174,7 +5579,9 @@
           "date": "2025-11-03",
           "trace": false
         }
-      }
+      },
+      "lipides_ciqual": 3.15,
+      "facteur_acides_gras": 1.0793650793650793
     },
     {
       "id": "brocolis",
@@ -6300,10 +6707,23 @@
       "etat": "surgelé, cru (pesé congelé)",
       "a_confirmer": false,
       "source_valeurs": "estime",
-      "ciqual": {
-        "code": 20041,
-        "nom": "Poivron, vert, jaune ou rouge, cru"
-      },
+      "ciqual_melange": [
+        {
+          "code": 20087,
+          "nom": "Poivron rouge, cru",
+          "part": 0.3333333333333333
+        },
+        {
+          "code": 20085,
+          "nom": "Poivron vert, cru",
+          "part": 0.3333333333333333
+        },
+        {
+          "code": 20168,
+          "nom": "Poivron jaune, cru",
+          "part": 0.3333333333333333
+        }
+      ],
       "valeurs": {
         "energie": {
           "v": 28.0,
@@ -6346,122 +6766,218 @@
           "trace": false
         },
         "oleique": {
-          "v": 0.011,
-          "brut": "0,011",
+          "v": 0.03666666666666667,
+          "brut": "moyenne : 1/3 × < 0,01 (20087) + 1/3 × < 0,01 (20085) + 1/3 × 0,11 (20168)",
           "unite": "g",
           "source": "estime",
-          "code": 20041,
-          "const": 41819,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            41819,
+            41819,
+            41819
+          ],
           "date": "2025-11-03",
-          "trace": false
+          "trace": true
         },
         "linoleique": {
-          "v": 0.091,
-          "brut": "0,091",
+          "v": 0.016666666666666666,
+          "brut": "moyenne : 1/3 × < 0,01 (20087) + 1/3 × < 0,01 (20085) + 1/3 × 0,05 (20168)",
           "unite": "g",
           "source": "estime",
-          "code": 20041,
-          "const": 41826,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            41826,
+            41826,
+            41826
+          ],
           "date": "2025-11-03",
-          "trace": false
+          "trace": true
         },
         "arachidonique": {
-          "v": null,
-          "brut": "-",
+          "v": 0.0,
+          "brut": "moyenne : 1/3 × < 0,01 (20087) + 1/3 × < 0,01 (20085) + 1/3 × < 0,01 (20168)",
           "unite": "g",
           "source": "estime",
-          "code": 20041,
-          "const": 42046,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            42046,
+            42046,
+            42046
+          ],
           "date": "2025-11-03",
-          "trace": false
+          "trace": true
         },
         "ala": {
-          "v": 0.026,
-          "brut": "0,026",
+          "v": 0.006666666666666666,
+          "brut": "moyenne : 1/3 × < 0,01 (20087) + 1/3 × < 0,01 (20085) + 1/3 × 0,02 (20168)",
           "unite": "g",
           "source": "estime",
-          "code": 20041,
-          "const": 41833,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            41833,
+            41833,
+            41833
+          ],
           "date": "2025-11-03",
-          "trace": false
+          "trace": true
         },
         "epa": {
-          "v": 0,
-          "brut": "0",
+          "v": 0.0,
+          "brut": "moyenne : 1/3 × < 0,01 (20087) + 1/3 × < 0,01 (20085) + 1/3 × < 0,01 (20168)",
           "unite": "g",
           "source": "estime",
-          "code": 20041,
-          "const": 42053,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            42053,
+            42053,
+            42053
+          ],
           "date": "2025-11-03",
-          "trace": false
+          "trace": true
         },
         "dha": {
-          "v": 0,
-          "brut": "0",
+          "v": 0.0,
+          "brut": "moyenne : 1/3 × < 0,01 (20087) + 1/3 × < 0,01 (20085) + 1/3 × < 0,01 (20168)",
           "unite": "g",
           "source": "estime",
-          "code": 20041,
-          "const": 42263,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            42263,
+            42263,
+            42263
+          ],
           "date": "2025-11-03",
-          "trace": false
+          "trace": true
         },
         "vitA": {
-          "v": 70.5,
-          "brut": "70,5",
+          "v": 37.5,
+          "brut": "moyenne : 1/3 × 46,2 (20087) + 1/3 × 12,8 (20085) + 1/3 × 53,5 (20168)",
           "unite": "µg",
           "source": "estime",
-          "code": 20041,
-          "const": 51104,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            51104,
+            51104,
+            51104
+          ],
           "date": "2025-11-03",
           "trace": false
         },
         "vitB1": {
-          "v": 0.041,
-          "brut": "0,041",
+          "v": 0.022,
+          "brut": "moyenne : 1/3 × 0,036 (20087) + 1/3 × < 0,015 (20085) + 1/3 × 0,03 (20168)",
           "unite": "mg",
           "source": "estime",
-          "code": 20041,
-          "const": 56100,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            56100,
+            56100,
+            56100
+          ],
           "date": "2025-11-03",
-          "trace": false
+          "trace": true
         },
         "vitB2": {
-          "v": 0.041,
-          "brut": "0,041",
+          "v": 0.03666666666666667,
+          "brut": "moyenne : 1/3 × 0,11 (20087) + 1/3 × < 0,01 (20085) + 1/3 × < 0,01 (20168)",
           "unite": "mg",
           "source": "estime",
-          "code": 20041,
-          "const": 56200,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            56200,
+            56200,
+            56200
+          ],
           "date": "2025-11-03",
-          "trace": false
+          "trace": true
         },
         "vitB3": {
-          "v": 0.74,
-          "brut": "0,74",
+          "v": 0.30666666666666664,
+          "brut": "moyenne : 1/3 × 0,34 (20087) + 1/3 × 0,3 (20085) + 1/3 × 0,28 (20168)",
           "unite": "mg",
           "source": "estime",
-          "code": 20041,
-          "const": 56310,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            56310,
+            56310,
+            56310
+          ],
           "date": "2025-11-03",
           "trace": false
         },
         "vitB5": {
-          "v": 0.12,
-          "brut": "0,12",
+          "v": 0.14333333333333334,
+          "brut": "moyenne : 1/3 × 0,18 (20087) + 1/3 × 0,11 (20085) + 1/3 × 0,14 (20168)",
           "unite": "mg",
           "source": "estime",
-          "code": 20041,
-          "const": 56400,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            56400,
+            56400,
+            56400
+          ],
           "date": "2025-11-03",
           "trace": false
         },
         "vitB6": {
-          "v": 0.38,
-          "brut": "0,38",
+          "v": 0.19966666666666666,
+          "brut": "moyenne : 1/3 × 0,31 (20087) + 1/3 × 0,21 (20085) + 1/3 × 0,079 (20168)",
           "unite": "mg",
           "source": "estime",
-          "code": 20041,
-          "const": 56500,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            56500,
+            56500,
+            56500
+          ],
           "date": "2025-11-03",
           "trace": false
         },
@@ -6470,183 +6986,319 @@
           "brut": "absent de la table",
           "unite": "µg",
           "source": "estime",
-          "code": 20041,
+          "code": null,
           "const": null,
           "date": "2025-11-03",
           "trace": false
         },
         "vitB9": {
-          "v": 40.7,
-          "brut": "40,7",
+          "v": 60.06666666666666,
+          "brut": "moyenne : 1/3 × 81,8 (20087) + 1/3 × 55,1 (20085) + 1/3 × 43,3 (20168)",
           "unite": "µg",
           "source": "estime",
-          "code": 20041,
-          "const": 56702,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            56702,
+            56702,
+            56702
+          ],
           "date": "2025-11-03",
           "trace": false
         },
         "vitB12": {
-          "v": null,
-          "brut": "-",
+          "v": 0.0,
+          "brut": "moyenne : 1/3 × 0 (20087) + 1/3 × 0 (20085) + 1/3 × 0 (20168)",
           "unite": "µg",
           "source": "estime",
-          "code": 20041,
-          "const": 56600,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            56600,
+            56600,
+            56600
+          ],
           "date": "2025-11-03",
           "trace": false
         },
         "vitC": {
-          "v": 121,
-          "brut": "121",
+          "v": 89.63333333333333,
+          "brut": "moyenne : 1/3 × 121 (20087) + 1/3 × 26,9 (20085) + 1/3 × 121 (20168)",
           "unite": "mg",
           "source": "estime",
-          "code": 20041,
-          "const": 55100,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            55100,
+            55100,
+            55100
+          ],
           "date": "2025-11-03",
           "trace": false
         },
         "vitD": {
-          "v": 0,
-          "brut": "< 0,5",
+          "v": 0.0,
+          "brut": "moyenne : 1/3 × 0 (20087) + 1/3 × 0 (20085) + 1/3 × 0 (20168)",
           "unite": "µg",
           "source": "estime",
-          "code": 20041,
-          "const": 52100,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            52100,
+            52100,
+            52100
+          ],
           "date": "2025-11-03",
-          "trace": true
+          "trace": false
         },
         "vitE": {
-          "v": null,
-          "brut": "-",
+          "v": 1.8299999999999998,
+          "brut": "moyenne : 1/3 × 3,45 (20087) + 1/3 × 0,28 (20085) + 1/3 × 1,76 (20168)",
           "unite": "mg",
           "source": "estime",
-          "code": 20041,
-          "const": 71010,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            71010,
+            71010,
+            71010
+          ],
           "date": "2025-11-03",
           "trace": false
         },
         "vitK1": {
-          "v": null,
-          "brut": "-",
+          "v": 1.4466666666666665,
+          "brut": "moyenne : 1/3 × 3,16 (20087) + 1/3 × < 0,8 (20085) + 1/3 × 1,18 (20168)",
           "unite": "µg",
           "source": "estime",
-          "code": 20041,
-          "const": 54101,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            54101,
+            54101,
+            54101
+          ],
           "date": "2025-11-03",
-          "trace": false
+          "trace": true
         },
         "vitK2": {
           "v": null,
-          "brut": "-",
+          "brut": "moyenne : 1/3 × - (20087) + 1/3 × - (20085) + 1/3 × - (20168)",
           "unite": "µg",
           "source": "estime",
-          "code": 20041,
-          "const": 54104,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            54104,
+            54104,
+            54104
+          ],
           "date": "2025-11-03",
           "trace": false
         },
         "fer": {
-          "v": 0.4,
-          "brut": "0,4",
+          "v": 0.21333333333333332,
+          "brut": "moyenne : 1/3 × 0,21 (20087) + 1/3 × 0,22 (20085) + 1/3 × 0,21 (20168)",
           "unite": "mg",
           "source": "estime",
-          "code": 20041,
-          "const": 10260,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            10260,
+            10260,
+            10260
+          ],
           "date": "2025-11-03",
           "trace": false
         },
         "calcium": {
-          "v": 7.7,
-          "brut": "7,7",
+          "v": 6.533333333333332,
+          "brut": "moyenne : 1/3 × 4,8 (20087) + 1/3 × 6,2 (20085) + 1/3 × 8,6 (20168)",
           "unite": "mg",
           "source": "estime",
-          "code": 20041,
-          "const": 10200,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            10200,
+            10200,
+            10200
+          ],
           "date": "2025-11-03",
           "trace": false
         },
         "magnesium": {
-          "v": 11.9,
-          "brut": "11,9",
+          "v": 9.299999999999999,
+          "brut": "moyenne : 1/3 × 8,2 (20087) + 1/3 × 7,7 (20085) + 1/3 × 12 (20168)",
           "unite": "mg",
           "source": "estime",
-          "code": 20041,
-          "const": 10120,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            10120,
+            10120,
+            10120
+          ],
           "date": "2025-11-03",
           "trace": false
         },
         "potassium": {
-          "v": 155,
-          "brut": "155",
+          "v": 186.66666666666666,
+          "brut": "moyenne : 1/3 × 180 (20087) + 1/3 × 160 (20085) + 1/3 × 220 (20168)",
           "unite": "mg",
           "source": "estime",
-          "code": 20041,
-          "const": 10190,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            10190,
+            10190,
+            10190
+          ],
           "date": "2025-11-03",
           "trace": false
         },
         "sodium": {
-          "v": 8.4,
-          "brut": "8,4",
+          "v": 0.0,
+          "brut": "moyenne : 1/3 × < 5 (20087) + 1/3 × < 5 (20085) + 1/3 × < 5 (20168)",
           "unite": "mg",
           "source": "estime",
-          "code": 20041,
-          "const": 10110,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            10110,
+            10110,
+            10110
+          ],
           "date": "2025-11-03",
-          "trace": false
+          "trace": true
         },
         "zinc": {
-          "v": 0.13,
-          "brut": "0,13",
+          "v": 0.16,
+          "brut": "moyenne : 1/3 × 0,14 (20087) + 1/3 × 0,11 (20085) + 1/3 × 0,23 (20168)",
           "unite": "mg",
           "source": "estime",
-          "code": 20041,
-          "const": 10300,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            10300,
+            10300,
+            10300
+          ],
           "date": "2025-11-03",
           "trace": false
         },
         "phosphore": {
-          "v": 22.5,
-          "brut": "22,5",
+          "v": 19.666666666666664,
+          "brut": "moyenne : 1/3 × 19 (20087) + 1/3 × 17 (20085) + 1/3 × 23 (20168)",
           "unite": "mg",
           "source": "estime",
-          "code": 20041,
-          "const": 10150,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            10150,
+            10150,
+            10150
+          ],
           "date": "2025-11-03",
           "trace": false
         },
         "manganese": {
-          "v": 0.1,
-          "brut": "0,1",
+          "v": 0.08666666666666667,
+          "brut": "moyenne : 1/3 × 0,08 (20087) + 1/3 × 0,07 (20085) + 1/3 × 0,11 (20168)",
           "unite": "mg",
           "source": "estime",
-          "code": 20041,
-          "const": 10251,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            10251,
+            10251,
+            10251
+          ],
           "date": "2025-11-03",
           "trace": false
         },
         "selenium": {
-          "v": 0.1,
-          "brut": "0,1",
+          "v": 0.0,
+          "brut": "moyenne : 1/3 × < 20 (20087) + 1/3 × < 20 (20085) + 1/3 × < 20 (20168)",
           "unite": "µg",
           "source": "estime",
-          "code": 20041,
-          "const": 10340,
-          "date": "2025-11-03",
-          "trace": false
-        },
-        "cuivre": {
-          "v": 0,
-          "brut": "< 0,1",
-          "unite": "mg",
-          "source": "estime",
-          "code": 20041,
-          "const": 10290,
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            10340,
+            10340,
+            10340
+          ],
           "date": "2025-11-03",
           "trace": true
+        },
+        "cuivre": {
+          "v": 0.05,
+          "brut": "moyenne : 1/3 × 0,04 (20087) + 1/3 × 0,04 (20085) + 1/3 × 0,07 (20168)",
+          "unite": "mg",
+          "source": "estime",
+          "codes": [
+            20087,
+            20085,
+            20168
+          ],
+          "consts": [
+            10290,
+            10290,
+            10290
+          ],
+          "date": "2025-11-03",
+          "trace": false
         }
       },
-      "notes": "Produit U BIO (sachet de 600 g) : « Mélange de poivrons lanières rouge, vert et jaune, surgelés, issus de l'agriculture biologique ». Ingrédients : poivrons rouges (minimum 27 %), poivrons verts (minimum 27 %), poivrons jaunes (minimum 27 %), tous bio. Énergie et macros : fiche produit Système U du 2026-11-21 (https://www.coursesu.com/p/trio-de-poivrons---600g/4359817.html) ; vitamines, minéraux et oméga : Ciqual 20041 « Poivron, vert, jaune ou rouge, cru », moyenne de la table, marquée « estimé » (Ciqual n'a pas de poivron surgelé et ne connaît pas la part exacte de chaque couleur de ce mélange). Écarts de plus de 15 % avec Ciqual 20041 : énergie 28 contre 22,6 (+24 %) ; glucides 6,1 contre 3,5 (+74 %) ; lipides 0,5 contre 0,27 (+85 %)."
+      "notes": "Produit U BIO (sachet de 600 g) : « Mélange de poivrons lanières rouge, vert et jaune, surgelés, issus de l'agriculture biologique ». Ingrédients : poivrons rouges (minimum 27 %), poivrons verts (minimum 27 %), poivrons jaunes (minimum 27 %), tous bio. Énergie et macros : fiche produit Système U du 2026-11-21 (https://www.coursesu.com/p/trio-de-poivrons---600g/4359817.html). Vitamines, minéraux et oméga : moyenne au tiers de Ciqual 20087 « Poivron rouge, cru », 20085 « Poivron vert, cru » et 20168 « Poivron jaune, cru » (au moins 27 % de chaque couleur), marquée « estimé » (Ciqual n'a pas de poivron surgelé). Écarts de plus de 15 % entre l'étiquette et cette moyenne : glucides 6,1 contre 4,71 (+29 %) ; lipides 0,5 contre 0,1 (+400 %). L'étiquette est elle-même incohérente : 4 × 0,8 + 4 × 6,1 + 9 × 0,5 + 2 × 1,7 = 35,5 kcal contre 28 déclarées, et « dont saturés 0,5 g » égale les lipides totaux. Il faudra une photo du sachet."
     },
     {
       "id": "kiwi_vert",
@@ -11091,7 +11743,9 @@
           "date": "2025-11-03",
           "trace": false
         }
-      }
+      },
+      "lipides_ciqual": 99.9,
+      "facteur_acides_gras": 1.0010010010010009
     },
     {
       "id": "huile_tournesol",
@@ -11463,7 +12117,9 @@
           "date": "2025-11-03",
           "trace": true
         }
-      }
+      },
+      "lipides_ciqual": 100,
+      "facteur_acides_gras": 1.0
     },
     {
       "id": "raisin",
@@ -12205,7 +12861,7 @@
     },
     {
       "id": "saumon",
-      "nom": "Saumon",
+      "nom": "Saumon (pesé avec la peau)",
       "categorie": "Viandes et poissons",
       "icone": "🐟",
       "unite": "g",
@@ -12226,14 +12882,14 @@
       "poids_source": null,
       "part_comestible": 1,
       "part_comestible_source": null,
-      "etat": "cru",
+      "etat": "cru, pesé avec la peau, peau mangée",
       "a_confirmer": false,
       "source_valeurs": "ciqual",
       "ciqual": {
         "code": 26036,
         "nom": "Saumon, élevage, cru"
       },
-      "notes": "Saumon d'élevage, celui des rayons. Ciqual a aussi « Saumon, sauvage, cru » (26161), plus maigre.",
+      "notes": "Saumon d'élevage, celui des rayons, pesé cru avec la peau, peau mangée. Ciqual ne donne que la chair : la peau est comptée avec les valeurs de la chair, d'où une estimation. Ciqual a aussi « Saumon, sauvage, cru » (26161), plus maigre.",
       "valeurs": {
         "energie": {
           "v": 193,
@@ -13684,7 +14340,9 @@
           "date": "2026-11-05",
           "trace": false
         }
-      }
+      },
+      "lipides_ciqual": 46.3,
+      "facteur_acides_gras": 0.9071274298056156
     },
     {
       "id": "chocolat_85",
@@ -14053,7 +14711,9 @@
           "date": "2026-11-05",
           "trace": false
         }
-      }
+      },
+      "lipides_ciqual": 46.3,
+      "facteur_acides_gras": 1.187904967602592
     },
     {
       "id": "jus_orange",
@@ -14074,7 +14734,7 @@
         400
       ],
       "poids_unite_g": 210.32322120546345,
-      "poids_source": "Brique de 20 cl = 200 ml × 1,0516 g/ml = 210,3 g, Masse volumique : USDA SR28 n° 09207 « Orange juice, canned, unsweetened », 1 fl oz (29,57 ml) = 31,1 g",
+      "poids_source": "Brique de 20 cl = 200 ml × 1,0516 g/ml = 210,3 g ; masse volumique : USDA SR28 n° 09207 « Orange juice, canned, unsweetened », 1 fl oz (29,57 ml) = 31,1 g",
       "part_comestible": 1,
       "part_comestible_source": null,
       "etat": "tel que vendu",
@@ -14422,7 +15082,7 @@
           "trace": false
         }
       },
-      "notes": "Étiquette (pour 100 ml) : 40 kcal, matières grasses ≈ 0 g, glucides 9,3 g dont sucres 9,3 g, protéines 0,6 g, fibres < 0,5 g, sel 0 g. Valeurs converties pour 100 g avec la masse volumique USDA (1,052 g/ml). Vitamines, minéraux et oméga : Ciqual 2070 « Jus d'orange, pur jus », marqués « estimé ». Une brique de 20 cl apporte 18,6 g de sucres (étiquette : 9,3 g pour 100 ml)."
+      "notes": "Étiquette (pour 100 ml) : 40 kcal, matières grasses ≈ 0 g, glucides 9,3 g dont sucres 9,3 g, protéines 0,6 g, fibres < 0,5 g, sel 0 g. Valeurs converties pour 100 g avec la masse volumique USDA (1,052 g/ml). Vitamines, minéraux et oméga : Ciqual 2070 « Jus d'orange, pur jus », marqués « estimé ». Une brique de 20 cl apporte 18,6 g de sucres (étiquette : 9,3 g pour 100 ml). Écart de plus de 15 % avec Ciqual 2070 : énergie 38,0 contre 45,4 (−16 %)."
     }
   ]
 }

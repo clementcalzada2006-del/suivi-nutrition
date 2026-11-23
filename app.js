@@ -227,11 +227,11 @@ function htmlAliment(a) {
       : `<div class="segment segment-q" role="group" aria-label="Unité">
           <button data-act="mode-q" data-id="${a.id}" data-mode="pieces" aria-pressed="true">Pièces</button>
           <button data-act="mode-q" data-id="${a.id}" data-mode="grammes" aria-pressed="false">Grammes</button></div>
-        <div class="q-pieces grille-q">${boutons.join("")}</div>
+        <div class="q-pieces">${a.tailles ? selecteurTaille(a) : ""}<div class="grille-q">${boutons.join("")}</div></div>
         <div class="q-grammes" hidden><div class="grille-q">${C.quantitesG(a)
           .map((g) => `<button class="q" data-act="ajouter" data-id="${a.id}" data-q="${g}" data-unite="g">${esc(C.libelleQuantite(a, g, "g"))}</button>`)
           .join("")}</div>${champGrammes(a)}</div>`;
-  return `<div class="aliment" data-id="${a.id}">
+  return `<div class="aliment" data-id="${a.id}"${a.tailles ? ` data-taille="${a.taille_defaut}"` : ""}>
     <div class="al-ligne">
       <button class="al-nom" data-act="aliment" data-id="${a.id}" aria-expanded="false">
         <span class="emoji" aria-hidden="true">${a.icone}</span><span class="al-texte">${esc(a.nom)}${a.a_confirmer ? ' <span class="badge">à confirmer</span>' : ""}</span>
@@ -240,6 +240,13 @@ function htmlAliment(a) {
     </div>
     <div class="quantites" hidden>${panneau}</div>
   </div>`;
+}
+
+// Sélecteur de taille (tomates cerises) : le nombre de pièces choisi ensuite prend le poids de cette taille.
+function selecteurTaille(a) {
+  return `<div class="segment segment-q segment-taille" role="group" aria-label="Taille">${a.tailles
+    .map((t) => `<button data-act="taille" data-id="${a.id}" data-taille="${t.id}" aria-pressed="${t.id === a.taille_defaut}">${esc(t.nom)}</button>`)
+    .join("")}</div>`;
 }
 
 function basculerAliment(id) {
@@ -258,24 +265,26 @@ function basculerAliment(id) {
 }
 
 // Ajout au journal. unite "g" pour des grammes sur un aliment en pièces (champ « unite » de l'entrée).
-function ajouter(id, q, bouton, unite) {
+function ajouter(id, q, bouton, unite, taille) {
   const al = parId[id];
   const entree = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7), alimentId: id, quantite: q, heure: new Date().toISOString() };
   if (unite === "g" && al.unite !== "g") entree.unite = "g";
+  else if (taille && al.tailles) entree.taille = taille;
   etat.journal.push(entree);
   sauver();
   rafraichir();
   bouton?.classList.remove("flash");
   void bouton?.offsetWidth;
   bouton?.classList.add("flash");
-  toast(`Ajouté : ${libelleEntree(al, q, entree.unite)}`, () => {
+  toast(`Ajouté : ${libelleEntree(al, q, entree.unite, entree.taille)}`, () => {
     etat.journal = etat.journal.filter((e) => e.id !== entree.id);
     sauver();
     rafraichir();
   });
 }
 
-const libelleEntree = (al, q, unite = al.unite) => (unite === "g" ? `${C.libelleQuantite(al, q, "g")} de ${al.nom}` : `${C.libelleQuantite(al, q)} · ${al.nom}`);
+const libelleEntree = (al, q, unite = al.unite, taille) =>
+  unite === "g" ? `${C.libelleQuantite(al, q, "g")} de ${al.nom}` : taille ? C.libelleQuantite(al, q, unite, taille) : `${C.libelleQuantite(al, q)} · ${al.nom}`;
 
 // Ajout depuis le champ « grammes » : validé (1 à 5 000 g), sinon message sous le champ et rien d'ajouté.
 function ajouterGrammes(id) {
@@ -296,6 +305,16 @@ function ajouterGrammes(id) {
 
 // ---------- Fiche d'un aliment ----------
 
+// Entrée Ciqual d'un aliment, ou mélange de plusieurs entrées (parts).
+function entreeCiqual(a) {
+  const date = ` (table du ${esc(foods.table_ciqual.date)})`;
+  if (a.ciqual_melange) {
+    const parts = a.ciqual_melange.map((c) => `${C.formaterNombre(Math.round(c.part * 1000) / 10)} % de ${c.code} « ${esc(c.nom)} »`).join(", ");
+    return `<dt>Entrées Ciqual</dt><dd>Moyenne : ${parts}${date}</dd>`;
+  }
+  return `<dt>Entrée Ciqual</dt><dd>${a.ciqual.code} « ${esc(a.ciqual.nom)} »${date}</dd>`;
+}
+
 function ouvrirFiche(id) {
   const a = parId[id];
   const q0 = a.quantites[0];
@@ -303,7 +322,9 @@ function ouvrirFiche(id) {
   const portion = `${C.libelleQuantite(a, q0)}${a.unite !== "g" || a.part_comestible !== 1 ? ` (${C.formater(g0, "g")} g mangés)` : ""}`;
   const provenance = (val) => {
     if (val.source === "etiquette") return `Étiquette${val.origine ? ` : ${esc(val.origine)}` : ""}${val.date ? ` (${esc(val.date)})` : ""}`;
-    const base = `Ciqual ${val.code} « ${esc(a.ciqual.nom)} », constituant ${val.const}`;
+    const base = val.codes
+      ? `moyenne de ${a.ciqual_melange.map((c) => `Ciqual ${c.code} « ${esc(c.nom)} »`).join(", ")}, constituant${val.consts.length > 1 ? "s" : ""} ${[...new Set(val.consts)].join(", ")}`
+      : `Ciqual ${val.code} « ${esc(a.ciqual.nom)} », constituant ${val.const}`;
     return val.source === "estime" ? `Estimé : aliment voisin ${base}` : base;
   };
   const lignes = GROUPES_BILAN.map(({ groupe, titre }) => {
@@ -330,7 +351,10 @@ function ouvrirFiche(id) {
       ${a.poids_source ? `<dt>Poids de la portion</dt><dd>${esc(a.poids_source)}</dd>` : ""}
       <dt>Part comestible</dt><dd>${Math.round(a.part_comestible * 100)} %${a.part_comestible_source ? ` · ${esc(a.part_comestible_source)}` : ""}</dd>
       <dt>État</dt><dd>${esc(a.etat)}</dd>
-      <dt>Entrée Ciqual</dt><dd>${a.ciqual.code} « ${esc(a.ciqual.nom)} » (table du ${esc(foods.table_ciqual.date)})</dd>
+      ${entreeCiqual(a)}
+      ${a.tailles ? `<dt>Tailles</dt><dd>${a.tailles.map((t) => `${esc(t.nom)} : ${C.formaterNombre(t.poids_g)} g (${esc(t.source)})`).join(" ; ")}</dd>` : ""}
+      ${a.cuisson ? `<dt>Cuisson</dt><dd class="fiche-cuisson">${Math.round(a.cuisson.retention_lipides * 100)} % du gras gardé (${esc(a.cuisson.methode)}) : lipides et acides gras × ${C.formaterNombre(a.cuisson.retention_lipides)}, énergie diminuée de 9 kcal par gramme de lipides perdu. Les valeurs « / 100 g » ci-dessous sont celles de la table ; les apports en tiennent compte. <span class="citation">${esc(a.cuisson.source)}</span></dd>` : ""}
+      ${a.facteur_acides_gras !== undefined ? `<dt>Acides gras</dt><dd class="fiche-facteur">Acides gras de l'entrée Ciqual × ${C.formater(a.facteur_acides_gras, "g")}, car l'étiquette donne ${C.formaterNombre(a.valeurs.lipides.v)} g de lipides contre ${C.formaterNombre(a.lipides_ciqual)} g. C'est une estimation : elle suppose que ces graisses ont le même profil que l'entrée Ciqual. Les valeurs « / 100 g » ci-dessous sont celles de la table ; les apports en tiennent compte.</dd>` : ""}
       ${a.notes ? `<dt>Notes</dt><dd>${esc(a.notes)}</dd>` : ""}
     </dl>
     <p class="aide fiche-grammes">Tu peux aussi ajouter en grammes${a.part_comestible !== 1 ? ` (poids pesé tel que décrit ici, part comestible de ${Math.round(a.part_comestible * 100)} % appliquée)` : ""}.</p>
@@ -347,11 +371,11 @@ function rendreJournal() {
     .map(({ e }) => {
       const al = parId[e.alimentId];
       if (!al) return "";
-      const v = (c) => C.apport(al, e.quantite, c, e.unite);
+      const v = (c) => C.apport(al, e.quantite, c, e.unite, e.taille);
       const h = new Date(e.heure).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
       return `<li class="j-ligne" data-id="${e.id}">
         <div class="j-tete"><span class="j-heure">${h}</span><span class="j-nom"><span aria-hidden="true">${al.icone}</span> ${esc(al.nom)}${al.a_confirmer ? ' <span class="badge">à confirmer</span>' : ""}</span></div>
-        <div class="j-detail"><span class="j-q">${esc(C.libelleQuantite(al, e.quantite, e.unite))}</span>
+        <div class="j-detail"><span class="j-q">${esc(C.libelleQuantite(al, e.quantite, e.unite, e.taille))}</span>
           <span><b>${C.formater(v("energie"), "kcal")}</b> kcal</span>
           <span class="c-prot">P ${C.formater(v("proteines"), "g")}</span>
           <span class="c-gluc">G ${C.formater(v("glucides"), "g")}</span>
@@ -373,7 +397,7 @@ function supprimer(id) {
   const [e] = etat.journal.splice(i, 1);
   sauver();
   rafraichir();
-  toast(`Supprimé : ${libelleEntree(parId[e.alimentId], e.quantite, e.unite)}`, () => {
+  toast(`Supprimé : ${libelleEntree(parId[e.alimentId], e.quantite, e.unite, e.taille)}`, () => {
     etat.journal.splice(Math.min(i, etat.journal.length), 0, e);
     sauver();
     rafraichir();
@@ -435,13 +459,13 @@ function rendreSemaine() {
   const lignes = b.jours
     .map((j) => {
       const tete = `<span class="sj-jour">${j.nomJour[0].toUpperCase() + j.nomJour.slice(1)} ${enDate(j.date).getDate()}</span>`;
-      if (j.etat !== "rempli") {
+      if (j.etat !== "rempli" && j.etat !== "en cours") {
         const detail = j.etat === "dépense inconnue" ? `${kcal(j.totaux.energie)} kcal mangées · dépense inconnue (pas de pesée)` : j.etat;
         return `<li class="sj sj-vide" data-date="${j.date}" data-etat="${j.etat}"><div class="sj-tete">${tete}<span class="sj-etat">${esc(j.etat)}</span></div>
           ${j.etat === "dépense inconnue" ? `<div class="sj-detail">${detail}</div>` : ""}</li>`;
       }
-      return `<li class="sj" data-date="${j.date}" data-etat="rempli" data-solde="${j.solde}">
-        <div class="sj-tete">${tete}<span class="sj-solde ${j.solde < 0 ? "deficit" : "surplus"}">${signe(j.solde)}</span></div>
+      return `<li class="sj${j.etat === "en cours" ? " sj-en-cours" : ""}" data-date="${j.date}" data-etat="${j.etat}" data-solde="${j.solde}">
+        <div class="sj-tete">${tete}${j.etat === "en cours" ? '<span class="sj-etat">en cours</span>' : ""}<span class="sj-solde ${j.solde < 0 ? "deficit" : "surplus"}">${signe(j.solde)}</span></div>
         <div class="sj-detail"><span>${kcal(j.totaux.energie)} mangées</span><span>${kcal(j.depense)} dépensées</span><span class="c-prot">P ${C.formater(j.totaux.proteines, "g")} g</span></div>
       </li>`;
     })
@@ -460,9 +484,10 @@ function rendreSemaine() {
     <section class="verdict${t.jours ? (t.solde < 0 ? " deficit" : " surplus") : ""}" data-solde="${t.jours ? t.solde : ""}" data-jours="${t.jours}">
       <p class="verdict-texte">${esc(C.verdictSemaine(b))}</p>
       ${t.jours ? `<p>Soit ${signe(t.soldeMoyen)} kcal par jour en moyenne · ${kcal(t.mange)} mangées pour ${kcal(t.depense)} dépensées · protéines ${C.formater(t.proteinesMoyennes, "g")} g par jour.</p>` : ""}
+      ${b.totauxAvecAujourdhui ? `<p class="verdict-avec" data-solde="${b.totauxAvecAujourdhui.solde}" data-jours="${b.totauxAvecAujourdhui.jours}">${esc(C.verdictAvecAujourdhui(b))}</p>` : ""}
       <p class="evolution-poids">${esc(poids)}</p>
     </section>
-    <p class="aide">La dépense est une estimation (masse grasse : réglage actuel). Les jours non remplis, à venir ou sans pesée ne comptent pas.</p>
+    <p class="aide">La dépense est une estimation (masse grasse : réglage actuel). Le verdict porte sur les jours terminés ; la journée en cours est ajoutée à part. Les jours non remplis, à venir ou sans pesée ne comptent pas.</p>
     <button class="btn btn-large btn-principal" data-act="exporter">Exporter la semaine (Excel)</button>`;
 }
 
@@ -495,7 +520,7 @@ async function exporterSemaine() {
 }
 
 function rendreBilanJour({ t, dep, poids }) {
-  const contexteRef = { poids, depense: dep ? dep.total : null };
+  const contexteRef = { poids, depense: dep ? dep.total : null, energie: t.energie.total };
   const groupes = GROUPES_BILAN.map(({ groupe, titre }) => {
     const lignes = foods.nutriments.filter((n) => n.groupe === groupe).map((n) => ligneBilan(n, t[n.cle], C.referenceConcrete(refs.nutriments[n.cle], contexteRef)));
     if (groupe === "omega") {
@@ -514,7 +539,7 @@ function rendreBilanJour({ t, dep, poids }) {
     <p class="legende"><span class="l-min">À atteindre</span> <span class="l-max">À ne pas dépasser</span> <span class="l-four">Fourchette</span></p>
     ${groupes}
     <section class="carte sources"><h2>Références</h2>
-      <p>${esc(refs.profil)}. Références du ${esc(refs.date)}.</p>
+      <p>${esc(refs.profil)} Références du ${esc(refs.date)}.</p>
       <p class="aide">${esc(refs.explication)}</p>
       <ul class="citation">${sources}</ul></section>`;
 }
@@ -530,15 +555,27 @@ function ligneBilan(n, tot, r) {
   const et = C.etatReference(tot.total, r);
   let refTexte = "";
   let barre = "";
-  if (r?.inconnue) refTexte = `${LIBELLE_TYPE[r.type]} : — <small>(saisis ton poids)</small>`;
+  const pourquoi = (r) => (r.raison === "energie" ? "rien mangé pour l'instant" : "saisis ton poids");
+  if (n.cle === "energie") {
+    // Énergie : la dépense estimée sert de repère, sans état ; on affiche le solde mangé − dépensé.
+    if (r?.inconnue) refTexte = `Dépense estimée : — <small>(${pourquoi(r)})</small>`;
+    else if (r) {
+      const solde = tot.total - r.bas;
+      refTexte = `Dépense estimée : ${C.formater(r.bas, "kcal")} kcal · solde <span class="solde ${solde < 0 ? "deficit" : "surplus"}" data-solde="${solde}">${solde > 0 ? "+" : solde < 0 ? "−" : ""}${C.formater(Math.abs(solde), "kcal")} kcal</span>`;
+      barre = `<div class="barre t-egal" role="img" aria-label="${Math.round(et.pct)} % de la dépense"><span style="width:${Math.min(100, et.pct)}%"></span></div>`;
+    }
+  } else if (r?.inconnue) refTexte = `${LIBELLE_TYPE[r.type]} : — <small>(${pourquoi(r)})</small>`;
   else if (r) {
     const borne = r.type === "fourchette" ? `${C.formaterNutriment(r.bas, n).replace(/ \S+$/, "")} à ${C.formaterNutriment(r.haut, n)}` : C.formaterNutriment(r.bas, n);
-    refTexte = `${LIBELLE_TYPE[r.type]} : ${borne} · <b>${Math.round(et.pct)} %</b>`;
-    const marque = r.type === "fourchette" && r.haut > 0 ? `<i class="repere" style="left:${(r.bas / r.haut) * 100}%"></i>` : "";
-    barre = `<div class="barre t-${r.type} e-${et.etat}" role="img" aria-label="${Math.round(et.pct)} %"><span style="width:${Math.min(100, et.pct)}%"></span>${marque}</div>`;
+    refTexte = `${LIBELLE_TYPE[r.type]} : ${borne} · <b>${Math.round(et.pct)} %</b>${r.type === "fourchette" ? " du minimum" : ""}`;
+    // Fourchette : la barre va de 0 à la borne haute ; le repère marque la borne basse (100 % du minimum),
+    // le bout de la barre la borne haute.
+    const largeur = r.type === "fourchette" ? (r.haut > 0 ? (tot.total / r.haut) * 100 : 0) : et.pct;
+    const marque = r.type === "fourchette" && r.haut > 0 ? `<i class="repere" style="left:${(r.bas / r.haut) * 100}%"></i><i class="repere repere-haut"></i>` : "";
+    barre = `<div class="barre t-${r.type} e-${et.etat}" role="img" aria-label="${Math.round(et.pct)} %"><span style="width:${Math.min(100, largeur)}%"></span>${marque}</div>`;
   }
   const ouvert = ui.manquantsOuverts.has(n.cle);
-  return `<div class="ligne-nut t-${r?.type || "aucun"}" data-cle="${n.cle}" data-total="${tot.total}" data-incomplet="${tot.incomplet ? 1 : 0}">
+  return `<div class="ligne-nut t-${r?.type || "aucun"}" data-cle="${n.cle}" data-total="${tot.total}" data-incomplet="${tot.incomplet ? 1 : 0}"${et && n.cle !== "energie" ? ` data-etat="${et.etat}" data-pct="${et.pct}"` : ""}>
     ${zoneExplication(n.cle, n.nom, `<div class="nut-tete"><span class="nut-nom">${esc(n.nom)}</span>
       <span class="nut-val">${C.formaterNutriment(tot.total, n)}</span></div>
     ${barre}
@@ -824,7 +861,12 @@ const ACTIONS = {
     b.nextElementSibling.hidden = ouvert;
   },
   aliment: (b) => basculerAliment(b.dataset.id),
-  ajouter: (b) => ajouter(b.dataset.id, Number(b.dataset.q), b, b.dataset.unite),
+  ajouter: (b) => ajouter(b.dataset.id, Number(b.dataset.q), b, b.dataset.unite, b.closest(".aliment")?.dataset.taille),
+  taille: (b) => {
+    const el = b.closest(".aliment");
+    el.dataset.taille = b.dataset.taille;
+    el.querySelectorAll('[data-act="taille"]').forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+  },
   "ajouter-g": (b) => ajouterGrammes(b.dataset.id),
   "mode-q": (b) => {
     const el = $(`.aliment[data-id="${b.dataset.id}"]`);
@@ -901,7 +943,7 @@ function surClic(ev) {
   const b = ev.target.closest("[data-act]");
   if (!b || !ACTIONS[b.dataset.act]) return;
   // Chaque geste commence par vérifier la date : un ajout après minuit va dans la bonne journée.
-  if (!["annuler", "fermer", "onglet", "categorie", "aliment", "fiche", "manquants", "explication", "mode-q"].includes(b.dataset.act)) verifierJour();
+  if (!["annuler", "fermer", "onglet", "categorie", "aliment", "fiche", "manquants", "explication", "mode-q", "taille"].includes(b.dataset.act)) verifierJour();
   ACTIONS[b.dataset.act](b);
 }
 
